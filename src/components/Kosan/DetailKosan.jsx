@@ -204,7 +204,7 @@ function DetailKosan() {
                 </div>
 
                 <div className="detail-contact pb-5">
-                    <div className="card mb-5 shadow">
+                    <div className="card mb-5 shadow" style={{borderRadius: '15px'}}>
                         <div className="card-body">
                             <h5 className="card-title">Hubungi Penyewa/Seller Kosan</h5>
                             <div className="contact-info d-flex align-items-center">

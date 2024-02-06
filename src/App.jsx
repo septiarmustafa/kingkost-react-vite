@@ -18,6 +18,7 @@ import PageKosan from "./pages/PageKosan";
 import PageBooking from "./pages/PageBooking";
 import DetailKosan from "./components/Kosan/DetailKosan";
 import PageDetailKosan from "./pages/PageDetailKosan";
+import PageProfile from "./pages/PageProfile";
 
 function App() {
   
@@ -93,9 +94,7 @@ function App() {
 
         <Route path="/booking" element={<PageBooking />} />
 
-
-
-
+        <Route path="/profile" element={<PageProfile />} />
 
       </Routes>
     </>
