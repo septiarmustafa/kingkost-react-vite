@@ -1,8 +1,76 @@
-import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/king.png';
+import { GoogleLogin, GoogleLogout } from "react-google-login";
+import { useSelector, useDispatch } from "react-redux";
+import { setAuthenticated } from "../../store/authSlice.js";
+import Swal from 'sweetalert2'; 
+import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
+import img1 from "../../assets/img/team-1.jpg";
+
+const clientId = "574506119134-iobilhshvcia2ums2k0h0bp9kaoetcma.apps.googleusercontent.com";
 
 function Navbar() {
+
+    const isAuthenticated = useSelector((state) => state.authentication.isAuthenticated);
+    const username = useSelector((state) => state.authentication.username);
+    const role = useSelector((state) => state.authentication.role);
+  
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('username:', username);
+    console.log('role:', role);
+  
+    const dispatch = useDispatch();
+    const navigate = useNavigate(); // Hapus deklarasi navigate yang kedua
+  
+    const handleLogout = () => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will be logged out!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, logout!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Hapus data dari localStorage
+          localStorage.removeItem('userLogin');
+          localStorage.removeItem('isLoggedIn');
+  
+          localStorage.removeItem('customerData');
+          localStorage.removeItem('isLoggedIn');
+  
+          dispatch(setAuthenticated(false));
+          Swal.fire({
+            icon: 'success',
+            title: 'Logout Successful!',
+            text: 'You have been logged out.',
+            showConfirmButton: true,
+            timer: 2000
+          }).then(() => {
+            navigate("/login"); 
+          });
+        }
+      });
+    };
+
+    const [userData, setUserData] = useState(null);
+
+    const onSuccess = (res) => {
+        setUserData(res.profileObj);
+    };
+
+    const onFailure = (res) => {
+        console.log("Login Failed, Res : " + res);
+    };
+
+    const onLogoutSuccess = (res) => {
+        console.log("Successfully loggout ");
+        navigate('/login'); 
+    }
+
     return (
         <>
             <div className="container-fluid bg-dark px-5 d-none d-lg-block">
@@ -16,11 +84,40 @@ function Navbar() {
                     </div>
                     <div className="col-lg-4 text-center text-lg-end">
                         <div className="d-inline-flex align-items-center" style={{ height: '45px' }}>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" to="/twitter"><i className="fab fa-twitter fw-normal"></i></Link>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" to="/facebook"><i className="fab fa-facebook-f fw-normal"></i></Link>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" to="/linkedin"><i className="fab fa-linkedin-in fw-normal"></i></Link>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" to="/instagram"><i className="fab fa-instagram fw-normal"></i></Link>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle" to="/youtube"><i className="fab fa-youtube fw-normal"></i></Link>
+                            {userData ? (
+                                <div className="dropdown">
+                                    <button className="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src={img1} alt="Profile" className="me-2 rounded-circle" style={{ width: '30px', height: '30px' }} />
+                                        {userData.name}
+                                    </button>
+                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><span className="dropdown-item-text">Email: {userData.email}</span></li>
+                                        <li><hr className="dropdown-divider" /></li>
+                                        <li><NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink></li>
+                                        <li><NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink></li>
+                                        <li><hr className="dropdown-divider" /></li>
+                                        <li className='ms-3'>
+                                            <div id="signInButton">
+                                                <GoogleLogout 
+                                                    clientId={clientId}
+                                                    buttonText="Logout"
+                                                    onLogoutSuccess={onLogoutSuccess}
+                                                />
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            ) : (
+                                <GoogleLogin 
+                                    clientId={clientId}
+                                    buttonText="Login"
+                                    onSuccess={onSuccess}
+                                    onFailure={onFailure}
+                                    cookiePolicy={'single_host_origin'}
+                                    isSignedIn={true}
+                                    className="google-login-button" // Menambahkan kelas CSS di sini
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
@@ -53,7 +150,37 @@ function Navbar() {
                             <NavLink to="/contact" className="nav-item nav-link" activeClassName="active">Contact</NavLink>
                             <NavLink to="/TermsAndConditions" className="nav-item nav-link" activeClassName="active">Terms And Conditions</NavLink>
                         </div>
-                        <Link to="/login" className="btn rounded-pill py-2 px-4" style={{backgroundColor: '#FFD700', color: 'black'}}>Login</Link>
+                        {isAuthenticated ? (
+                            <Dropdown>
+                                <Dropdown.Toggle variant="secondary" style={{borderRadius: '5px'}} id="dropdown-basic" className="text-black fw-bold">
+                                    <img src={img1} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
+                                    {username}
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item  className="text-black">{role}</Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item  className="text-black">
+                                        <NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink>
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item  className="text-black">
+                                        <NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink>
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item onClick={handleLogout} className="white text-white">
+                                        <Button variant="danger" className="w-100" style={{borderRadius: '15px',}}>
+                                            Logout
+                                        </Button>
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        ) : (
+                            <Link to="/login">
+                                <button className="btn btn-warning mt1" style={{ borderRadius: '10px', color: 'black', fontWeight: 'bold' }} type="submit">
+                                    LOGIN
+                                </button>
+                            </Link>
+                        )}
                     </div>
                 </nav>
 

@@ -138,6 +138,9 @@ function DetailKosan() {
         );
     }
     
+    const formatRupiah = (value) => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
+      };
 
     return (
         <div className="container ">
@@ -181,7 +184,7 @@ function DetailKosan() {
 
                         <div className="detail-price my-3"> 
                            <i class="fas fa-solid fa-tag text-danger"></i> 
-                           <span className='ms-2'> Rp. {kosanData.price} / Bulan</span>
+                           <span className='ms-2'> {formatRupiah(kosanData.price)}/month</span>
                         </div>
                     </div>
                 </div>

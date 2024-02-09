@@ -6,7 +6,7 @@ const authSlice = createSlice({
   name: "authentication",
   initialState: {
     isAuthenticated: false,
-    id: "",
+    userId: "",
     username: "",
     password: "",
     email: "",
@@ -17,8 +17,8 @@ const authSlice = createSlice({
     setAuthenticated: (state, action) => {
       state.isAuthenticated = action.payload;
     },
-    setAuthId: (state, action) => {
-      state.id = action.payload;
+    setAuthUserId: (state, action) => {
+      state.userId = action.payload;
     },
     setAuthUsername: (state, action) => {
       state.username = action.payload;
@@ -41,7 +41,7 @@ const authSlice = createSlice({
 
 export const {
   setAuthenticated,
-  setAuthId,
+  setAuthUserId,
   setAuthUsername,
   setAuthEmail,
   setAuthRole,

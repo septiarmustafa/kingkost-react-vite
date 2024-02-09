@@ -59,7 +59,7 @@ function Kosan() {
             location: 'Jakarta - Kebayoran Baru',
             availability: 'Available Now',
             roomType: 'Single Room',
-            price: 'Rp. 1.000.000',
+            price: '1000000',
             rating: 5,
             available_room: 5,
             seller: 'John Doe',
@@ -80,7 +80,7 @@ function Kosan() {
             location: 'Jakarta - Tanah Abang',
             availability: 'Available Now',
             roomType: 'Single Room',
-            price: 'Rp. 1.300.000',
+            price: '1300000',
             rating: 4,
             available_room: 3,
             seller: 'Jane Doe',
@@ -101,7 +101,7 @@ function Kosan() {
             location: 'Bandung - Cicendo',
             availability: 'Available Now',
             roomType: 'Single Room',
-            price: 'Rp. 1.500.000',
+            price: '1500000',
             rating: 4,
             available_room: 2,
             seller: 'Bob Johnson',
@@ -122,7 +122,7 @@ function Kosan() {
             location: 'Jakarta - Cikini',
             availability: 'Available Now',
             roomType: 'Single Room',
-            price: 'Rp. 600.000',
+            price: '600000',
             rating: 4,
             available_room: 4,
             seller: 'Alice Smith',
@@ -142,6 +142,10 @@ function Kosan() {
     // Call the fetchData function
     fetchData();
   }, []); // The empty dependency array ensures that this effect runs once on component mount
+
+  const formatRupiah = (value) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
+  };
 
   return (
     <div className="container" style={{paddingTop: '5em', paddingBottom: '10em'}}>
@@ -228,7 +232,7 @@ function Kosan() {
                 </small>
               </div>
               <div className="text-center p-4">
-                <h4 className="mb-2">Rp. {lokasi.price}/month</h4>
+                <h4 className="mb-2">{formatRupiah(lokasi.price)}/month</h4>
                 <label className='mb-3'>{lokasi.name}</label>
                 <div className="mb-3">
                   {Array.from({ length: lokasi.rating }, (_, index) => (

@@ -1,8 +1,76 @@
-import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/king.png';
+import { GoogleLogin, GoogleLogout } from "react-google-login";
+import { useSelector, useDispatch } from "react-redux";
+import { setAuthenticated } from "../../store/authSlice.js";
+import Swal from 'sweetalert2'; 
+import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
+import img1 from "../../assets/img/team-1.jpg";
+
+const clientId = "574506119134-iobilhshvcia2ums2k0h0bp9kaoetcma.apps.googleusercontent.com";
 
 function NavBooking() {
+
+    const isAuthenticated = useSelector((state) => state.authentication.isAuthenticated);
+    const username = useSelector((state) => state.authentication.username);
+    const role = useSelector((state) => state.authentication.role);
+  
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('username:', username);
+    console.log('role:', role);
+  
+    const dispatch = useDispatch();
+    const navigate = useNavigate(); // Hapus deklarasi navigate yang kedua
+  
+    const handleLogout = () => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will be logged out!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, logout!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Hapus data dari localStorage
+          localStorage.removeItem('userLogin');
+          localStorage.removeItem('isLoggedIn');
+  
+          localStorage.removeItem('customerData');
+          localStorage.removeItem('isLoggedIn');
+  
+          dispatch(setAuthenticated(false));
+          Swal.fire({
+            icon: 'success',
+            title: 'Logout Successful!',
+            text: 'You have been logged out.',
+            showConfirmButton: true,
+            timer: 2000
+          }).then(() => {
+            navigate("/login"); 
+          });
+        }
+      });
+    };
+
+    const [userData, setUserData] = useState(null);
+
+    const onSuccess = (res) => {
+        setUserData(res.profileObj);
+    };
+
+    const onFailure = (res) => {
+        console.log("Login Failed, Res : " + res);
+    };
+
+    const onLogoutSuccess = (res) => {
+        console.log("Successfully loggout ");
+        navigate('/login'); 
+    }
+
     return(
         <>
           <div className="container-fluid bg-dark px-5 d-none d-lg-block">
@@ -27,9 +95,9 @@ function NavBooking() {
             </div>
 
             <div className="container-fluid position-relative p-0">
-                <nav className="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
+            <nav className="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
                     <Link to="/" className="navbar-brand p-0">
-                        <p className="m-0" style={{ color: '#FFD700', fontFamily: 'sans-serif', fontWeight: 'bold', fontSize: '1.5rem', display: 'flex', alignItems: 'center' }}>
+                        <p className="m-0" style={{ color: '#cfb000', fontFamily: 'sans-serif', fontWeight: 'bold', fontSize: '1.5rem', display: 'flex', alignItems: 'center' }}>
                             <img src={logo} alt="KingKos Logo" className="logo-image" style={{ marginRight: '1rem', height: '30px' }} />
                             KingKos
                         </p>
@@ -53,7 +121,37 @@ function NavBooking() {
                             <NavLink to="/contact" className="nav-item nav-link" activeClassName="active">Contact</NavLink>
                             <NavLink to="/TermsAndConditions" className="nav-item nav-link" activeClassName="active">Terms And Conditions</NavLink>
                         </div>
-                        <Link to="/login" className="btn rounded-pill py-2 px-4" style={{backgroundColor: '#FFD700', color: 'black'}}>Login</Link>
+                        {isAuthenticated ? (
+                            <Dropdown>
+                                <Dropdown.Toggle variant="secondary" style={{borderRadius: '5px'}} id="dropdown-basic" className="text-black fw-bold">
+                                    <img src={img1} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
+                                    {username}
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item  className="text-black">{role}</Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item  className="text-black">
+                                        <NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink>
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item  className="text-black">
+                                        <NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink>
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item onClick={handleLogout} className="white text-white">
+                                        <Button variant="danger" className="w-100" style={{borderRadius: '15px',}}>
+                                            Logout
+                                        </Button>
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        ) : (
+                            <Link to="/login">
+                                <button className="btn btn-warning mt1" style={{ borderRadius: '10px', color: 'black', fontWeight: 'bold' }} type="submit">
+                                    LOGIN
+                                </button>
+                            </Link>
+                        )}
                     </div>
                 </nav>
 

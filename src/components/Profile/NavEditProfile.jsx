@@ -11,7 +11,7 @@ import img1 from "../../assets/img/team-1.jpg";
 
 const clientId = "574506119134-iobilhshvcia2ums2k0h0bp9kaoetcma.apps.googleusercontent.com";
 
-function NavTeam() {
+function NavEditProfile() {
 
     const isAuthenticated = useSelector((state) => state.authentication.isAuthenticated);
     const username = useSelector((state) => state.authentication.username);
@@ -159,12 +159,12 @@ function NavTeam() {
                     <div className="container py-5">
                         <div className="row justify-content-center py-5">
                         <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                            <h1 className="display-3 text-white animated slideInDown">Team</h1>
+                            <h1 className="display-3 text-white animated slideInDown">Edit Profile</h1>
                             <nav aria-label="breadcrumb">
                             <ol className="breadcrumb justify-content-center">
                                 <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                                 <li className="breadcrumb-item"><Link to="/pages">Pages</Link></li>
-                                <li className="breadcrumb-item text-white active" aria-current="page">Team</li>
+                                <li className="breadcrumb-item text-white active" aria-current="page">Edit Profile</li>
                             </ol>
                             </nav>
                         </div>
@@ -176,4 +176,4 @@ function NavTeam() {
     )
 }
 
-export default NavTeam;
+export default NavEditProfile;
