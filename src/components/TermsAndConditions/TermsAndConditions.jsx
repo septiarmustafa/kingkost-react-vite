@@ -30,7 +30,7 @@ function TermsAndConditions() {
                 data-bs-target="#panelsStayOpen-collapseOne"
                 aria-expanded="true"
                 aria-controls="panelsStayOpen-collapseOne"
-                style={{ backgroundColor: '#b3b1af', color: 'black' }}
+                style={{ backgroundColor: '#F0F2FA', color: 'black' }}
               >
                 Definisi
               </button>
@@ -67,7 +67,7 @@ function TermsAndConditions() {
                 data-bs-target="#panelsStayOpen-collapseTwo"
                 aria-expanded="false"
                 aria-controls="panelsStayOpen-collapseTwo"
-                style={{ backgroundColor: '#b3b1af', color: 'black' }}
+                style={{ backgroundColor: '#F0F2FA', color: 'black' }}
               >
                Pemesanan (Booking), Check-in, Pindah Kamar (Relocation), dan Penjadwalan Kembali (Reschedule) 
               </button>
@@ -101,7 +101,7 @@ function TermsAndConditions() {
                 data-bs-target="#panelsStayOpen-collapseThree"
                 aria-expanded="false"
                 aria-controls="panelsStayOpen-collapseThree"
-                style={{ backgroundColor: '#b3b1af', color: 'black' }}
+                style={{ backgroundColor: '#F0F2FA', color: 'black' }}
               >
                 Apakah saya dapat membatalkan pemesanan kosan setelah melakukan pembayaran?
               </button>

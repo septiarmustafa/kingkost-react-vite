@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '../../../store/axiosInterceptor';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 function Customer() {
     const [customers, setCustomers] = useState([]);
@@ -25,37 +26,58 @@ function Customer() {
     const currentItems = customers.slice(indexOfFirstItem, indexOfLastItem);
 
     const handleUpdate = (customerId) => {
-        navigate(`/customer/update/${customerId}`);
+        navigate(`/updateCustomer/${customerId}`);
     };
 
     const handleDelete = (customerId) => {
-        axios.delete(`/customer/v1/${customerId}`)
-            .then(response => {
-                // Update state to reflect the removal of the customer
-                setCustomers(customers.filter(customer => customer.id !== customerId));
-                console.log('Customer deleted successfully');
-            })
-            .catch(error => {
-                console.error('Error deleting customer:', error);
-            });
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this customer data!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`/customer/v1/${customerId}`)
+                    .then(response => {
+                        // Update state to reflect the removal of the customer
+                        setCustomers(customers.filter(customer => customer.id !== customerId));
+                        console.log('Customer deleted successfully');
+                    })
+                    .catch(error => {
+                        console.error('Error deleting customer:', error);
+                    });
+                Swal.fire(
+                    'Deleted!',
+                    'Your customer data has been deleted.',
+                    'success'
+                );
+            }
+        });
     };
 
     // Change page
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
-        <div className="container mt-5">
+        <div className="container-fluid mt-5">
             <div className="card mb-4 p-3">
                 <h2 style={{ margin: "10px 0px 10px 10px" }}>Customer List</h2>
                 <nav>
                     <ol className="breadcrumb mb-4" style={{ marginLeft: "10px" }}>
                         <li className="breadcrumb-item"><Link style={{ textDecoration: "none", color: "black" }} to="/customer">Data Master</Link></li>
+                        <li className="mx-2">/</li>
                         <li className="breadcrumb-item active">Customer</li>
                     </ol>
                 </nav>
                 <div className="card-header fw-bold">
                     <i className="fa fa-user" style={{ marginRight: "10px" }}></i>
                     DATA CUSTOMER
+                </div>
+                <div className="mt-4" style={{ width: "550px", marginLeft: "18px" }}>
+                    <Link to="/addCustomer" className="btn btn-success" style={{borderRadius: '10px'}}>Add Customer</Link>
                 </div>
                 <div className="mt-4" style={{ width: "550px", marginLeft: "18px" }}>
                     {/* Add category-related buttons */}
@@ -76,7 +98,7 @@ function Customer() {
                         </thead>
                         <tbody>
                             {currentItems.map((customer, index) => (
-                                <tr key={customer.id} style={{ backgroundColor: index % 2 === 0 ? 'azure' : 'azure' }}>
+                                <tr key={customer.id} >
                                     <td>{index + 1}</td>
                                     <td>{customer.fullName}</td>
                                     <td>{customer.username}</td>

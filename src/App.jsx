@@ -31,6 +31,8 @@ import LoginAdmin from "./components/Login/LoginAdmin";
 import SelectLogin from "./components/Login/SelectLogin";
 import PageDashboard from "./pages/Admin/PageDashboard/PageDashboard";
 import PageCustomer from "./pages/Admin/PageCustomer/PageCustomer";
+import PageAddCustomer from "./pages/Admin/PageCustomer/PageAddCustomer";
+import PageUpdateCustomer from "./pages/Admin/PageCustomer/PageUpdateCustomer";
 
 function App() {
 
@@ -178,6 +180,8 @@ function App() {
 
         <Route path="/dashboard" element={<PageDashboard />} />
         <Route path="/customer" element={<PageCustomer />} />
+        <Route path="/addCustomer" element={<PageAddCustomer />} />
+        <Route path="/updateCustomer/:id" element={<PageUpdateCustomer />} />
 
       </Routes>
     </>

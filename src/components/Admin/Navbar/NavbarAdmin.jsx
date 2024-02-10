@@ -1,12 +1,58 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import img from '../../../assets/Admin/img/avatar/avatar-illustrated-02.png';
+import { useSelector, useDispatch } from "react-redux";
+import { setAuthenticated} from "../../../store/authSlice"; // Menambahkan import setUserData
+import Swal from 'sweetalert2';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
 
 function NavbarAdmin() {
+
+    const isAuthenticated = useSelector((state) => state.authentication.isAuthenticated);
+    const username = useSelector((state) => state.authentication.username);
+    const role = useSelector((state) => state.authentication.role);
+  
+    const dispatch = useDispatch();
+    const navigate = useNavigate(); // Hapus deklarasi navigate yang kedua
+  
+    const handleLogout = () => {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'You will be logged out!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, logout!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Hapus data dari localStorage
+            localStorage.removeItem('userLogin');
+            localStorage.removeItem('isLoggedIn');
+    
+            localStorage.removeItem('customerData');
+            localStorage.removeItem('isLoggedIn');
+    
+            dispatch(setAuthenticated(false));
+            Swal.fire({
+              icon: 'success',
+              title: 'Logout Successful!',
+              text: 'You have been logged out.',
+              showConfirmButton: true,
+              timer: 2000
+            }).then(() => {
+              navigate("/login"); 
+            });
+          }
+        });
+      };
+
+
     return (
         <>
         <div class="layer"></div>
-        <nav className="main-nav--bg">
+        <nav className="main-nav--bg" style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
             <div className="container main-nav">
                 <div className="main-nav-start">
                     <div className="search-wrapper">
@@ -24,7 +70,7 @@ function NavbarAdmin() {
                             EN
                             <i data-feather="chevron-down" aria-hidden="true"></i>
                         </button>
-                        <ul className="lang-menu dropdown">
+                        <ul className="lang-menu dropdown-admin">
                             <li><Link to="/">English</Link></li>
                             <li><Link to="/">French</Link></li>
                             <li><Link to="/">Uzbek</Link></li>
@@ -40,7 +86,7 @@ function NavbarAdmin() {
                             <span className="sr-only">To messages</span>
                             <span className="icon notification active" aria-hidden="true"></span>
                         </button>
-                        <ul className="users-item-dropdown notification-dropdown dropdown">
+                        <ul className="users-item-dropdown notification-dropdown dropdown-admin">
                             <li>
                                 <Link to="/">
                                     <div className="notification-dropdown-icon info">
@@ -82,34 +128,39 @@ function NavbarAdmin() {
                         </ul>
                     </div>
                     <div className="nav-user-wrapper">
-                        <button href="##" className="nav-user-btn dropdown-btn" title="My profile" type="button">
-                            <span className="sr-only">My profile</span>
-                            <span className="nav-user-img">
-                                <picture>
-                                    <img src={img} alt="User name" />
-                                </picture>
-                            </span>
+                    {isAuthenticated ? (
+                        <>
+                        <Dropdown>
+                                <Dropdown.Toggle variant="secondary" style={{borderRadius: '5px'}} id="dropdown-basic" className="text-black fw-bold">
+                                    <img src={img} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
+                                    {username}
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item  className="text-black">{role}</Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item  className="text-black">
+                                        <NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink>
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item  className="text-black">
+                                        <NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink>
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item onClick={handleLogout} className="white text-white">
+                                        <Button variant="danger" className="w-100" style={{borderRadius: '15px',}}>
+                                            Logout
+                                        </Button>
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </>
+                    ) : (
+                        <Link to="/login">
+                        <button className="btn btn-warning mt1" style={{ borderRadius: '10px', color: 'black', fontWeight: 'bold' }} type="submit">
+                            LOGIN
                         </button>
-                        <ul className="users-item-dropdown nav-user-dropdown dropdown">
-                            <li>
-                                <Link to="/">
-                                    <i data-feather="user" aria-hidden="true"></i>
-                                    <span>Profile</span>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/">
-                                    <i data-feather="settings" aria-hidden="true"></i>
-                                    <span>Account settings</span>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link className="danger" to="/">
-                                    <i data-feather="log-out" aria-hidden="true"></i>
-                                    <span>Log out</span>
-                                </Link>
-                            </li>
-                        </ul>
+                        </Link>
+                    )}
                     </div>
                 </div>
             </div>
