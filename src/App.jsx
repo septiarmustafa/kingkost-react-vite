@@ -29,6 +29,8 @@ import LoginCustomer from "./components/Login/LoginCustomer";
 import LoginSeller from "./components/Login/LoginSeller";
 import LoginAdmin from "./components/Login/LoginAdmin";
 import SelectLogin from "./components/Login/SelectLogin";
+import PageDashboard from "./pages/Admin/PageDashboard/PageDashboard";
+import PageCustomer from "./pages/Admin/PageCustomer/PageCustomer";
 
 function App() {
 
@@ -172,6 +174,10 @@ function App() {
 
         <Route path="/profile" element={<PageProfile />} />
         <Route path="/edit-profile/:id" element={<PageEditProfile />} />
+
+
+        <Route path="/dashboard" element={<PageDashboard />} />
+        <Route path="/customer" element={<PageCustomer />} />
 
       </Routes>
     </>
