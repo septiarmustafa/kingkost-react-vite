@@ -40,7 +40,6 @@ function Navbar() {
           localStorage.removeItem('isLoggedIn');
   
           localStorage.removeItem('customerData');
-          localStorage.removeItem('isLoggedIn');
   
           dispatch(setAuthenticated(false));
           Swal.fire({
@@ -140,7 +139,7 @@ function Navbar() {
                             <div className="nav-item dropdown">
                                 <Link to="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Cari Apa? </Link>
                                 <div className="dropdown-menu m-0">
-                                    <Link to="/kosan" className="dropdown-item" activeClassName="active">Kosan</Link>
+                                    <NavLink to="/kosan" className="dropdown-item" activeClassName="active">Kosan</NavLink>
                                     <Link to="/booking" className="dropdown-item" activeClassName="active">Booking</Link>
                                     <Link to="/testimonial" className="dropdown-item" activeClassName="active">Testimonial</Link>
                                 </div>
@@ -184,13 +183,14 @@ function Navbar() {
                     </div>
                 </nav>
 
-                <div className="container-fluid py-4 mb-5 hero-header">
+                <div className="container-fluid py-4 hero-header">
                     <div className="container">
                         <div className="row justify-content-center py-5">
                             <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                                <h1 className="display-3 text-white mb-4 animated slideInDown">Mau Cari Kos ?</h1>
-                                <h3 className=" text-white mb-3 animated slideInDown">Find Your Ideal Kosan</h3>
-                                <p className="fs-4 text-white mb-4 animated slideInDown">Discover comfortable and affordable kosan options tailored for you.</p>
+                                <h2 className="display-3 text-white mb-4 animated slideInDown">Find Your Ideal Kosan</h2>
+                                <h2 className="text-white mb-4 animated slideInDown">With Kingkos App</h2>
+                                <h3 className=" text-white mb-3 animated slideInDown">Discover Comfortable and Affordable Kosan Options</h3>
+                                <p className="fs-4 text-white mb-4 animated slideInDown">Explore a variety of kosan options tailored for you.</p>
                                 <div className="position-relative w-75 mx-auto animated slideInDown">
                                     <input className="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Enter Location or Keyword" />
                                     <button type="button" className="btn btn-warning rounded-pill py-2 px-4 position-absolute top-0 end-0 me-2" style={{ marginTop: '7px' }}>Search</button>

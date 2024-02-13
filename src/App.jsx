@@ -33,6 +33,10 @@ import PageDashboard from "./pages/Admin/PageDashboard/PageDashboard";
 import PageCustomer from "./pages/Admin/PageCustomer/PageCustomer";
 import PageAddCustomer from "./pages/Admin/PageCustomer/PageAddCustomer";
 import PageUpdateCustomer from "./pages/Admin/PageCustomer/PageUpdateCustomer";
+import PageDataKosan from "./pages/Admin/PageKosan/PageDataKosan";
+import PageDataSeller from "./pages/Admin/PageSeller/PageDataSeller";
+import PageAddSeller from "./pages/Admin/PageSeller/PageAddSeller";
+import PageUpdateSeller from "./pages/Admin/PageSeller/PageUpdateSeller";
 
 function App() {
 
@@ -179,9 +183,115 @@ function App() {
 
 
         <Route path="/dashboard" element={<PageDashboard />} />
+        
         <Route path="/customer" element={<PageCustomer />} />
         <Route path="/addCustomer" element={<PageAddCustomer />} />
         <Route path="/updateCustomer/:id" element={<PageUpdateCustomer />} />
+
+        <Route path="/datakosan" element={<PageDataKosan />} />
+
+        <Route path="/dataSeller" element={<PageDataSeller />} />
+        <Route path="/addDataSeller" element={<PageAddSeller />} />
+        <Route path="/updateSeller/:id" element={<PageUpdateSeller />} />
+
+
+         {/* <Route
+          path="/dashboard"
+          element={
+            isLoggedIn ? (
+              // Jika pengguna sudah login
+              role === "ROLE_ADMIN" || role === "ROLE_SELLER" ? (
+                // Jika rolenya adalah ROLE_ADMIN atau ROLE_SELLER, tampilkan halaman Dashboard
+                <PageDashboard />
+              ) : (
+                // Jika rolenya bukan ROLE_ADMIN atau ROLE_SELLER, redirect ke halaman Home
+                <Navigate to="/" replace />
+              )
+            ) : (
+              // Jika pengguna belum login, redirect ke halaman Login
+              <Navigate to="/loginfsfs" replace />
+            )
+          }
+        /> */}
+
+
+
+        {/* <Route
+          path="/dashboard"
+          element={
+            isLoggedIn ? (
+              // Jika pengguna sudah login
+              role === "ROLE_ADMIN" || role === "ROLE_SELLER" ? (
+                // Jika rolenya adalah ROLE_ADMIN atau ROLE_SELLER, tampilkan halaman Dashboard
+                <PageDashboard />
+              ) : (
+                // Jika rolenya bukan ROLE_ADMIN atau ROLE_SELLER, redirect ke halaman Home
+                <Navigate to="/" replace />
+              )
+            ) : (
+              // Jika pengguna belum login, redirect ke halaman Login
+              <Navigate to="/login" replace />
+            )
+        }
+        />
+
+
+        <Route
+          path="/customer"
+          element={
+            isLoggedIn ? (
+              // Jika pengguna sudah login
+              role !== "ROLE_CUSTOMER" ? (
+                // Jika rolenya bukan ROLE_CUSTOMER, tampilkan halaman Customer
+                <PageCustomer />
+              ) : (
+                // Jika rolenya adalah ROLE_CUSTOMER, redirect ke halaman Home
+                <Navigate to="/" replace />
+              )
+            ) : (
+              // Jika pengguna belum login, redirect ke halaman Login
+              <Navigate to="/login" replace />
+            )
+        }
+        />
+
+        <Route
+          path="/addCustomer"
+          element={
+            isLoggedIn ? (
+              // Jika pengguna sudah login
+              role !== "ROLE_CUSTOMER" ? (
+                // Jika rolenya bukan ROLE_CUSTOMER, tampilkan halaman Add Customer
+                <PageAddCustomer />
+              ) : (
+                // Jika rolenya adalah ROLE_CUSTOMER, redirect ke halaman Home
+                <Navigate to="/" replace />
+              )
+            ) : (
+              // Jika pengguna belum login, redirect ke halaman Login
+              <Navigate to="/login" replace />
+            )
+        }
+        />
+
+        <Route
+          path="/updateCustomer/:id"
+          element={
+            isLoggedIn ? (
+              // Jika pengguna sudah login
+              role !== "ROLE_CUSTOMER" ? (
+                // Jika rolenya bukan ROLE_CUSTOMER, tampilkan halaman Update Customer
+                <PageUpdateCustomer />
+              ) : (
+                // Jika rolenya adalah ROLE_CUSTOMER, redirect ke halaman Home
+                <Navigate to="/" replace />
+              )
+            ) : (
+              // Jika pengguna belum login, redirect ke halaman Login
+              <Navigate to="/login" replace />
+            )
+        }
+        /> */}
 
       </Routes>
     </>

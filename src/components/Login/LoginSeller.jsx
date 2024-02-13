@@ -34,15 +34,20 @@ function LoginSeller() {
     return Object.values(validationErrors).every(error => error === "");
   };
 
-  const handleLogin = async () => {
-    try {
-      if (!validateForm()) {
-        // Display error message if form is not valid
-        return;
-      }
-  
-      if (location.pathname.startsWith("/login")) {
-        await dispatch(loginUserSeller(username, password));
+const handleLogin = async () => {
+  try {
+    if (!validateForm()) {
+      // Display error message if form is not valid
+      return;
+    }
+
+    if (location.pathname.startsWith("/login")) {
+      await dispatch(loginUserSeller(username, password));
+
+      // Ambil data user dari local storage setelah login berhasil
+      const user = JSON.parse(localStorage.getItem("userLogin"));
+
+      if (user && user.active) { // Memeriksa apakah status seller aktif setelah login berhasil
         Swal.fire({
           icon: 'success',
           title: 'Success',
@@ -50,13 +55,22 @@ function LoginSeller() {
           showConfirmButton: false,
           timer: 1500 // Menutup alert setelah 1.5 detik
         });
+      } else if (user && !user.active) { // Jika status seller tidak aktif
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Failed',
+          text: 'Status seller belum aktif!',
+          confirmButtonText: 'OK'
+        });
       }
-    } catch (error) {
-      console.error("Login failed:", error);
-      // Handle error, if needed
-      setErrors({ ...errors, general: "Invalid username or password" }); // Set error message for invalid login
     }
-  };
+  } catch (error) {
+    console.error("Login failed:", error);
+    // Handle error, if needed
+    setErrors({ ...errors, general: "Invalid username or password" }); // Set error message for invalid login
+  }
+};
+
   
 
   const onSuccess = (res) => {

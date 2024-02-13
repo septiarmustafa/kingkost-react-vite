@@ -7,6 +7,7 @@ import axios from '../../store/axiosInterceptor';
 import Swal from 'sweetalert2';
 
 import logo from '../../assets/img/login-owner.svg';
+import { FaWhatsapp } from 'react-icons/fa'; // Import ikon WhatsApp
 
 function RegisterSeller() {
 
@@ -110,7 +111,7 @@ function RegisterSeller() {
                 Swal.fire({
                     icon: 'success',
                     title: 'Registration Successful',
-                    text: 'Your registration seller was successful!',
+                    text: 'Your registration seller was successful! Wait For Admin Approval',
                     confirmButtonText: 'OK'
                 }).then(() => {
                     navigate("/login");
@@ -126,7 +127,6 @@ function RegisterSeller() {
                 });
             });
     };
-
 
     return (
         <div>
@@ -259,10 +259,13 @@ function RegisterSeller() {
                                                     </div>
                                                 </div>
 
-                                                <div className="mt-4 mx-4 mb-3 mb-lg-4" style={{ paddingLeft: '1em' }}>
-                                                    <button type="button" style={{borderRadius: '15px'}} className="btn btn-secondary" onClick={handleAddSeller}>
+                                                <div className="mt-4 mx-4 mb-3 mb-lg-4 d-flex justify-content-center" style={{ paddingLeft: '1em' }}>
+                                                    <button type="button" style={{borderRadius: '15px'}} className="me-3 btn btn-secondary" onClick={handleAddSeller}>
                                                         Register
                                                     </button>
+                                                    <Link to="https://wa.me/6281234567890" target="_blank" className="btn btn-success ms-2" style={{ borderRadius: '15px' }}>
+                                                        <FaWhatsapp className="m-1" />Chat Admin
+                                                    </Link>
                                                 </div>
                                                 <p className="pb-lg-2" style={{ color: '#393f81', paddingLeft: '2.8em' }}>
                                                     Have an account ?

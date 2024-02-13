@@ -5,7 +5,7 @@ import axios from "axios";
 import { setAuthenticated } from "./authSlice";
 import Swal from 'sweetalert2'; 
 
-import {  setAuthUserId, setAuthUsername, setAuthEmail, setAuthRole, } from "./authSlice";
+import {  setAuthUserId, setAuthUsername, setAuthEmail, setAuthRole, setAuthActive } from "./authSlice";
 import { useNavigate } from "react-router-dom";
 
 const initialIsLoggedIn =
@@ -147,13 +147,14 @@ export const loginUserSeller = (username, password) => async (dispatch) => {
 
     console.log(user);
 
-    if (user) {
-      const { userId, username, email, role } = user;
+    if (user && user.active === "true") { // Memeriksa apakah user ada dan status aktif
+      const { userId, username, email, role, active } = user;
 
       dispatch(setAuthUserId(userId));
       dispatch(setAuthUsername(username));
       dispatch(setAuthEmail(email));
       dispatch(setAuthRole(role));
+      dispatch(setAuthActive(active));
       dispatch(setAuthenticated(true));
 
       console.log(user.token)
@@ -164,6 +165,17 @@ export const loginUserSeller = (username, password) => async (dispatch) => {
       localStorage.setItem("isLoggedIn", true);
       console.log("Login Successful!");
       console.log(user, "User Data");
+
+    } else if (user && user.active === "false") { // Jika status seller tidak aktif
+      dispatch(setError("Status seller belum aktif"));
+      console.log("Login failed: Status seller belum aktif");
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: 'Status seller belum aktif!',
+        confirmButtonText: 'OK'
+      });
 
     } else {
       dispatch(setError("Invalid credentials"));
@@ -176,13 +188,13 @@ export const loginUserSeller = (username, password) => async (dispatch) => {
     dispatch(setError("Error during login"));
     console.error("Error during login:", error);
 
-
     const navigate = useNavigate();
     navigate('/login');
   } finally {
     dispatch(setLoading(false));
   }
 };
+
 
 export const loginUserAdmin = (username, password) => async (dispatch) => {
   try {
@@ -214,9 +226,9 @@ export const loginUserAdmin = (username, password) => async (dispatch) => {
 
       localStorage.setItem("userLogin", JSON.stringify(user));
       localStorage.setItem("isLoggedIn", true);
+
       console.log("Login Successful!");
       console.log(user, "User Data");
-
    
     } else {
       dispatch(setError("Invalid credentials"));

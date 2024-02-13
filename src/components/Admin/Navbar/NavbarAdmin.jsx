@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import img from '../../../assets/Admin/img/avatar/avatar-illustrated-02.png';
 import { useSelector, useDispatch } from "react-redux";
-import { setAuthenticated} from "../../../store/authSlice"; // Menambahkan import setUserData
+import { setAuthenticated} from "../../../store/authSlice";
 import Swal from 'sweetalert2';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 
 function NavbarAdmin() {
-
     const isAuthenticated = useSelector((state) => state.authentication.isAuthenticated);
     const username = useSelector((state) => state.authentication.username);
     const role = useSelector((state) => state.authentication.role);
   
     const dispatch = useDispatch();
-    const navigate = useNavigate(); // Hapus deklarasi navigate yang kedua
-  
+    const navigate = useNavigate(); // Menggunakan useNavigate untuk navigasi
+
     const handleLogout = () => {
         Swal.fire({
           title: 'Are you sure?',
@@ -27,10 +26,8 @@ function NavbarAdmin() {
           confirmButtonText: 'Yes, logout!'
         }).then((result) => {
           if (result.isConfirmed) {
-            // Hapus data dari localStorage
             localStorage.removeItem('userLogin');
             localStorage.removeItem('isLoggedIn');
-    
             localStorage.removeItem('customerData');
             localStorage.removeItem('isLoggedIn');
     
@@ -42,16 +39,15 @@ function NavbarAdmin() {
               showConfirmButton: true,
               timer: 2000
             }).then(() => {
-              navigate("/login"); 
+              navigate("/login"); // Menggunakan navigate untuk navigasi
             });
           }
         });
       };
 
-
     return (
         <>
-        <div class="layer"></div>
+        <div className="layer"></div>
         <nav className="main-nav--bg" style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
             <div className="container main-nav">
                 <div className="main-nav-start">
@@ -86,6 +82,7 @@ function NavbarAdmin() {
                             <span className="sr-only">To messages</span>
                             <span className="icon notification active" aria-hidden="true"></span>
                         </button>
+
                         <ul className="users-item-dropdown notification-dropdown dropdown-admin">
                             <li>
                                 <Link to="/">

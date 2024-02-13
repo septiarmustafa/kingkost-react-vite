@@ -1,16 +1,18 @@
 import React from 'react';
-import './Style.css'; // Pastikan untuk mengimpor gaya kustom Anda
+import './Style.css'; 
+import faq from '../../assets/img/faq.webp'
 
 function Accordion() {
   return (
     <div className="row py-5" style={{ marginTop: '5em', marginBottom: '5em' }}>
       <div className="col-sm-6 px-5 wow fadeInUp" data-wow-delay="0.1s">
         <h1 className="text-24-bold ps-5" style={{ color: 'black' }}>
-          Frequently Asked Question
+          Frequently Asked Questions
         </h1>
         <p className="text-16-light ps-5" style={{ color: 'black' }}>
-          Beberapa pertanyaan yang sering diajukan tentang pemesanan booking Kingkos...
+          Here are some frequently asked questions about booking with Kingkos.
         </p>
+        <img src={faq} alt="FAQ Image" className="img-fluid ps-5" />
       </div>
 
       <div className="col-sm-6 pe-5">
@@ -24,9 +26,9 @@ function Accordion() {
                 data-bs-target="#panelsStayOpen-collapseOne"
                 aria-expanded="true"
                 aria-controls="panelsStayOpen-collapseOne"
-                style={{ background: '#0db5af', color: 'white' }}
+                style={{ background: '#f28e02', color: 'white' }}
               >
-                Bagaimana cara melakukan pemesanan kosan di Kingkos?
+                How do I book a kosan with Kingkosa?
               </button>
             </h2>
             <div
@@ -34,7 +36,7 @@ function Accordion() {
               className="accordion-collapse collapse show"
             >
               <div className="accordion-body">
-                Untuk memesan kosan di Kingkos, Anda dapat mengikuti langkah-langkah berikut: [Tambahkan instruksi atau informasi khusus mengenai pemesanan].
+                To book a kosan with Kingkosa, you can follow these steps: [Add specific booking instructions or information].
               </div>
             </div>
           </div>
@@ -47,9 +49,9 @@ function Accordion() {
                 data-bs-target="#panelsStayOpen-collapseTwo"
                 aria-expanded="false"
                 aria-controls="panelsStayOpen-collapseTwo"
-                style={{ background: '#0db5af', color: 'white' }}
+                style={{ background: '#f28e02', color: 'white' }}
               >
-                Berapa biaya yang diperlukan untuk memesan kosan di Kingkos?
+                How much does it cost to book a kosan with Kingkosa?
               </button>
             </h2>
             <div
@@ -57,7 +59,7 @@ function Accordion() {
               className="accordion-collapse collapse"
             >
               <div className="accordion-body">
-                Biaya pemesanan kosan di Kingkos dapat bervariasi. Silakan cek halaman produk atau hubungi kami untuk mendapatkan informasi lebih lanjut tentang biaya dan persyaratan pembayaran.
+                The cost of booking a kosan with Kingkosa can vary. Please check the product page or contact us for more information about fees and payment requirements.
               </div>
             </div>
           </div>
@@ -70,9 +72,9 @@ function Accordion() {
                 data-bs-target="#panelsStayOpen-collapseThree"
                 aria-expanded="false"
                 aria-controls="panelsStayOpen-collapseThree"
-                style={{ background: '#0db5af', color: 'white' }}
+                style={{ background: '#f28e02', color: 'white' }}
               >
-                Apakah saya dapat membatalkan pemesanan kosan setelah melakukan pembayaran?
+                Can I cancel my kosan booking after making payment?
               </button>
             </h2>
             <div
@@ -80,7 +82,53 @@ function Accordion() {
               className="accordion-collapse collapse"
             >
               <div className="accordion-body">
-                Kebijakan pembatalan dapat bervariasi. Harap membaca syarat dan ketentuan kami atau menghubungi layanan pelanggan untuk informasi lebih lanjut mengenai kebijakan pembatalan pemesanan kosan di Kingkos.
+                Cancellation policies may vary. Please read our terms and conditions or contact customer service for more information about the cancellation policy for kosan bookings with Kingkosa.
+              </div>
+            </div>
+          </div>
+          <div className="accordion-item">
+            <h2 className="accordion-header">
+              <button
+                className="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#panelsStayOpen-collapseFour"
+                aria-expanded="false"
+                aria-controls="panelsStayOpen-collapseFour"
+                style={{ background: '#f28e02', color: 'white' }}
+              >
+                How can I change my booking details?
+              </button>
+            </h2>
+            <div
+              id="panelsStayOpen-collapseFour"
+              className="accordion-collapse collapse"
+            >
+              <div className="accordion-body">
+                You can change your booking details by [insert instructions on how to change booking details]. Please note that changes may be subject to availability and additional charges.
+              </div>
+            </div>
+          </div>
+          <div className="accordion-item">
+            <h2 className="accordion-header">
+              <button
+                className="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#panelsStayOpen-collapseFive"
+                aria-expanded="false"
+                aria-controls="panelsStayOpen-collapseFive"
+                style={{ background: '#f28e02', color: 'white' }}
+              >
+                How do I contact customer support?
+              </button>
+            </h2>
+            <div
+              id="panelsStayOpen-collapseFive"
+              className="accordion-collapse collapse"
+            >
+              <div className="accordion-body">
+                You can reach our customer support team at [insert contact information]. Our team is available to assist you with any questions or concerns you may have regarding your booking or any other inquiries.
               </div>
             </div>
           </div>

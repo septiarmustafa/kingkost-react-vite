@@ -929,6 +929,7 @@
    font-style: normal;
  }
  
+ 
  @font-face {
    font-family: "Inter-ExtraBold";
    font-display: swap;
@@ -1116,6 +1117,12 @@
    width: 24px;
    height: 24px;
  }
+
+ .sun {
+  background-image: url(../../../assets/Admin/img/svg/Bulk/sun.svg);
+  width: 24px;
+  height: 24px;
+}
  
  .arrows-up-down {
    background-image: url(../../../assets/Admin/img/svg/Bulk/Arrows-up-down.svg);

@@ -12,6 +12,7 @@ const authSlice = createSlice({
     email: "",
     role: "",
     token: "",
+    active: "",
   },
   reducers: {
     setAuthenticated: (state, action) => {
@@ -34,6 +35,9 @@ const authSlice = createSlice({
     },
     setAuthToken: (state, action) => {
       state.token = action.payload;
+    },
+    setAuthActive: (state, action) => {
+      state.active = action.payload;
     }
   },
 });
@@ -46,7 +50,8 @@ export const {
   setAuthEmail,
   setAuthRole,
   setAuthPassword,
-  setAuthToken
+  setAuthToken,
+  setAuthActive,
 } = authSlice.actions;
 
 

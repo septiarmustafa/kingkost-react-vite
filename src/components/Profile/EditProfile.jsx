@@ -31,18 +31,29 @@ function EditProfile() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        // Fetch user data and set form data
         axios.get(`/customer/v1/${userId}`)
             .then(response => {
                 const userData = response.data;
                 setFormData(userData);
+
+                // Fetch genders after setting form data
+                axios.get('/gender/v1')
+                    .then(response => {
+                        setGenders(response.data);
+
+                        // Find selected gender and set genderTypeId in formData
+                        const selectedGender = response.data.find(gender => gender.id === userData.genderTypeId);
+                        if (selectedGender) {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                genderTypeId: selectedGender.id
+                            }));
+                        }
+                    })
+                    .catch(error => console.error('Error fetching gender data:', error));
             })
             .catch(error => console.error('Error fetching user data:', error));
-
-        axios.get('/gender/v1')
-            .then(response => {
-                setGenders(response.data);
-            })
-            .catch(error => console.error('Error fetching gender data:', error));
     }, [userId]);
 
     const handleChange = (e) => {
@@ -139,7 +150,7 @@ function EditProfile() {
                                         Gender:
                                     </label>
                                     <select id="genderTypeId" name="genderTypeId" value={formData.genderTypeId} onChange={handleChange} className="form-select">
-                                        <option value="">Pilih Gender</option>
+                                        <option value="">Select Gender</option>
                                         {genders.map(gender => (
                                             <option key={gender.id} value={gender.id}>{gender.name}</option>
                                         ))}
@@ -183,7 +194,7 @@ function EditProfile() {
                                     {errors.password && <div className="text-danger">{errors.password}</div>}
                                 </div>
                                 <div className="d-grid">
-                                    <button type="submit" className="btn btn-secondary" style={{ borderRadius: '10px' }}>Simpan Perubahan</button>
+                                    <button type="submit" className="btn btn-secondary" style={{ borderRadius: '10px' }}>Save Changes</button>
                                 </div>
                             </form>
                         </div>
