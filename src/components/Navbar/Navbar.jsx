@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/king.png';
-import { GoogleLogin, GoogleLogout } from "react-google-login";
 import { useSelector, useDispatch } from "react-redux";
 import { setAuthenticated } from "../../store/authSlice.js";
 import Swal from 'sweetalert2'; 
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-import img1 from "../../assets/img/team-1.jpg";
+import defaultUserImg from '../../assets/img/def.webp';
+import axios from '../../store/axiosInterceptor';
 
-const clientId = "574506119134-iobilhshvcia2ums2k0h0bp9kaoetcma.apps.googleusercontent.com";
 
 function Navbar() {
 
     const isAuthenticated = useSelector((state) => state.authentication.isAuthenticated);
     const username = useSelector((state) => state.authentication.username);
     const role = useSelector((state) => state.authentication.role);
+    const userId = useSelector((state) => state.authentication.userId);
   
     console.log('isAuthenticated:', isAuthenticated);
     console.log('username:', username);
@@ -55,20 +55,23 @@ function Navbar() {
       });
     };
 
-    const [userData, setUserData] = useState(null);
+    const [UserData, setUserData] = useState(null);
 
-    const onSuccess = (res) => {
-        setUserData(res.profileObj);
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log(userId)
+                const userDataResponse = await axios.get(`/customer/user/${userId}`);
+                const matchedUser = userDataResponse.data.data;
+                setUserData(matchedUser);
+               
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
-    const onFailure = (res) => {
-        console.log("Login Failed, Res : " + res);
-    };
-
-    const onLogoutSuccess = (res) => {
-        console.log("Successfully loggout ");
-        navigate('/login'); 
-    }
+        fetchData();
+    }, [userId]); 
 
     return (
         <>
@@ -83,40 +86,18 @@ function Navbar() {
                     </div>
                     <div className="col-lg-4 text-center text-lg-end">
                         <div className="d-inline-flex align-items-center" style={{ height: '45px' }}>
-                            {userData ? (
-                                <div className="dropdown">
-                                    <button className="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src={img1} alt="Profile" className="me-2 rounded-circle" style={{ width: '30px', height: '30px' }} />
-                                        {userData.name}
-                                    </button>
-                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><span className="dropdown-item-text">Email: {userData.email}</span></li>
-                                        <li><hr className="dropdown-divider" /></li>
-                                        <li><NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink></li>
-                                        <li><NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink></li>
-                                        <li><hr className="dropdown-divider" /></li>
-                                        <li className='ms-3'>
-                                            <div id="signInButton">
-                                                <GoogleLogout 
-                                                    clientId={clientId}
-                                                    buttonText="Logout"
-                                                    onLogoutSuccess={onLogoutSuccess}
-                                                />
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            ) : (
-                                <GoogleLogin 
-                                    clientId={clientId}
-                                    buttonText="Login"
-                                    onSuccess={onSuccess}
-                                    onFailure={onFailure}
-                                    cookiePolicy={'single_host_origin'}
-                                    isSignedIn={true}
-                                    className="google-login-button" // Menambahkan kelas CSS di sini
-                                />
-                            )}
+                            <Link to="#" className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2">
+                            <i className="fab fa-twitter fw-normal"></i>
+                            </Link>
+                            <Link to="#" className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2">
+                            <i className="fab fa-facebook-f fw-normal"></i>
+                            </Link>
+                            <Link to="#" className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2">
+                            <i className="fab fa-instagram fw-normal"></i>
+                            </Link>
+                            <Link to="#" className="btn btn-sm btn-outline-light btn-sm-square rounded-circle">
+                            <i className="fab fa-youtube fw-normal"></i>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -151,8 +132,10 @@ function Navbar() {
                         </div>
                         {isAuthenticated ? (
                             <Dropdown>
+                                {UserData && (
+                                <>
                                 <Dropdown.Toggle variant="secondary" style={{borderRadius: '5px'}} id="dropdown-basic" className="text-black fw-bold">
-                                    <img src={img1} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
+                                    <img src={UserData.url ? UserData.url : defaultUserImg} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
                                     {username}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
@@ -172,6 +155,8 @@ function Navbar() {
                                         </Button>
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
+                                </>
+                            )}
                             </Dropdown>
                         ) : (
                             <Link to="/login">

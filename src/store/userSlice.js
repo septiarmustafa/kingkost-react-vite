@@ -78,11 +78,11 @@ export default userSlice.reducer;
 export const selectLoading = (state) => state.user.loading;
 
 
-export const loginUserCustomer = (username, password) => async (dispatch) => {
+export const loginUser = (username, password) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
 
-    const response = await axios.post("http://localhost:8080/api/auth/login/customer", {
+    const response = await axios.post("http://localhost:8080/api/auth/login", {
       username,
       password,
     });
@@ -91,160 +91,202 @@ export const loginUserCustomer = (username, password) => async (dispatch) => {
 
     const user = response.data.data; 
 
+    console.log(user.userId);
     console.log(user);
 
     if (user) {
-      const { userId, username, email, role } = user;
+      if (user.role === 'ROLE_SELLER') {
+        // Tambahkan permintaan GET untuk mendapatkan data pengguna dari endpoint seller/user/userId
+        const userResponse = await axios.get(`http://localhost:8080/seller/user/${user.userId}`);
+        const userData = userResponse.data.data;
 
-      dispatch(setAuthUserId(userId));
-      dispatch(setAuthUsername(username));
-      dispatch(setAuthEmail(email));
-      dispatch(setAuthRole(role));
-      dispatch(setAuthenticated(true));
+        console.log("user data " + userData);
 
-      console.log(user.token)
-      console.log(user.username)
-      console.log(user.userId)
+        // Periksa apakah status active pengguna adalah true atau false
+        if (userData.active === "true") {
+          const { userId, username, email, role, active } = user;
 
-      localStorage.setItem("userLogin", JSON.stringify(user));
-      localStorage.setItem("isLoggedIn", true);
-      console.log("Login Successful!");
-      console.log(user, "User Data");
+          dispatch(setAuthUserId(userId));
+          dispatch(setAuthUsername(username));
+          dispatch(setAuthEmail(email));
+          dispatch(setAuthRole(role));
+          dispatch(setAuthenticated(true));
+          dispatch(setAuthActive(active));
 
+          console.log(user.token)
+          console.log(user.active)
+          console.log(user.username)
+          console.log(user.userId)
+
+          localStorage.setItem("userLogin", JSON.stringify(user));
+          localStorage.setItem("isLoggedIn", true);
+          console.log("Login Successful!");
+          console.log(user, "User Data");
+        } else if (userData && userData.active === "false") {
+          // Jika status active adalah false, tampilkan SweetAlert
+          Swal.fire({
+            icon: 'error',
+            title: 'Login failed',
+            text: 'User is inactive. Please contact administrator.',
+            confirmButtonText: 'OK'
+          });
+
+          console.log("Login failed: User is inactive");
+        }
+      } else {
+        // Jika rolenya bukan ROLE_SELLER, maka langsung login
+        const { userId, username, email, role } = user;
+
+        dispatch(setAuthUserId(userId));
+        dispatch(setAuthUsername(username));
+        dispatch(setAuthEmail(email));
+        dispatch(setAuthRole(role));
+        dispatch(setAuthenticated(true));
+
+        console.log(user.token)
+        console.log(user.username)
+        console.log(user.userId)
+
+        localStorage.setItem("userLogin", JSON.stringify(user));
+        localStorage.setItem("isLoggedIn", true);
+        console.log("Login Successful!");
+        console.log(user, "User Data");
+      }
+    } else {
+      dispatch(setError("Invalid credentials"));
+      console.log("Login failed: Invalid credentials");
+
+      const navigate = useNavigate();
+      navigate('/login');
+    }
+  } catch (error) {
+    dispatch(setError("Error during login"));
+    console.error("Error during login:", error);
+
+    const navigate = useNavigate();
+    navigate('/login');
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
+
+
+
+
+// export const loginUserSeller = (username, password) => async (dispatch) => {
+//   try {
+//     dispatch(setLoading(true));
+
+//     const response = await axios.post("http://localhost:8080/api/auth/login/seller", {
+//       username,
+//       password,
+//     });
+
+//     console.log(response);
+
+//     const user = response.data.data; 
+
+//     console.log(user);
+
+//     if (user && user.active === "true") { // Memeriksa apakah user ada dan status aktif
+//       const { userId, username, email, role, active } = user;
+
+//       dispatch(setAuthUserId(userId));
+//       dispatch(setAuthUsername(username));
+//       dispatch(setAuthEmail(email));
+//       dispatch(setAuthRole(role));
+//       dispatch(setAuthActive(active));
+//       dispatch(setAuthenticated(true));
+
+//       console.log(user.token)
+//       console.log(user.username)
+//       console.log(user.userId)
+
+//       localStorage.setItem("userLogin", JSON.stringify(user));
+//       localStorage.setItem("isLoggedIn", true);
+//       console.log("Login Successful!");
+//       console.log(user, "User Data");
+
+//     } else if (user && user.active === "false") { // Jika status seller tidak aktif
+//       dispatch(setError("Status seller belum aktif"));
+//       console.log("Login failed: Status seller belum aktif");
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Login Failed',
+//         text: 'Status seller belum aktif!',
+//         confirmButtonText: 'OK'
+//       });
+
+//     } else {
+//       dispatch(setError("Invalid credentials"));
+//       console.log("Login failed: Invalid credentials");
+
+//       const navigate = useNavigate();
+//       navigate('/login');
+//     }
+//   } catch (error) {
+//     dispatch(setError("Error during login"));
+//     console.error("Error during login:", error);
+
+//     const navigate = useNavigate();
+//     navigate('/login');
+//   } finally {
+//     dispatch(setLoading(false));
+//   }
+// };
+
+
+// export const loginUserAdmin = (username, password) => async (dispatch) => {
+//   try {
+//     dispatch(setLoading(true));
+
+//     const response = await axios.post("http://localhost:8080/api/auth/login/admin", {
+//       username,
+//       password,
+//     });
+
+//     console.log(response);
+
+//     const user = response.data.data; 
+
+//     console.log(user);
+
+//     if (user) {
+//       const { userId, username, email, role } = user;
+
+//       dispatch(setAuthUserId(userId));
+//       dispatch(setAuthUsername(username));
+//       dispatch(setAuthEmail(email));
+//       dispatch(setAuthRole(role));
+//       dispatch(setAuthenticated(true));
+
+//       console.log(user.token)
+//       console.log(user.username)
+//       console.log(user.userId)
+
+//       localStorage.setItem("userLogin", JSON.stringify(user));
+//       localStorage.setItem("isLoggedIn", true);
+
+//       console.log("Login Successful!");
+//       console.log(user, "User Data");
    
-    } else {
-      dispatch(setError("Invalid credentials"));
-      console.log("Login failed: Invalid credentials");
+//     } else {
+//       dispatch(setError("Invalid credentials"));
+//       console.log("Login failed: Invalid credentials");
 
-      const navigate = useNavigate();
-      navigate('/login');
-    }
-  } catch (error) {
-    dispatch(setError("Error during login"));
-    console.error("Error during login:", error);
-
-
-    const navigate = useNavigate();
-    navigate('/login');
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
+//       const navigate = useNavigate();
+//       navigate('/login');
+//     }
+//   } catch (error) {
+//     dispatch(setError("Error during login"));
+//     console.error("Error during login:", error);
 
 
-export const loginUserSeller = (username, password) => async (dispatch) => {
-  try {
-    dispatch(setLoading(true));
-
-    const response = await axios.post("http://localhost:8080/api/auth/login/seller", {
-      username,
-      password,
-    });
-
-    console.log(response);
-
-    const user = response.data.data; 
-
-    console.log(user);
-
-    if (user && user.active === "true") { // Memeriksa apakah user ada dan status aktif
-      const { userId, username, email, role, active } = user;
-
-      dispatch(setAuthUserId(userId));
-      dispatch(setAuthUsername(username));
-      dispatch(setAuthEmail(email));
-      dispatch(setAuthRole(role));
-      dispatch(setAuthActive(active));
-      dispatch(setAuthenticated(true));
-
-      console.log(user.token)
-      console.log(user.username)
-      console.log(user.userId)
-
-      localStorage.setItem("userLogin", JSON.stringify(user));
-      localStorage.setItem("isLoggedIn", true);
-      console.log("Login Successful!");
-      console.log(user, "User Data");
-
-    } else if (user && user.active === "false") { // Jika status seller tidak aktif
-      dispatch(setError("Status seller belum aktif"));
-      console.log("Login failed: Status seller belum aktif");
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: 'Status seller belum aktif!',
-        confirmButtonText: 'OK'
-      });
-
-    } else {
-      dispatch(setError("Invalid credentials"));
-      console.log("Login failed: Invalid credentials");
-
-      const navigate = useNavigate();
-      navigate('/login');
-    }
-  } catch (error) {
-    dispatch(setError("Error during login"));
-    console.error("Error during login:", error);
-
-    const navigate = useNavigate();
-    navigate('/login');
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
-
-
-export const loginUserAdmin = (username, password) => async (dispatch) => {
-  try {
-    dispatch(setLoading(true));
-
-    const response = await axios.post("http://localhost:8080/api/auth/login/admin", {
-      username,
-      password,
-    });
-
-    console.log(response);
-
-    const user = response.data.data; 
-
-    console.log(user);
-
-    if (user) {
-      const { userId, username, email, role } = user;
-
-      dispatch(setAuthUserId(userId));
-      dispatch(setAuthUsername(username));
-      dispatch(setAuthEmail(email));
-      dispatch(setAuthRole(role));
-      dispatch(setAuthenticated(true));
-
-      console.log(user.token)
-      console.log(user.username)
-      console.log(user.userId)
-
-      localStorage.setItem("userLogin", JSON.stringify(user));
-      localStorage.setItem("isLoggedIn", true);
-
-      console.log("Login Successful!");
-      console.log(user, "User Data");
-   
-    } else {
-      dispatch(setError("Invalid credentials"));
-      console.log("Login failed: Invalid credentials");
-
-      const navigate = useNavigate();
-      navigate('/login');
-    }
-  } catch (error) {
-    dispatch(setError("Error during login"));
-    console.error("Error during login:", error);
-
-
-    const navigate = useNavigate();
-    navigate('/login');
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
+//     const navigate = useNavigate();
+//     navigate('/login');
+//   } finally {
+//     dispatch(setLoading(false));
+//   }
+// };

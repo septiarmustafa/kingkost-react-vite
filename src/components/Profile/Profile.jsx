@@ -5,14 +5,16 @@ import axios from '../../store/axiosInterceptor';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless, FaStar } from 'react-icons/fa';
 import kos1 from '../../assets/img/kosan1.jpg';
 import kos2 from '../../assets/img/kosan2.jpg';
-import img from '../../assets/img/team-1.jpg';
+import defaultUserImg from '../../assets/img/def.webp';
 import { Carousel } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 function Profile() {
     const [isLoading, setIsLoading] = useState(true);
     const [apiUserData, setApiUserData] = useState(null);
     const [genders, setGenders] = useState([]);
     const [profileCompletion, setProfileCompletion] = useState(0);
+    const [imageUploaded, setImageUploaded] = useState(false); // State untuk menandai bahwa gambar telah diunggah
 
     const user = useSelector(state => state.user);
     const userId = useSelector((state) => state.authentication.userId);
@@ -21,8 +23,9 @@ function Profile() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userDataResponse = await axios.get(`/customer/v1/${userId}`);
-                const matchedUser = userDataResponse.data;
+                console.log(userId)
+                const userDataResponse = await axios.get(`/customer/user/${userId}`);
+                const matchedUser = userDataResponse.data.data;
                 setApiUserData(matchedUser);
                 const completedFields = Object.values(matchedUser).filter(value => value !== null && value !== '').length;
                 const totalFields = Object.keys(matchedUser).length;
@@ -42,10 +45,63 @@ function Profile() {
         };
 
         fetchData();
-    }, [userId]);
+    }, [userId, imageUploaded]); // Tambahkan imageUploaded ke dependencies agar useEffect dipanggil saat imageUploaded berubah
 
     const handleEditProfile = () => {
         navigate(`/edit-profile/${userId}`);
+    };
+
+    const handleImageClick = () => {
+        Swal.fire({
+            title: "Upload Image",
+            text: "Please upload an image",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonText: "Upload",
+            cancelButtonText: "Cancel",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = "image/*";
+                input.onchange = (event) => handleFileInputChange(event, apiUserData.id);
+                input.click();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                console.log("Upload canceled");
+            }
+        });
+    };
+    
+    const handleFileInputChange = async (event, userId) => {
+        const file = event.target.files[0];
+        if (file) {
+            try {
+                const formData = new FormData();
+                formData.append("file", file);
+    
+                // Post data ke endpoint yang ditentukan
+                await axios.post(`http://localhost:8080/customer/v1/upload/${userId}`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
+    
+                // Menampilkan pesan berhasil
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Upload Image Successful!',
+                    showConfirmButton: true,
+                    timer: 2000
+                });
+    
+                // Menandai bahwa gambar telah diunggah
+                setImageUploaded(prevState => !prevState);
+            } catch (error) {
+                console.error("Error uploading image:", error);
+            }
+        }
     };
 
     return (
@@ -69,7 +125,14 @@ function Profile() {
                                     {apiUserData && (
                                         <>
                                             <div className="d-flex align-items-center justify-content-start mb-3">
-                                                <img src={img} alt="Avatar" style={{ width: '70px', height: '70px', borderRadius: '20px' }} />
+                                                 {/* <img src={img} alt="Avatar" style={{ width: '70px', height: '70px', borderRadius: '20px' }} /> */}
+                                                    <img
+                                                        src={apiUserData.url ? apiUserData.url : defaultUserImg}
+                                                        className="card-img-top"
+                                                        alt="Kos 1"
+                                                        style={{ width: '70px', height: '70px', borderRadius: '20px' , objectFit: 'cover', cursor: 'pointer' }}
+                                                        onClick={handleImageClick}
+                                                    />
                                                 <h5 className="card-text text-center ms-3">{apiUserData.fullName}</h5>
                                             </div>
                                             <ul className="list-group list-group-flush">
@@ -89,8 +152,8 @@ function Profile() {
                                 </div>
                             </div>
 
-                            <div className=" card mt-3 wow fadeInUp"  style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
-                                <ul className="list-group"  style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                            <div className=" card mt-3 wow fadeInUp" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                                <ul className="list-group" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
                                     <li className="list-group-item">Kos Saya</li>
                                     <li className="list-group-item">Riwayat Pengajuan Sewa</li>
                                     <li className="list-group-item">Riwayat Kos</li>

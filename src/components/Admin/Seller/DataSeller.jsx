@@ -110,9 +110,9 @@ function DataSeller() {
                                     <td>{seller.phoneNumber}</td>
                                     <td>{seller.address}</td>
                                     <td style={{ textAlign: 'center' }}>
-                                        <span className={`badge text-white ${seller.active ? 'bg-success' : 'bg-danger'}`}
+                                        <span className={`badge text-white ${seller.active === "true" ? 'bg-success' : 'bg-danger'}`}
                                             style={{ padding: '10px', fontSize: '12px', borderRadius: '10px' }}>
-                                            {seller.active ? 'Active' : 'IsActive'}
+                                            {seller.active === "true" ? 'Active' : 'nonActive'}
                                         </span>
                                     </td>
                                     <td>
@@ -130,7 +130,7 @@ function DataSeller() {
 
                     </table>
                     {/* Pagination */}
-                    <nav>
+                    {/* <nav>
                         <ul className="pagination">
                             <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                                 <button onClick={() => paginate(currentPage - 1)} className="page-link">Previous</button>
@@ -146,7 +146,7 @@ function DataSeller() {
                                 <button onClick={() => paginate(currentPage + 1)} className="page-link">Next</button>
                             </li>
                         </ul>
-                    </nav>
+                    </nav> */}
                 </div>
             </div>
         </div>

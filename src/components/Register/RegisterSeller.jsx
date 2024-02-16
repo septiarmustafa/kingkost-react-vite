@@ -37,6 +37,8 @@ function RegisterSeller() {
     const [passwordMatch, setPasswordMatch] = useState(false); // State to track if the password matches the requirements
     const [passwordIndicator, setPasswordIndicator] = useState(""); // State to control the password indicator message
 
+    const [emailMatch, setEmailMatch] = useState(false);
+    const [emailIndicator, setEmailIndicator] = useState("");
     const [genderTypes, setGenderTypes] = useState([]);
   
     useEffect(() => {
@@ -57,9 +59,29 @@ function RegisterSeller() {
     };
 
     const validatePassword = (password) => {
-        // Validate password complexity (combination of symbols, letters, and numbers, minimum length of 8 characters)
         return /(?=.*\d)(?=.*[a-zA-Z])(?=.*\W).{8,}/.test(password);
     }
+
+    const validateEmail = (email) => {
+        return /^\S+@\S+\.\S+$/.test(email);
+    }
+
+    const validatePhoneNumber = (phoneNumber) => {
+        return /^\d+$/.test(phoneNumber);
+    }
+
+    const handleChangeEmail = (e) => {
+        const newEmail = e.target.value;
+        setNewSeller({ ...newSeller, email: newEmail });
+
+        if (validateEmail(newEmail)) {
+            setEmailMatch(true);
+            setEmailIndicator("Email is valid");
+        } else {
+            setEmailMatch(false);
+            setEmailIndicator("Email must be an format @gmail.com");
+        }
+    };
 
     const handleChangePassword = (e) => {
         const newPassword = e.target.value;
@@ -79,9 +101,9 @@ function RegisterSeller() {
         const validationErrors = {
             fullName: newSeller.fullName.trim() === "" ? "Full Name is required" : "",
             genderTypeId: newSeller.genderTypeId === "" ? "Gender is required" : "",
-            email: !/^\S+@\S+\.\S+$/.test(newSeller.email) ? "Please enter a valid email address" : "",
+            email: !validateEmail(newSeller.email) ? "Please enter a valid email address" : "",
             address: newSeller.address.trim() === "" ? "Address is required" : "",
-            phoneNumber: !/^\d+$/.test(newSeller.phoneNumber) ? "Phone number must contain only numbers" : "",
+            phoneNumber: !validatePhoneNumber(newSeller.phoneNumber) ? "Phone number must contain only numbers" : "",
             username: newSeller.username.trim() === "" ? "Username is required" : "",
             password: newSeller.password.trim() === "" ? "Password is required" : "",
         };
@@ -170,6 +192,7 @@ function RegisterSeller() {
                                                             Gender:
                                                         </label>
                                                         <select
+                                                            style={{borderColor: 'black'}}
                                                             id="form3Example1c"
                                                             className="form-select"
                                                             onChange={e => setNewSeller({ ...newSeller, genderTypeId: e.target.value })}
@@ -228,34 +251,42 @@ function RegisterSeller() {
                                                         <div className="text-danger">{errors.address}</div>
                                                     </div>
                                                 </div>
+
                                                 <div className="d-flex flex-row align-items-center ms-5">
                                                     <div className="form-outline flex-fill mb-0 mt-4">
                                                         <label htmlFor="phoneNumber" className="form-label">
                                                             <FaPhone className="me-2" />
-                                                            Phone Number:
-                                                        </label>
+                                                            Phone Number
+                                                            </label>
                                                         <input
                                                             type="text"
-                                                            id="form3Example1c"
-                                                            className="form-control"
-                                                            onChange={e => setNewSeller({ ...newSeller, phoneNumber: e.target.value })}
+                                                            id="phoneNumber"
+                                                            className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
+                                                            value={newSeller.phoneNumber}
+                                                            onChange={(e) => {
+                                                                const value = e.target.value.replace(/\D/, ''); // Hanya menerima digit/angka
+                                                                setNewSeller({ ...newSeller, phoneNumber: value });
+                                                            }}
                                                         />
-                                                        <div className="text-danger">{errors.phoneNumber}</div>
+                                                        <div className="invalid-feedback">{errors.phoneNumber}</div>
                                                     </div>
                                                 </div>
+
                                                 <div className="d-flex flex-row align-items-center ms-5">
                                                     <div className="form-outline flex-fill mb-0 mt-4">
-                                                        <label htmlFor="email" className="form-label">
-                                                            <FaEnvelope className="me-2" />
-                                                            Email:
-                                                        </label>
-                                                        <input
-                                                            type="email"
-                                                            id="form3Example3c"
-                                                            className="form-control"
-                                                            onChange={e => setNewSeller({ ...newSeller, email: e.target.value })}
-                                                        />
-                                                        <div className="text-danger">{errors.email}</div>
+                                                    <label htmlFor="email" className="form-label">
+                                                        <FaEnvelope className="me-2" />
+                                                        Email
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        id="email"
+                                                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                                        value={newSeller.email}
+                                                        onChange={handleChangeEmail}
+                                                    />
+                                                    <div className={emailMatch ? "text-success" : "text-danger"}>{emailIndicator}</div>
+                                                    <div className="invalid-feedback">{errors.email}</div>
                                                     </div>
                                                 </div>
 
@@ -264,7 +295,7 @@ function RegisterSeller() {
                                                         Register
                                                     </button>
                                                     <Link to="https://wa.me/6281234567890" target="_blank" className="btn btn-success ms-2" style={{ borderRadius: '15px' }}>
-                                                        <FaWhatsapp className="m-1" />Chat Admin
+                                                        <FaWhatsapp className="m-1" />Admin
                                                     </Link>
                                                 </div>
                                                 <p className="pb-lg-2" style={{ color: '#393f81', paddingLeft: '2.8em' }}>

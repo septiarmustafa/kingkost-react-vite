@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/king.png';
-import { GoogleLogin, GoogleLogout } from "react-google-login";
 import { useSelector, useDispatch } from "react-redux";
 import { setAuthenticated } from "../../store/authSlice.js";
 import Swal from 'sweetalert2'; 
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-import img1 from "../../assets/img/team-1.jpg";
+import defaultUserImg from '../../assets/img/def.webp';
+import axios from '../../store/axiosInterceptor';
 
-const clientId = "574506119134-iobilhshvcia2ums2k0h0bp9kaoetcma.apps.googleusercontent.com";
 
 function NavBooking() {
 
     const isAuthenticated = useSelector((state) => state.authentication.isAuthenticated);
     const username = useSelector((state) => state.authentication.username);
     const role = useSelector((state) => state.authentication.role);
+    const userId = useSelector((state) => state.authentication.userId);
   
     console.log('isAuthenticated:', isAuthenticated);
     console.log('username:', username);
@@ -40,7 +40,6 @@ function NavBooking() {
           localStorage.removeItem('isLoggedIn');
   
           localStorage.removeItem('customerData');
-          localStorage.removeItem('isLoggedIn');
   
           dispatch(setAuthenticated(false));
           Swal.fire({
@@ -56,24 +55,27 @@ function NavBooking() {
       });
     };
 
-    const [userData, setUserData] = useState(null);
+    const [UserData, setUserData] = useState(null);
 
-    const onSuccess = (res) => {
-        setUserData(res.profileObj);
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log(userId)
+                const userDataResponse = await axios.get(`/customer/user/${userId}`);
+                const matchedUser = userDataResponse.data.data;
+                setUserData(matchedUser);
+               
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
-    const onFailure = (res) => {
-        console.log("Login Failed, Res : " + res);
-    };
+        fetchData();
+    }, [userId]); 
 
-    const onLogoutSuccess = (res) => {
-        console.log("Successfully loggout ");
-        navigate('/login'); 
-    }
-
-    return(
+    return (
         <>
-          <div className="container-fluid bg-dark px-5 d-none d-lg-block">
+            <div className="container-fluid bg-dark px-5 d-none d-lg-block">
                 <div className="row gx-0">
                     <div className="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
                         <div className="d-inline-flex align-items-center" style={{ height: '45px' }}>
@@ -84,18 +86,25 @@ function NavBooking() {
                     </div>
                     <div className="col-lg-4 text-center text-lg-end">
                         <div className="d-inline-flex align-items-center" style={{ height: '45px' }}>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" to="/twitter"><i className="fab fa-twitter fw-normal"></i></Link>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" to="/facebook"><i className="fab fa-facebook-f fw-normal"></i></Link>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" to="/linkedin"><i className="fab fa-linkedin-in fw-normal"></i></Link>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" to="/instagram"><i className="fab fa-instagram fw-normal"></i></Link>
-                            <Link className="btn btn-sm btn-outline-light btn-sm-square rounded-circle" to="/youtube"><i className="fab fa-youtube fw-normal"></i></Link>
+                            <Link to="#" className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2">
+                            <i className="fab fa-twitter fw-normal"></i>
+                            </Link>
+                            <Link to="#" className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2">
+                            <i className="fab fa-facebook-f fw-normal"></i>
+                            </Link>
+                            <Link to="#" className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2">
+                            <i className="fab fa-instagram fw-normal"></i>
+                            </Link>
+                            <Link to="#" className="btn btn-sm btn-outline-light btn-sm-square rounded-circle">
+                            <i className="fab fa-youtube fw-normal"></i>
+                            </Link>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div className="container-fluid position-relative p-0">
-            <nav className="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
+                <nav className="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
                     <Link to="/" className="navbar-brand p-0">
                         <p className="m-0" style={{ color: '#cfb000', fontFamily: 'sans-serif', fontWeight: 'bold', fontSize: '1.5rem', display: 'flex', alignItems: 'center' }}>
                             <img src={logo} alt="KingKos Logo" className="logo-image" style={{ marginRight: '1rem', height: '30px' }} />
@@ -111,7 +120,7 @@ function NavBooking() {
                             <div className="nav-item dropdown">
                                 <Link to="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Cari Apa? </Link>
                                 <div className="dropdown-menu m-0">
-                                    <Link to="/kosan" className="dropdown-item" activeClassName="active">Kosan</Link>
+                                    <NavLink to="/kosan" className="dropdown-item" activeClassName="active">Kosan</NavLink>
                                     <Link to="/booking" className="dropdown-item" activeClassName="active">Booking</Link>
                                     <Link to="/testimonial" className="dropdown-item" activeClassName="active">Testimonial</Link>
                                 </div>
@@ -123,8 +132,10 @@ function NavBooking() {
                         </div>
                         {isAuthenticated ? (
                             <Dropdown>
+                                {UserData && (
+                                <>
                                 <Dropdown.Toggle variant="secondary" style={{borderRadius: '5px'}} id="dropdown-basic" className="text-black fw-bold">
-                                    <img src={img1} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
+                                    <img src={UserData.url ? UserData.url : defaultUserImg} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
                                     {username}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
@@ -144,6 +155,8 @@ function NavBooking() {
                                         </Button>
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
+                                </>
+                            )}
                             </Dropdown>
                         ) : (
                             <Link to="/login">

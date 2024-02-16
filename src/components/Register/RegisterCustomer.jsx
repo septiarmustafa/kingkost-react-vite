@@ -34,8 +34,11 @@ function RegisterCustomer() {
 
     const [passwordMatch, setPasswordMatch] = useState(false); // State to track if the password matches the requirements
     const [passwordIndicator, setPasswordIndicator] = useState(""); // State to control the password indicator message
-    const [showPassword, setShowPassword] = useState(false);
 
+    const [emailMatch, setEmailMatch] = useState(false);
+    const [emailIndicator, setEmailIndicator] = useState("");
+
+    const [showPassword, setShowPassword] = useState(false);
     const [genderTypes, setGenderTypes] = useState([]);
   
     useEffect(() => {
@@ -55,9 +58,29 @@ function RegisterCustomer() {
         else input.type = "password";
     };
 
+    const handleChangeEmail = (e) => {
+        const newEmail = e.target.value;
+        setNewCustomer({ ...newCustomer, email: newEmail });
+
+        if (validateEmail(newEmail)) {
+            setEmailMatch(true);
+            setEmailIndicator("Email is valid");
+        } else {
+            setEmailMatch(false);
+            setEmailIndicator("Email must be an format @gmail.com");
+        }
+    };
+
     const validatePassword = (password) => {
-        // Validate password complexity (combination of symbols, letters, and numbers, minimum length of 8 characters)
         return /(?=.*\d)(?=.*[a-zA-Z])(?=.*\W).{8,}/.test(password);
+    }
+
+    const validateEmail = (email) => {
+        return /^\S+@\S+\.\S+$/.test(email);
+    }
+
+    const validatePhoneNumber = (phoneNumber) => {
+        return /^\d+$/.test(phoneNumber);
     }
 
     const handleChangePassword = (e) => {
@@ -78,9 +101,9 @@ function RegisterCustomer() {
         const validationErrors = {
             fullName: newCustomer.fullName.trim() === "" ? "Full Name is required" : "",
             genderTypeId: newCustomer.genderTypeId === "" ? "Gender is required" : "",
-            email: !/^\S+@\S+\.\S+$/.test(newCustomer.email) ? "Please enter a valid email address" : "",
+            email: !validateEmail(newCustomer.email) ? "Please enter a valid email address" : "",
             address: newCustomer.address.trim() === "" ? "Address is required" : "",
-            phoneNumber: !/^\d+$/.test(newCustomer.phoneNumber) ? "Phone number must contain only numbers" : "",
+            phoneNumber: !validatePhoneNumber(newCustomer.phoneNumber) ? "Phone number must contain only numbers" : "",
             username: newCustomer.username.trim() === "" ? "Username is required" : "",
             password: newCustomer.password.trim() === "" ? "Password is required" : "",
         };
@@ -170,6 +193,7 @@ function RegisterCustomer() {
                                                             Gender:
                                                         </label>
                                                         <select
+                                                            style={{borderColor: 'black'}}
                                                             id="form3Example1c"
                                                             className="form-select"
                                                             onChange={e => setNewCustomer({ ...newCustomer, genderTypeId: e.target.value })}
@@ -228,34 +252,42 @@ function RegisterCustomer() {
                                                         <div className="text-danger">{errors.address}</div>
                                                     </div>
                                                 </div>
-                                                <div className="d-flex flex-row align-items-center ms-5">
+
+                                               <div className="d-flex flex-row align-items-center ms-5">
                                                     <div className="form-outline flex-fill mb-0 mt-4">
-                                                        <label htmlFor="phoneNumber" className="form-label">
-                                                            <FaPhone className="me-2" />
-                                                            Phone Number:
+                                                    <label htmlFor="phoneNumber" className="form-label">
+                                                        <FaPhone className="me-2" />
+                                                        Phone Number
                                                         </label>
-                                                        <input
-                                                            type="text"
-                                                            id="form3Example1c"
-                                                            className="form-control"
-                                                            onChange={e => setNewCustomer({ ...newCustomer, phoneNumber: e.target.value })}
-                                                        />
-                                                        <div className="text-danger">{errors.phoneNumber}</div>
+                                                    <input
+                                                        type="text"
+                                                        id="phoneNumber"
+                                                        className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
+                                                        value={newCustomer.phoneNumber}
+                                                        onChange={(e) => {
+                                                            const value = e.target.value.replace(/\D/, ''); // Hanya menerima digit/angka
+                                                            setNewCustomer({ ...newCustomer, phoneNumber: value });
+                                                        }}
+                                                    />
+                                                    <div className="invalid-feedback">{errors.phoneNumber}</div>
                                                     </div>
                                                 </div>
+
                                                 <div className="d-flex flex-row align-items-center ms-5">
                                                     <div className="form-outline flex-fill mb-0 mt-4">
-                                                        <label htmlFor="email" className="form-label">
-                                                            <FaEnvelope className="me-2" />
-                                                            Email:
-                                                        </label>
-                                                        <input
-                                                            type="email"
-                                                            id="form3Example3c"
-                                                            className="form-control"
-                                                            onChange={e => setNewCustomer({ ...newCustomer, email: e.target.value })}
-                                                        />
-                                                        <div className="text-danger">{errors.email}</div>
+                                                    <label htmlFor="email" className="form-label">
+                                                        <FaEnvelope className="me-2" />
+                                                        Email
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        id="email"
+                                                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                                        value={newCustomer.email}
+                                                        onChange={handleChangeEmail}
+                                                    />
+                                                    <div className={emailMatch ? "text-success" : "text-danger"}>{emailIndicator}</div>
+                                                    <div className="invalid-feedback">{errors.email}</div>
                                                     </div>
                                                 </div>
 

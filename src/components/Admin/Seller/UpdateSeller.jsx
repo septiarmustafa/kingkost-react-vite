@@ -18,6 +18,7 @@ function UpdateSeller() {
         phoneNumber: "",
         username: "",
         password: "",
+        active: true // Set default active value
     });
 
     const [errors, setErrors] = useState({
@@ -144,6 +145,7 @@ function UpdateSeller() {
             phoneNumber: "",
             username: "",
             password: "",
+            active: true // Reset default active value
         });
         setErrors({
             fullName: "",
@@ -177,16 +179,16 @@ function UpdateSeller() {
                         <div className="card-body p-5">
                             <h3 className="card-title text-center mb-5">Form Update Seller</h3>
                             <form className="row g-3" onSubmit={handleUpdateSeller}>
-                                <div className="col-6">
-                                        <label htmlFor="id" className="form-label">ID</label>
-                                        <input
-                                            type="text"
-                                            id="id"
-                                            className="form-control"
-                                            value={sellerData.id}
-                                            disabled
-                                        />
-                                </div>
+                                {/* <div className="col-6">
+                                    <label htmlFor="id" className="form-label">ID</label>
+                                    <input
+                                        type="text"
+                                        id="id"
+                                        className="form-control"
+                                        value={sellerData.id}
+                                        disabled
+                                    />
+                                </div> */}
                                 <div className="col-6">
                                     <label htmlFor="fullName" className="form-label">Full Name</label>
                                     <input
@@ -195,15 +197,14 @@ function UpdateSeller() {
                                         className={`form-control ${errors.fullName ? 'is-invalid' : ''}`}
                                         value={sellerData.fullName}
                                         onChange={(e) => setSellerData({ ...sellerData, fullName: e.target.value })}
-                                        style={{ borderColor: 'red'}} 
                                     />
-
                                     <div className="invalid-feedback">{errors.fullName}</div>
                                 </div>
                                 <div className="col-6">
                                     <label htmlFor="genderTypeId" className="form-label">Gender</label>
                                     <select
                                         id="genderTypeId"
+                                        style={{ borderColor: 'black'}} 
                                         className={`form-select ${errors.genderTypeId ? 'is-invalid' : ''}`}
                                         value={sellerData.genderTypeId}
                                         onChange={(e) => setSellerData({ ...sellerData, genderTypeId: e.target.value })}
@@ -268,18 +269,18 @@ function UpdateSeller() {
                                 </div>
                                 <div className="col-6">
                                     <label htmlFor="active" className="form-label">Active</label>
-                                    <div className="form-check">
-                                        <input
-                                            type="checkbox"
-                                            id="active"
-                                            className="form-check-input"
-                                            checked={sellerData.active}
-                                            onChange={(e) => setSellerData({ ...sellerData, active: e.target.checked })}
-                                        />
-                                        <label className="form-check-label" htmlFor="active">Active</label>
-                                    </div>
+                                    <select
+                                        id="active"
+                                        style={{ borderColor: 'black'}} 
+                                        className={`form-select ${errors.active ? 'is-invalid' : ''}`}
+                                        value={sellerData.active.toString()} // Convert boolean value to string
+                                        onChange={(e) => setSellerData({ ...sellerData, active: e.target.value === "true" })}
+                                    >
+                                        <option value="true">Active</option>
+                                        <option value="false">Inactive</option>
+                                    </select>
+                                    <div className="invalid-feedback">{errors.active}</div>
                                 </div>
-
                                 <div className="col-6">
                                     <label htmlFor="email" className="form-label">Email</label>
                                     <input

@@ -30,6 +30,9 @@ function AddCustomer() {
 
     const [passwordMatch, setPasswordMatch] = useState(false);
     const [passwordIndicator, setPasswordIndicator] = useState("");
+
+    const [emailMatch, setEmailMatch] = useState(false);
+    const [emailIndicator, setEmailIndicator] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [genderTypes, setGenderTypes] = useState([]);
 
@@ -43,6 +46,18 @@ function AddCustomer() {
             });
     }, []);
 
+    const handleChangeEmail = (e) => {
+        const newEmail = e.target.value;
+        setNewCustomer({ ...newCustomer, email: newEmail });
+
+        if (validateEmail(newEmail)) {
+            setEmailMatch(true);
+            setEmailIndicator("Email is valid");
+        } else {
+            setEmailMatch(false);
+            setEmailIndicator("Email must be an format @gmail.com");
+        }
+    };
 
     const handleShowPass = () => {
         let input = document.getElementById("password");
@@ -50,8 +65,17 @@ function AddCustomer() {
         else input.type = "password";
     };
 
+
     const validatePassword = (password) => {
         return /(?=.*\d)(?=.*[a-zA-Z])(?=.*\W).{8,}/.test(password);
+    }
+
+    const validateEmail = (email) => {
+        return /^\S+@\S+\.\S+$/.test(email);
+    }
+
+    const validatePhoneNumber = (phoneNumber) => {
+        return /^\d+$/.test(phoneNumber);
     }
 
     const handleChangePassword = (e) => {
@@ -71,9 +95,9 @@ function AddCustomer() {
         const validationErrors = {
             fullName: newCustomer.fullName.trim() === "" ? "Full Name is required" : "",
             genderTypeId: newCustomer.genderTypeId === "" ? "Gender is required" : "",
-            email: !/^\S+@\S+\.\S+$/.test(newCustomer.email) ? "Please enter a valid email address" : "",
+            email: !validateEmail(newCustomer.email) ? "Please enter a valid email address" : "",
             address: newCustomer.address.trim() === "" ? "Address is required" : "",
-            phoneNumber: !/^\d+$/.test(newCustomer.phoneNumber) ? "Phone number must contain only numbers" : "",
+            phoneNumber: !validatePhoneNumber(newCustomer.phoneNumber) ? "Phone number must contain only numbers" : "",
             username: newCustomer.username.trim() === "" ? "Username is required" : "",
             password: newCustomer.password.trim() === "" ? "Password is required" : "",
         };
@@ -169,7 +193,7 @@ function AddCustomer() {
                                         className={`form-control ${errors.fullName ? 'is-invalid' : ''}`}
                                         value={newCustomer.fullName}
                                         onChange={(e) => setNewCustomer({ ...newCustomer, fullName: e.target.value })}
-                                        style={{ borderColor: 'red'}} 
+                                        style={{ borderColor: 'black'}} 
                                     />
 
                                     <div className="invalid-feedback">{errors.fullName}</div>
@@ -177,6 +201,7 @@ function AddCustomer() {
                                 <div className="col-6">
                                     <label htmlFor="genderTypeId" className="form-label">Gender</label>
                                     <select
+                                        style={{ borderColor: 'black'}} 
                                         id="genderTypeId"
                                         className={`form-select ${errors.genderTypeId ? 'is-invalid' : ''}`}
                                         value={newCustomer.genderTypeId}
@@ -217,9 +242,39 @@ function AddCustomer() {
                                     />
                                     <div className="invalid-feedback">{errors.username}</div>
                                 </div>
+                                
                                 <div className="col-6">
-                                    <label htmlFor="address" className="form-label">Address</label>
+                                    <label htmlFor="phoneNumber" className="form-label">Phone Number</label>
                                     <input
+                                        type="text"
+                                        id="phoneNumber"
+                                        className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
+                                        value={newCustomer.phoneNumber}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/\D/, ''); // Hanya menerima digit/angka
+                                            setNewCustomer({ ...newCustomer, phoneNumber: value });
+                                        }}
+                                    />
+                                    <div className="invalid-feedback">{errors.phoneNumber}</div>
+                                </div>
+
+                                <div className="col-6">
+                                    <label htmlFor="email" className="form-label">Email</label>
+                                    <input
+                                        type="text"
+                                        id="email"
+                                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                        value={newCustomer.email}
+                                        onChange={handleChangeEmail}
+                                    />
+                                    <div className={emailMatch ? "text-success" : "text-danger"}>{emailIndicator}</div>
+                                    <div className="invalid-feedback">{errors.email}</div>
+                                </div>
+
+                                <div className="col-12">
+                                    <label htmlFor="address" className="form-label">Address</label>
+                                    <textarea
+                                        style={{ borderColor: 'black'}} 
                                         type="text"
                                         id="address"
                                         className={`form-control ${errors.address ? 'is-invalid' : ''}`}
@@ -228,28 +283,7 @@ function AddCustomer() {
                                     />
                                     <div className="invalid-feedback">{errors.address}</div>
                                 </div>
-                                <div className="col-6">
-                                    <label htmlFor="phoneNumber" className="form-label">Phone Number</label>
-                                    <input
-                                        type="text"
-                                        id="phoneNumber"
-                                        className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
-                                        value={newCustomer.phoneNumber}
-                                        onChange={(e) => setNewCustomer({ ...newCustomer, phoneNumber: e.target.value })}
-                                    />
-                                    <div className="invalid-feedback">{errors.phoneNumber}</div>
-                                </div>
-                                <div className="col-6">
-                                    <label htmlFor="email" className="form-label">Email</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                                        value={newCustomer.email}
-                                        onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
-                                    />
-                                    <div className="invalid-feedback">{errors.email}</div>
-                                </div>
+
                                 <div className="text-center" style={{paddingTop: '30px'}}>
                                     <button type="submit" className="btn btn-success me-3" style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '10px'}}>Add Customer</button>
                                     <button type="button" className="btn btn-dark" style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '10px'}} onClick={handleResetForm}>Reset</button>

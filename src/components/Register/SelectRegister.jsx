@@ -8,12 +8,12 @@ function SelectRegister() {
             <div className="container">
                 <div className="row d-flex justify-content-center align-items-center">
                     <div className="col-lg-12">
-                        <div className="card text-center" style={{ borderRadius: '2rem', backgroundColor: 'light', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', transition: '0.3s' }}>
+                        <div className="card text-center" style={{ borderRadius: '2rem', backgroundColor: 'white', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', transition: '0.3s' }}>
                             <div className="card-body">
                                 <h5 className="card-title py-2">REGISTER AS</h5>
                                 <div className="row">
                                     <div className="col-md-6 col-12">
-                                        <div className="card wow fadeInUp" style={{ marginBottom: '1rem', borderRadius: '15px', backgroundColor: '#f2f2f2', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', transition: '0.3s' }}>
+                                        <div className="card wow fadeInUp" style={{ marginBottom: '1rem', borderRadius: '15px', backgroundColor: '#fff', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', transition: '0.3s' }}>
                                             <div className="card-body">
                                                 <h5 className="card-title">Customer (Pencari Kos)</h5>
                                                 <img src={img1} alt="" />
@@ -23,7 +23,7 @@ function SelectRegister() {
                                         </div>
                                     </div>
                                     <div className="col-md-6 col-12">
-                                        <div className="card wow fadeInUp" style={{ marginBottom: '1rem', borderRadius: '15px', backgroundColor: '#f2f2f2', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', transition: '0.3s' }}>
+                                        <div className="card wow fadeInUp" style={{ marginBottom: '1rem', borderRadius: '15px', backgroundColor: '#fff', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', transition: '0.3s' }}>
                                             <div className="card-body">
                                                 <h5 className="card-title">Seller (Pemilik Kos)</h5>
                                                 <img src={img2} alt="" />

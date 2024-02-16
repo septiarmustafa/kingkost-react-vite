@@ -119,7 +119,7 @@ function Customer() {
                         </tbody>
                     </table>
                     {/* Pagination */}
-                    <nav>
+                    {/* <nav>
                         <ul className="pagination">
                             <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                                 <button onClick={() => paginate(currentPage - 1)} className="page-link">Previous</button>
@@ -135,7 +135,7 @@ function Customer() {
                                 <button onClick={() => paginate(currentPage + 1)} className="page-link">Next</button>
                             </li>
                         </ul>
-                    </nav>
+                    </nav> */}
                 </div>
             </div>
         </div>

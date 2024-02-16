@@ -18,17 +18,18 @@ import PageBooking from "./pages/PageBooking";
 import PageDetailKosan from "./pages/PageDetailKosan";
 import PageProfile from "./pages/PageProfile";
 
-const cliendId = "574506119134-iobilhshvcia2ums2k0h0bp9kaoetcma.apps.googleusercontent.com";
 
-import { gapi } from "gapi-script";
 import PageRegisterCustomer from "./pages/PageRegisterCustomer";
 import PageSelectRegister from "./pages/PageSelectRegister";
 import PageRegisterSeller from "./pages/PageRegisterSeller";
 import PageEditProfile from "./pages/PageEditProfile";
-import LoginCustomer from "./components/Login/LoginCustomer";
-import LoginSeller from "./components/Login/LoginSeller";
-import LoginAdmin from "./components/Login/LoginAdmin";
-import SelectLogin from "./components/Login/SelectLogin";
+
+
+import Login from "./components/Login/Login";
+// import LoginCustomer from "./components/Login/LoginCustomer";
+// import LoginSeller from "./components/Login/LoginSeller";
+// import LoginAdmin from "./components/Login/LoginAdmin";
+// import SelectLogin from "./components/Login/SelectLogin";
 import PageDashboard from "./pages/Admin/PageDashboard/PageDashboard";
 import PageCustomer from "./pages/Admin/PageCustomer/PageCustomer";
 import PageAddCustomer from "./pages/Admin/PageCustomer/PageAddCustomer";
@@ -37,18 +38,16 @@ import PageDataKosan from "./pages/Admin/PageKosan/PageDataKosan";
 import PageDataSeller from "./pages/Admin/PageSeller/PageDataSeller";
 import PageAddSeller from "./pages/Admin/PageSeller/PageAddSeller";
 import PageUpdateSeller from "./pages/Admin/PageSeller/PageUpdateSeller";
+import PageDataTestimonial from "./pages/Admin/PageTestimonial/PageTestimonial";
+import PageAddTestimonial from "./pages/Admin/PageTestimonial/PageAddTestimonial";
+import PageUpdateTestimonial from "./pages/Admin/PageTestimonial/PageUpdateTestimonial";
+import PageAddDataKosan from "./pages/Admin/PageKosan/PageAddDataKosan";
+import PageUpdateDataKosan from "./pages/Admin/PageKosan/PageUpdateDataKosan";
+import PageMyProfile from "./pages/Admin/PageMyProfile/PageMyProfile";
+import PageEditMyProfile from "./pages/Admin/PageMyProfile/PageEditMyProfile";
 
 function App() {
 
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        cliendId: cliendId,
-        scope: "",
-      })
-    };
-    gapi.load('client:auth2', start)
-  })
   
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.authentication.isAuthenticated);
@@ -75,28 +74,28 @@ function App() {
   return (
     <>
       <Routes>
-      {/* <Route
-        path="/login"
-        element={isLoggedIn ? (
-          // Jika pengguna sudah login
-          role === "ROLE_SELLER" || role === "ROLE_ADMIN" ? (
-            // Jika role adalah ROLE_SELLER atau ROLE_ADMIN, redirect ke Dashboard
-            <Navigate to="/dashboard" replace />
-          ) : role === "ROLE_CUSTOMER" ? (
-            // Jika role adalah ROLE_CUSTOMER, redirect ke Home
-            <Navigate to="/" replace />
+        <Route
+          path="/login"
+          element={isLoggedIn ? (
+            // Jika pengguna sudah login
+            role === "ROLE_SELLER" || role === "ROLE_ADMIN" ? (
+              // Jika role adalah ROLE_SELLER atau ROLE_ADMIN, redirect ke Dashboard
+              <Navigate to="/dashboard" replace />
+            ) : role === "ROLE_CUSTOMER" ? (
+              // Jika role adalah ROLE_CUSTOMER, redirect ke Home
+              <Navigate to="/" replace />
+            ) : (
+              // Jika role tidak sesuai dengan yang diharapkan, tampilkan halaman Home
+              <Home />
+            )
           ) : (
-            // Jika role tidak sesuai dengan yang diharapkan, tampilkan halaman Home
-            <Home />
-          )
-        ) : (
-          // Jika pengguna belum login, tampilkan halaman Login
-          <Login />
-        )}
-      /> */}
+            // Jika pengguna belum login, tampilkan halaman Login
+            <Login />
+          )}
+        />
 
-        <Route path={"/login"} element={<SelectLogin />} />
-
+        {/* <Route path={"/login"} element={<SelectLogin />} /> */}
+{/* 
         <Route
           path="/login/customer"
           element={
@@ -117,9 +116,9 @@ function App() {
               <LoginCustomer />
             )
         }
-        />
+        /> */}
 
-        <Route
+        {/* <Route
           path="/login/seller"
           element={
             isLoggedIn ? (
@@ -155,7 +154,7 @@ function App() {
               <LoginAdmin />
             )
         }
-        />
+        /> */}
 
 
         {/* <Route path="/login" element={<Login />} /> */}
@@ -178,6 +177,7 @@ function App() {
 
         <Route path="/booking" element={<PageBooking />} />
 
+        {/* customer */}
         <Route path="/profile" element={<PageProfile />} />
         <Route path="/edit-profile/:id" element={<PageEditProfile />} />
 
@@ -189,10 +189,20 @@ function App() {
         <Route path="/updateCustomer/:id" element={<PageUpdateCustomer />} />
 
         <Route path="/datakosan" element={<PageDataKosan />} />
+        <Route path="/addDataKosan" element={<PageAddDataKosan />} />
+        <Route path="/updateDataKosan/:id" element={<PageUpdateDataKosan />} />
 
         <Route path="/dataSeller" element={<PageDataSeller />} />
         <Route path="/addDataSeller" element={<PageAddSeller />} />
         <Route path="/updateSeller/:id" element={<PageUpdateSeller />} />
+
+        <Route path="/dataTestimoni" element={<PageDataTestimonial />} />
+        <Route path="/addDataTestimoni" element={<PageAddTestimonial />} />
+        <Route path="/updateDataTestimoni/:id" element={<PageUpdateTestimonial />} />
+
+        {/* Seller */}
+        <Route path="/myProfile" element={<PageMyProfile />} />
+        <Route path="/edit-myProfile/:id" element={<PageEditMyProfile />} />
 
 
          {/* <Route

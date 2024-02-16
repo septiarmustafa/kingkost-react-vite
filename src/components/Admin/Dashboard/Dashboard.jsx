@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from '../../../store/axiosInterceptor';
 import { Link } from 'react-router-dom';
 import SideBar from '../../../components/Admin/SideBar/SideBar';
 import NavbarAdmin from '../../../components/Admin/Navbar/NavbarAdmin';
@@ -15,7 +16,60 @@ import avatar4 from '../../../assets/Admin/img/avatar/avatar-face-05.png'
 
 function Dashboard() {
 
-    
+
+    const [totalCustomers, setTotalCustomers] = useState(0);
+    const [totalSellers, setTotalSellers] = useState(0);
+    const [totalKosans, setTotalKosans] = useState(0);
+    const [totalReviews, setTotalReviews] = useState(0);
+
+    useEffect(() => {
+        axios.get('/customer/v1')
+            .then(response => {
+                const customers = response.data; // Ambil data customer dari respons API
+                const total = customers.length; // Hitung jumlah data customer
+                setTotalCustomers(total); // Update state dengan jumlah total customer
+            })
+            .catch(error => {
+                console.error('Error fetching customer data:', error);
+            });
+    }, []);
+
+    useEffect(() => {
+        axios.get('/seller/v1')
+            .then(response => {
+                const sellers = response.data; 
+                const total = sellers.length;
+                setTotalSellers(total); 
+            })
+            .catch(error => {
+                console.error('Error fetching seller data:', error);
+            });
+    }, []);
+
+    useEffect(() => {
+        axios.get('/kost')
+            .then(response => {
+                const kosans = response.data.data; 
+                const total = kosans.length;
+                setTotalKosans(total); 
+            })
+            .catch(error => {
+                console.error('Error fetching kosan data:', error);
+            });
+    }, []);
+
+    useEffect(() => {
+        axios.get('/review/v1')
+            .then(response => {
+                const reviews = response.data; 
+                const total = reviews.length;
+                setTotalReviews(total); 
+            })
+            .catch(error => {
+                console.error('Error fetching kosan data:', error);
+            });
+    }, []);
+
   return (
     <main className="main users chart-page" id="skip-target">
       <div className="container">
@@ -24,77 +78,97 @@ function Dashboard() {
             <div className="col-md-6 col-xl-3">
                 <article className="stat-cards-item">
                     <div className="stat-cards-icon primary">
-                        <i data-feather="bar-chart-2" aria-hidden="true"></i>
+                        <i data-feather="users" aria-hidden="true"></i>
                     </div>
                     <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">1478 286</p>
-                        <p className="stat-cards-info__title">Total visits</p>
-                        <p className="stat-cards-info__progress">
-                            <span className="stat-cards-info__profit success">
-                                <i data-feather="trending-up" aria-hidden="true"></i>4.07%
-                            </span>
-                            Last month
-                        </p>
+                        <p className="stat-cards-info__num">Total : {totalCustomers}</p>
+                        <p className="stat-cards-info__title">Customer</p>
                     </div>
                 </article>
             </div>
             <div className="col-md-6 col-xl-3">
                 <article className="stat-cards-item">
-                    <div className="stat-cards-icon warning">
-                        <i data-feather="file" aria-hidden="true"></i>
+                    <div className="stat-cards-icon primary">
+                        <i data-feather="user" aria-hidden="true"></i>
                     </div>
                     <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">1478 286</p>
-                        <p className="stat-cards-info__title">Total visits</p>
-                        <p className="stat-cards-info__progress">
-                            <span className="stat-cards-info__profit success">
-                                <i data-feather="trending-up" aria-hidden="true"></i>0.24%
-                            </span>
-                            Last month
-                        </p>
+                        <p className="stat-cards-info__num">Total : {totalSellers}</p>
+                        <p className="stat-cards-info__title">Seller</p>
                     </div>
                 </article>
             </div>
             <div className="col-md-6 col-xl-3">
                 <article className="stat-cards-item">
-                    <div className="stat-cards-icon purple">
-                        <i data-feather="file" aria-hidden="true"></i>
+                    <div className="stat-cards-icon primary">
+                        <i data-feather="home" aria-hidden="true"></i>
                     </div>
                     <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">1478 286</p>
-                        <p className="stat-cards-info__title">Total visits</p>
-                        <p className="stat-cards-info__progress">
-                            <span className="stat-cards-info__profit danger">
-                                <i data-feather="trending-down" aria-hidden="true"></i>1.64%
-                            </span>
-                            Last month
-                        </p>
+                        <p className="stat-cards-info__num">Total : {totalKosans}</p>
+                        <p className="stat-cards-info__title">Kosan</p>
                     </div>
                 </article>
             </div>
             <div className="col-md-6 col-xl-3">
                 <article className="stat-cards-item">
-                    <div className="stat-cards-icon success">
-                        <i data-feather="feather" aria-hidden="true"></i>
+                    <div className="stat-cards-icon primary">
+                        <i data-feather="star" aria-hidden="true"></i>
                     </div>
                     <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">1478 286</p>
-                        <p className="stat-cards-info__title">Total visits</p>
-                        <p className="stat-cards-info__progress">
-                            <span className="stat-cards-info__profit warning">
-                                <i data-feather="trending-up" aria-hidden="true"></i>0.00%
-                            </span>
-                            Last month
-                        </p>
+                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
+                        <p className="stat-cards-info__title">Testimonial</p>
                     </div>
                 </article>
             </div>
         </div>
+        <div className="row stat-cards">
+            <div className="col-md-6 col-xl-3">
+                <article className="stat-cards-item">
+                    <div className="stat-cards-icon primary">
+                        <i data-feather="star" aria-hidden="true"></i>
+                    </div>
+                    <div className="stat-cards-info">
+                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
+                        <p className="stat-cards-info__title">Testimonial</p>
+                    </div>
+                </article>
+            </div>
+            <div className="col-md-6 col-xl-3">
+                <article className="stat-cards-item">
+                    <div className="stat-cards-icon primary">
+                        <i data-feather="star" aria-hidden="true"></i>
+                    </div>
+                    <div className="stat-cards-info">
+                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
+                        <p className="stat-cards-info__title">Testimonial</p>
+                    </div>
+                </article>
+            </div>
+            <div className="col-md-6 col-xl-3">
+                <article className="stat-cards-item">
+                    <div className="stat-cards-icon primary">
+                        <i data-feather="star" aria-hidden="true"></i>
+                    </div>
+                    <div className="stat-cards-info">
+                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
+                        <p className="stat-cards-info__title">Testimonial</p>
+                    </div>
+                </article>
+            </div>
+            <div className="col-md-6 col-xl-3">
+                <article className="stat-cards-item">
+                    <div className="stat-cards-icon primary">
+                        <i data-feather="star" aria-hidden="true"></i>
+                    </div>
+                    <div className="stat-cards-info">
+                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
+                        <p className="stat-cards-info__title">Testimonial</p>
+                    </div>
+                </article>
+            </div>
+        
+        </div>
         <div className="row">
-            <div className="col-lg-9">
-                <div className="chart">
-                    <canvas id="myChart" aria-label="Site statistics" role="img"></canvas>
-                </div>
+            <div className="col-lg-12">
                 <div className="users-table table-wrapper">
                     <table className="posts-table">
                         <thead>
@@ -259,107 +333,6 @@ function Dashboard() {
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div className="col-lg-3">
-            <article className="customers-wrapper">
-                <canvas
-                    id="customersChart"
-                    aria-label="Customers statistics"
-                    role="img"
-                ></canvas>
-            </article>
-            <article className="white-block">
-                <div className="top-cat-title">
-                    <h3>Top categories</h3>
-                    <p>28 Categories, 1400 Posts</p>
-                </div>
-                <ul className="top-cat-list">
-                    <li>
-                        <Link to="#">
-                            <div className="top-cat-list__title">
-                                Lifestyle <span>8.2k</span>
-                            </div>
-                            <div className="top-cat-list__subtitle">
-                                Dailiy lifestyle articles
-                                <span className="purple">+472</span>
-                            </div>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="#">
-                            <div className="top-cat-list__title">
-                                Tutorials <span>8.2k</span>
-                            </div>
-                            <div className="top-cat-list__subtitle">
-                                Coding tutorials <span className="blue">+472</span>
-                            </div>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="#">
-                            <div className="top-cat-list__title">
-                                Technology <span>8.2k</span>
-                            </div>
-                            <div className="top-cat-list__subtitle">
-                                Dailiy technology articles
-                                <span className="danger">+472</span>
-                            </div>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="#">
-                            <div className="top-cat-list__title">
-                                UX design <span>8.2k</span>
-                            </div>
-                            <div className="top-cat-list__subtitle">
-                                UX design tips <span className="success">+472</span>
-                            </div>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="#">
-                            <div className="top-cat-list__title">
-                                Interaction tips <span>8.2k</span>
-                            </div>
-                            <div className="top-cat-list__subtitle">
-                                Interaction articles <span className="warning">+472</span>
-                            </div>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="#">
-                            <div className="top-cat-list__title">
-                                App development <span>8.2k</span>
-                            </div>
-                            <div className="top-cat-list__subtitle">
-                                Mobile development articles
-                                <span className="warning">+472</span>
-                            </div>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="#">
-                            <div className="top-cat-list__title">
-                                Nature <span>8.2k</span>
-                            </div>
-                            <div className="top-cat-list__subtitle">
-                                Wildlife animal articles
-                                <span className="warning">+472</span>
-                            </div>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="#">
-                            <div className="top-cat-list__title">
-                                Geography <span>8.2k</span>
-                            </div>
-                            <div className="top-cat-list__subtitle">
-                                Geography articles <span className="primary">+472</span>
-                            </div>
-                        </Link>
-                    </li>
-                </ul>
-            </article>
             </div>
         </div>
       </div>

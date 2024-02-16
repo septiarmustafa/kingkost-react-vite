@@ -52,8 +52,7 @@ function NavbarAdmin() {
             <div className="container main-nav">
                 <div className="main-nav-start">
                     <div className="search-wrapper">
-                        <i data-feather="search" aria-hidden="true"></i>
-                        <input type="text" placeholder="Enter keywords ..." required />
+                        
                     </div>
                 </div>
                 <div className="main-nav-end">
@@ -135,14 +134,14 @@ function NavbarAdmin() {
                                 <Dropdown.Menu>
                                     <Dropdown.Item  className="text-black">{role}</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item  className="text-black">
-                                        <NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink>
-                                    </Dropdown.Item>
-                                    <Dropdown.Divider />
-                                    <Dropdown.Item  className="text-black">
-                                        <NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink>
-                                    </Dropdown.Item>
-                                    <Dropdown.Divider />
+                                    {role === 'ROLE_SELLER' && ( // Memeriksa jika rolenya adalah ROLE_SELLER
+                                        <>
+                                            <Dropdown.Item  className="text-black">
+                                                <NavLink to="/myProfile" className="dropdown-item" activeClassName="active">Profile</NavLink>
+                                            </Dropdown.Item>
+                                            <Dropdown.Divider />
+                                        </>
+                                    )}
                                     <Dropdown.Item onClick={handleLogout} className="white text-white">
                                         <Button variant="danger" className="w-100" style={{borderRadius: '15px',}}>
                                             Logout

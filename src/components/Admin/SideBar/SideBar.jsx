@@ -97,24 +97,25 @@ function SideBar() {
                             <NavLink to="/datakosan"><span className="icon"><i className="fas fa-building"></i></span>Kosan</NavLink>
                         </li>
                         <li>
-                            <NavLink to="/manage-order"><span className="icon"><i className="fas fa-shopping-cart"></i></span>Order</NavLink>
+                            <NavLink to="/manage-order"><span className="icon"><i className="fas fa-shopping-cart"></i></span>Booking</NavLink>
                         </li>
                     </ul>
                     <span className="system-menu__title">Manage Data Testimonial</span>
                     <ul className="sidebar-body-menu">
                         <li>
-                            <NavLink to="/testimoni"><span className="icon"><i className="fas fa-comment"></i></span>Testimoni</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/manage-order"><span className="icon"><i className="fas fa-shopping-cart"></i></span>Order</NavLink>
+                            <NavLink to="/dataTestimoni"><span className="icon"><i className="fas fa-comment"></i></span>Testimoni</NavLink>
                         </li>
                     </ul>
-                    <span className="system-menu__title">System</span>
-                    <ul className="sidebar-body-menu">
-                        <li>
-                            <NavLink to="/ss"><span className="icon"><i className="fas fa-cog"></i></span>Settings</NavLink>
-                        </li>
-                    </ul>
+                    {role === 'ROLE_SELLER' && ( // Memeriksa jika rolenya adalah ROLE_SELLER
+                        <>
+                        <span className="system-menu__title">Profile</span>
+                        <ul className="sidebar-body-menu">
+                            <li>
+                                <NavLink to="/myProfile"><span className="icon"><i className="fas fa-cog"></i></span>My Profile</NavLink>
+                            </li>
+                        </ul>
+                        </>
+                    )}
                 </div>
 
             </div>

@@ -179,16 +179,6 @@ function UpdateCustomer() {
                             <h3 className="card-title text-center mb-5">Form Update Customer</h3>
                             <form className="row g-3" onSubmit={handleUpdateCustomer}>
                                 <div className="col-6">
-                                        <label htmlFor="id" className="form-label">ID</label>
-                                        <input
-                                            type="text"
-                                            id="id"
-                                            className="form-control"
-                                            value={customerData.id}
-                                            disabled
-                                        />
-                                </div>
-                                <div className="col-6">
                                     <label htmlFor="fullName" className="form-label">Full Name</label>
                                     <input
                                         type="text"
@@ -205,6 +195,7 @@ function UpdateCustomer() {
                                     <label htmlFor="genderTypeId" className="form-label">Gender</label>
                                     <select
                                         id="genderTypeId"
+                                        style={{ borderColor: 'black'}} 
                                         className={`form-select ${errors.genderTypeId ? 'is-invalid' : ''}`}
                                         value={customerData.genderTypeId}
                                         onChange={(e) => setCustomerData({ ...customerData, genderTypeId: e.target.value })}
@@ -246,17 +237,6 @@ function UpdateCustomer() {
                                     <div className="invalid-feedback">{errors.username}</div>
                                 </div>
                                 <div className="col-6">
-                                    <label htmlFor="address" className="form-label">Address</label>
-                                    <input
-                                        type="text"
-                                        id="address"
-                                        className={`form-control ${errors.address ? 'is-invalid' : ''}`}
-                                        value={customerData.address}
-                                        onChange={(e) => setCustomerData({ ...customerData, address: e.target.value })}
-                                    />
-                                    <div className="invalid-feedback">{errors.address}</div>
-                                </div>
-                                <div className="col-6">
                                     <label htmlFor="phoneNumber" className="form-label">Phone Number</label>
                                     <input
                                         type="text"
@@ -277,6 +257,18 @@ function UpdateCustomer() {
                                         onChange={(e) => setCustomerData({ ...customerData, email: e.target.value })}
                                     />
                                     <div className="invalid-feedback">{errors.email}</div>
+                                </div>
+                                <div className="col-12">
+                                    <label htmlFor="address" className="form-label">Address</label>
+                                    <textarea
+                                        type="text"
+                                        style={{ borderColor: 'black'}} 
+                                        id="address"
+                                        className={`form-control ${errors.address ? 'is-invalid' : ''}`}
+                                        value={customerData.address}
+                                        onChange={(e) => setCustomerData({ ...customerData, address: e.target.value })}
+                                    />
+                                    <div className="invalid-feedback">{errors.address}</div>
                                 </div>
                                 <div className="text-center" style={{paddingTop: '30px'}}>
                                     <button type="submit" className="btn btn-success me-3" style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '10px'}}>Update Customer</button>
