@@ -155,9 +155,10 @@ function Login() {
                           </div>
 
                           <div className="mb-3">
-                            <a href="#!" className="text-decoration-none" style={{color: 'blue'}}>
-                              Forgot password?
-                            </a>
+                            <Link to="/forgot-password" className="text-decoration-none"
+                                style={{color: 'blue'}}>
+                                Forgot password?
+                            </Link>
                           </div>
 
                           <button

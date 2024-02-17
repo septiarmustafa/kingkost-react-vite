@@ -6,7 +6,7 @@ import { setAuthenticated } from "../../store/authSlice.js";
 import Swal from 'sweetalert2'; 
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-import defaultUserImg from '../../assets/img/def.webp';
+import defaultUserImg from '../../assets/img/default-user.png';
 import axios from '../../store/axiosInterceptor';
 
 
@@ -132,31 +132,31 @@ function Navbar() {
                         </div>
                         {isAuthenticated ? (
                             <Dropdown>
-                                {UserData && (
-                                <>
                                 <Dropdown.Toggle variant="secondary" style={{borderRadius: '5px'}} id="dropdown-basic" className="text-black fw-bold">
-                                    <img src={UserData.url ? UserData.url : defaultUserImg} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
+                                    <img src={UserData && UserData.url ? UserData.url : defaultUserImg} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
                                     {username}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     <Dropdown.Item  className="text-black">{role}</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item  className="text-black">
-                                        <NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink>
-                                    </Dropdown.Item>
-                                    <Dropdown.Divider />
-                                    <Dropdown.Item  className="text-black">
-                                        <NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink>
-                                    </Dropdown.Item>
-                                    <Dropdown.Divider />
+                                    {role === 'ROLE_CUSTOMER' && ( // Memeriksa jika rolenya adalah ROLE_SELLER
+                                        <>
+                                        <Dropdown.Item  className="text-black">
+                                            <NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink>
+                                        </Dropdown.Item>
+                                        <Dropdown.Divider />
+                                        <Dropdown.Item  className="text-black">
+                                            <NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink>
+                                        </Dropdown.Item>
+                                        <Dropdown.Divider />
+                                        </>
+                                    )}
                                     <Dropdown.Item onClick={handleLogout} className="white text-white">
                                         <Button variant="danger" className="w-100" style={{borderRadius: '15px',}}>
                                             Logout
                                         </Button>
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
-                                </>
-                            )}
                             </Dropdown>
                         ) : (
                             <Link to="/login">
@@ -171,14 +171,14 @@ function Navbar() {
                 <div className="container-fluid py-4 hero-header">
                     <div className="container">
                         <div className="row justify-content-center py-5">
-                            <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center">
+                            <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center p-5">
                                 <h2 className="display-3 text-white mb-4 animated slideInDown">Find Your Ideal Kosan</h2>
                                 <h2 className="text-white mb-4 animated slideInDown">With Kingkos App</h2>
                                 <h3 className=" text-white mb-3 animated slideInDown">Discover Comfortable and Affordable Kosan Options</h3>
                                 <p className="fs-4 text-white mb-4 animated slideInDown">Explore a variety of kosan options tailored for you.</p>
                                 <div className="position-relative w-75 mx-auto animated slideInDown">
-                                    <input className="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Enter Location or Keyword" />
-                                    <button type="button" className="btn btn-warning rounded-pill py-2 px-4 position-absolute top-0 end-0 me-2" style={{ marginTop: '7px' }}>Search</button>
+                                    {/* <input className="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Enter Location or Keyword" />
+                                    <button type="button" className="btn btn-warning rounded-pill py-2 px-4 position-absolute top-0 end-0 me-2" style={{ marginTop: '7px' }}>Search</button> */}
                                 </div>
                             </div>
                         </div>

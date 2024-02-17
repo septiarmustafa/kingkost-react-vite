@@ -7,6 +7,7 @@ import img3 from '../../assets/img/kosan3.jpg'
 import logogplay from '../../assets/img/get-it-on-playstore.svg'
 import logoapp from '../../assets/img/get-it-on-appstore.svg'
 import logo from '../../assets/img/king.png';
+import { Button } from 'bootstrap';
 
 function Footer() {
     return (
@@ -21,13 +22,13 @@ function Footer() {
                         <p className="mb-2">Dapatkan "info kost murah" hanya di Kingkos App. Mau "Sewa Kost Murah"? </p>
                         <Link className="btn btn-link text-black" to="/about">About Us</Link>
                         <Link className="btn btn-link text-black" to="/contact">Contact Us</Link>
-                        <Link className="btn btn-link text-black" to="/privacy">Privacy Policy</Link>
-                        <Link className="btn btn-link text-black" to="/terms">Terms & Condition</Link>
-                        <Link className="btn btn-link text-black" to="/faqs">FAQs & Help</Link>
+                        <Link className="btn btn-link text-black" to="/testimonial">Testimonial</Link>
+                        <Link className="btn btn-link text-black" to="/TermsAndConditions">Terms & Condition</Link>
+                        <Link className="btn btn-link text-black" to="/team">Our Team</Link>
                     </div>
                     <div className="col-lg-3 col-md-6">
                         <h4 className="mb-3">Contact</h4>
-                        <p className="mb-2"><i className="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                        <p className="mb-2"><i className="fa fa-map-marker-alt me-3"></i>Jalan H Dahlan, Ragunan Pasar Minggu Jakarta</p>
                         <p className="mb-2"><i className="fa fa-phone-alt me-3"></i>+012 345 67890</p>
                         <p className="mb-2"><i className="fa fa-envelope me-3"></i>info@kingkosan.com</p>
                         <div className="d-flex pt-2">
@@ -60,12 +61,11 @@ function Footer() {
                             </div>
                         </div>
                     </div>
-                    <div className="col-lg-3 col-md-6">
+                    <div className="col-lg-3 col-md-6 ps-5">
                         <h4 className="mb-3">Newsletter</h4>
                         <p>Stay updated with our latest offers and news. Sign up for our newsletter!</p>
-                        <div className="position-relative mx-auto" style={{ maxWidth: '400px' }}>
-                            <input className="form-control border-primary w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email" />
-                            <button type="button" className="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Sign Up</button>
+                        <div className="mx-auto" >
+                            <Link to="/register/customer" type="button" className="btn btn-primary mt-2 me-2" style={{padding: '2px 10px 2px 10px ', borderRadius: '15px'}}>Sign Up</Link>
                         </div>
                         <div style={{ marginTop: '20px', padding: '10px 0' }}>
                             <img src={logogplay} alt="Google Play" style={{ marginRight: '10px' }} />
@@ -84,9 +84,6 @@ function Footer() {
                         <div className="col-md-6 text-center text-md-end">
                             <div className="footer-menu">
                                 <Link to="/" className="text-black">Home</Link>
-                                <Link to="/cookies" className="text-black">Cookies</Link>
-                                <Link to="/help" className="text-black">Help</Link>
-                                <Link to="/faqs" className="text-black">FAQs</Link>
                             </div>
                         </div>
                     </div>

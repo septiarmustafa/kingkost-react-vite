@@ -6,7 +6,7 @@ import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless, FaStar } from 'react
 import kos1 from '../../assets/img/kosan1.jpg';
 import kos2 from '../../assets/img/kosan2.jpg';
 import defaultUserImg from '../../assets/img/def.webp';
-import { Carousel } from 'react-bootstrap';
+import { Carousel, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
 function Profile() {
@@ -15,6 +15,7 @@ function Profile() {
     const [genders, setGenders] = useState([]);
     const [profileCompletion, setProfileCompletion] = useState(0);
     const [imageUploaded, setImageUploaded] = useState(false); // State untuk menandai bahwa gambar telah diunggah
+    const [recommendedKos, setRecommendedKos] = useState([]);
 
     const user = useSelector(state => state.user);
     const userId = useSelector((state) => state.authentication.userId);
@@ -50,6 +51,19 @@ function Profile() {
     const handleEditProfile = () => {
         navigate(`/edit-profile/${userId}`);
     };
+
+    useEffect(() => {
+        const fetchDataKost = async () => {
+            try {
+                const kostResponse = await axios.get('http://localhost:8080/kost');
+                setRecommendedKos(kostResponse.data.data);
+            } catch (error) {
+                console.error('Error fetching recommended kos data:', error);
+            }
+        };
+
+        fetchDataKost();
+    }, []); 
 
     const handleImageClick = () => {
         Swal.fire({
@@ -103,6 +117,14 @@ function Profile() {
             }
         }
     };
+    
+    const formatRupiah = (value) => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
+      };
+
+      const handleCariKosanClick = () => {
+        navigate('/kosan');
+    };
 
     return (
         <div className="container mt-5">
@@ -150,19 +172,20 @@ function Profile() {
                                         </>
                                     )}
                                 </div>
+
+                                 {/* Action Buttons */}
+                                <div className="card mb-3" style={{borderColor: 'white'}}>
+                                    <ul className="list-group list-group-flush">
+                                        <li className="list-group-item">
+                                            <Link to="/myBooking" className="btn btn-outline-secondary w-100">My Booking Kos</Link>
+                                        </li> 
+                                        <li className="list-group-item">
+                                            <Link to="/addTestimonial" className="btn btn-outline-secondary w-100">Give A Testimonial</Link>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
 
-                            <div className=" card mt-3 wow fadeInUp" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
-                                <ul className="list-group" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
-                                    <li className="list-group-item">Kos Saya</li>
-                                    <li className="list-group-item">Riwayat Pengajuan Sewa</li>
-                                    <li className="list-group-item">Riwayat Kos</li>
-                                    <li className="list-group-item">Riwayat Transaksi</li>
-                                    <li className="list-group-item">Poin Saya Baru 0</li>
-                                    <li className="list-group-item">Voucher Saya</li>
-                                    <li className="list-group-item">Verifikasi Akun</li>
-                                </ul>
-                            </div>
                         </div>
                         <div className="col-md-8">
                             <div className="card wow fadeInUp"  style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
@@ -181,53 +204,64 @@ function Profile() {
                                                 <li>Kingkos menjaga keamanan transaksi</li>
                                                 <li>Cashless, dengan beragam metode pembayaran</li>
                                             </ul>
-                                            <button className="btn btn-success" style={{ borderRadius: '10px' }}>Cari Kosan</button>
+                                            <Button className='m-3' variant="secondary" onClick={handleCariKosanClick} style={{borderRadius: '15px'}}>Cari Kosan</Button>
                                         </div>
                                     )}
                                 </div>
                             </div>
-                            <div className="mt-3 text-center p-3 wow fadeInUp"  style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
-                                <h4 className='py-2'>Rekomendasi kos buat kamu </h4>
-                                <Carousel prevIcon={<span />} nextIcon={<span />}>
-                                    <Carousel.Item>
-                                        <div className="d-flex justify-content-around">
-                                            <div className="card" style={{boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px', width: '45%', margin: '10px', textAlign: 'justify', fontFamily: 'Arial, sans-serif', border: '1px solid #ced4da' }}>
-                                                <img src={kos1} className="card-img-top" alt="Kos 1" style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
-                                                <div className="card-body">
-                                                    <div className="d-flex align-items-center mb-3">
-                                                        <button className="btn btn-border" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '5px 10px' }}>
-                                                            <p className="card-title ms-1 me-3 mb-0">Kos Andalan</p>
-                                                        </button>
-                                                        <button className="btn btn-border ms-3" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '5px 10px' }}>
-                                                            <p className="card-title ms-1 mb-0">Male</p>
-                                                        </button>
-                                                        <p className="card-text ms-auto mb-0"><FaStar /> 4.8</p>
-                                                    </div>
-                                                    <p className="card-text">Kost Abah Tipe Eksklusif Pasar Minggu Jakarta Selatan Pasar Minggu</p>
-                                                    <p className="card-text">K. Mandi Dalam · WiFi · AC · Kloset Duduk · Kasur · Akses 24 Jam</p>
-                                                    <p className="card-text">Rp 2.250.000 / bulan</p>
+
+                             {/* Recommended Kos Carousel */}
+                            <div className="card mt-3 p-3" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                                <div className="card-body">
+                                    <h5 className="card-title mb-4">Rekomendasi kos buat kamu</h5>
+                                    <Carousel
+                                        prevIcon={<span className="carousel-control-prev-icon" />}
+                                        nextIcon={<span className="carousel-control-next-icon" />}
+                                        slidesToShow={1} // Mengatur jumlah item yang ditampilkan dalam satu slide
+                                        slidesToScroll={1}
+                                    >
+                                        {recommendedKos.map((kos, index) => (
+                                            <Carousel.Item key={kos.id}>
+                                                <div className="d-flex justify-content-around">
+                                                    {recommendedKos.slice(index, index + 3).map((kosItem) => ( // Mengambil 3 item dalam satu slide
+                                                        <div className="card m-3" style={{ width: '28rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }} key={kosItem.id}>
+                                                            <img src={kosItem.images.length > 0 ? kosItem.images[0].url : DefaultImage} className="card-img-top" alt={kosItem.images.length > 0 ? kosItem.images[0].fileName : 'Placeholder'} />
+                                                            <div className="card-body">
+                                                                <div className="d-flex border-bottom">
+                                                                    <small className="flex-fill text-center border-end py-2 px-1">
+                                                                        <i className="fa fa-map-marker-alt text-primary me-2"></i>
+                                                                        {kosItem.city.name}
+                                                                    </small>
+                                                                    <small className="flex-fill text-center border-end py-2 px-1">
+                                                                        <i className="fa fa-calendar-alt text-primary me-2"></i>
+                                                                        Available Rooms: {kosItem.availableRoom}
+                                                                    </small>
+                                                                    <small className="flex-fill text-center py-2 px-1">
+                                                                        <i className="fa fa-solid fa-venus-mars text-primary me-2"></i>
+                                                                        Gender Kosan: {kosItem.genderType.name}
+                                                                    </small>
+                                                                </div>
+                                                                <h5 className="card-title pt-3">{kosItem.name}</h5>
+                                                                <p className="card-text">{kosItem.description}</p>
+                                                                <div>
+                                                                    <p className='mb-4'>
+                                                                        <i className={`fa fa-wifi ${kosItem.isWifi ? 'text-success' : 'text-danger'}`}></i> WiFi: {kosItem.isWifi ? 'Yes' : 'No'} |
+                                                                        <i className={`ps-1 fa fa-thermometer-three-quarters ${kosItem.isAc ? 'text-success' : 'text-danger'}`}></i> AC: {kosItem.isAc ? 'Yes' : 'No'} |
+                                                                        <i className={`ps-1 fa fa-car ${kosItem.isParking ? 'text-success' : 'text-danger'}`}></i> Park: {kosItem.isParking ? 'Yes' : 'No'}
+                                                                    </p>
+                                                                </div>
+                                                                <p className='mb-2 text-dark'>Address: {kosItem.subdistrict.name}, {kosItem.city.name}, {kosItem.province.name}</p>
+                                                                <p className="card-text">{formatRupiah(kosItem.kostPrice.price)}/month</p>
+                                                                <p className="card-text"> <i className="fa fa-user text-primary me-2"></i>{kosItem.seller.fullName}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
-                                            </div>
-                                            <div className="card" style={{boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px', width: '45%', margin: '10px', textAlign: 'justify', fontFamily: 'Arial, sans-serif', border: '1px solid #ced4da' }}>
-                                                <img src={kos2} className="card-img-top" alt="Kos 1" style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
-                                                <div className="card-body">
-                                                    <div className="d-flex align-items-center mb-3">
-                                                        <button className="btn btn-border" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '5px 10px' }}>
-                                                            <p className="card-title ms-1 me-3 mb-0">Kos Andalan</p>
-                                                        </button>
-                                                        <button className="btn btn-border ms-3" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '5px 10px' }}>
-                                                            <p className="card-title ms-1 mb-0">Male</p>
-                                                        </button>
-                                                        <p className="card-text ms-auto mb-0"><FaStar /> 4.8</p>
-                                                    </div>
-                                                    <p className="card-text">Kost Abah Tipe Eksklusif Pasar Minggu Jakarta Selatan Pasar Minggu</p>
-                                                    <p className="card-text">K. Mandi Dalam · WiFi · AC · Kloset Duduk · Kasur · Akses 24 Jam</p>
-                                                    <p className="card-text">Rp 2.250.000 / bulan</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Carousel.Item>
-                                </Carousel>
+                                            </Carousel.Item>
+                                        ))}
+                                    </Carousel>
+
+                                </div>
                             </div>
                         </div>
                     </div>

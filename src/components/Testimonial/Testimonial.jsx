@@ -8,46 +8,33 @@ function Testimonial() {
   const [testimonials, setTestimonials] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/review/v1')
-      .then(response => {
-        setTestimonials(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching testimonials:', error);
-      });
-  }, []);
+    const fetchData = async () => {
+      try {
+        const [reviewResponse, customerResponse] = await Promise.all([
+          axios.get('http://localhost:8080/review/v1'),
+          axios.get('http://localhost:8080/customer/v1')
+        ]);
 
-  useEffect(() => {
-    // Fetch customer data for each testimonial
-    const fetchCustomerData = async () => {
-      const customerIds = testimonials.map(testimonial => testimonial.customerId);
-      const uniqueCustomerIds = [...new Set(customerIds)]; // Get unique customer IDs
+        const reviewData = reviewResponse.data;
+        const customerData = customerResponse.data;
 
-      // Fetch customer data for each unique customer ID
-      const customersData = await Promise.all(uniqueCustomerIds.map(async customerId => {
-        try {
-          const response = await axios.get(`http://localhost:8080/customer/v1/${customerId}`);
-          return response.data;
-        } catch (error) {
-          console.error(`Error fetching customer data for ID ${customerId}:`, error);
-          return null;
-        }
-      }));
+        // Map customer data to each testimonial
+        const updatedTestimonials = reviewData.map(testimonial => {
+          const customer = customerData.find(customer => customer.id === testimonial.customerId);
+          return {
+            ...testimonial,
+            customerData: customer || {} // Set customerData or an empty object if not found
+          };
+        });
 
-      // Map customer data to each testimonial
-      const updatedTestimonials = testimonials.map(testimonial => {
-        const customerData = customersData.find(customer => customer.id === testimonial.customerId);
-        return {
-          ...testimonial,
-          customerData: customerData || {} // Set customerData or an empty object if not found
-        };
-      });
-
-      setTestimonials(updatedTestimonials);
+        setTestimonials(updatedTestimonials);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
 
-    fetchCustomerData();
-  }, [testimonials]);
+    fetchData();
+  }, []);
 
   // Memisahkan testimonial menjadi bagian-bagian yang berisi tiga testimonial
   const separatedTestimonials = [];

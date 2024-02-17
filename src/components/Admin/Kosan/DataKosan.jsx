@@ -3,6 +3,7 @@ import axios from '../../../store/axiosInterceptor';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import defaultImage from '../../../assets/img/DefaultImage.jpg';
 
 function DataKosan() {
     const [kosanData, setKosanData] = useState([]);
@@ -134,7 +135,7 @@ function DataKosan() {
                                     <td>
                                         <img
                                             className="img-fluid"
-                                            src={kosan.images.length > 0 ? kosan.images[0].url : DefaultImage}
+                                            src={kosan.images.length > 0 ? kosan.images[0].url : defaultImage}
                                             alt={kosan.images.length > 0 ? kosan.images[0].fileName : 'Placeholder'}
                                             style={{ height: '100%', width: '100%', objectFit: 'cover' }}
                                         />

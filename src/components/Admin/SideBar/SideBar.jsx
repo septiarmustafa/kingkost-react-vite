@@ -1,16 +1,19 @@
 // import '../../../assets/Admin/css/style.min.css';
 import './Style.css';
 
-import img from '../../../assets/Admin/img/avatar/avatar-illustrated-01.png'
-import img2 from '../../../assets/img/king.png'
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
+import img2 from '../../../assets/img/king.png'
+import defaultUserImg from '../../../assets/img/default-user.png';
+
 import { useSelector, useDispatch } from "react-redux";
 import { setAuthenticated} from "../../../store/authSlice"; // Menambahkan import setUserData
 import Swal from 'sweetalert2';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
+
+import axios from '../../../store/axiosInterceptor';
+
 
 
 function SideBar() {
@@ -22,6 +25,9 @@ function SideBar() {
     const dispatch = useDispatch();
     const navigate = useNavigate(); // Hapus deklarasi navigate yang kedua
   
+    const [UserData, setUserData] = useState(null);
+    const userId = useSelector((state) => state.authentication.userId);
+
     const handleLogout = () => {
         Swal.fire({
           title: 'Are you sure?',
@@ -53,6 +59,22 @@ function SideBar() {
           }
         });
       };
+
+      useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log(userId)
+                const userDataResponse = await axios.get(`/seller/user/${userId}`);
+                const matchedUser = userDataResponse.data.data;
+                setUserData(matchedUser);
+               
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [userId]); 
 
     return (
         <aside className="sidebar">
@@ -121,23 +143,29 @@ function SideBar() {
             </div>
 
             <div className="sidebar-footer">
-                {isAuthenticated ? (
-                    <Link to="##" className="sidebar-user">
-                        <span className="sidebar-user-img">
-                            <picture>
-                                <img src={img} alt="User name" />
-                            </picture>
-                        </span>
-                        <div className="sidebar-user-info">
-                            <span className="sidebar-user__title">{username}</span>
-                            <span className="sidebar-user__subtitle">{role}</span>
-                        </div>
-                    </Link>
-                ) : (
-                    // Jika tidak terautentikasi, Anda bisa menambahkan tindakan alternatif di sini
-                    <span>Anda tidak terautentikasi</span>
+            {isAuthenticated ? (
+                <>
+                <Link to="##" className="sidebar-user">
+                    <span className="sidebar-user-img">
+                    <picture>
+                        <img src={UserData && UserData.url ? UserData.url : defaultUserImg} alt="User name" />
+                    </picture>
+                    </span>
+                    <div className="sidebar-user-info">
+                    <span className="sidebar-user__title ps-2">{username}</span>
+                    <span className="sidebar-user__subtitle ps-2">{role}</span>
+                    </div>
+                </Link>
+                <div className='text-center pt-5'>
+                    <p style={{ color: 'white', fontSize: '14px' }} className='py-0'>Kelompok 2 Pascal</p>
+                    <p style={{ color: 'white', fontSize: '14px' }} className='py-0'>&copy;Enigmacamp 2024</p>
+                </div>
+                </>
+            ) : (
+                <span>Anda tidak terautentikasi</span>
                 )}
             </div>
+
         </aside>
     );
 }

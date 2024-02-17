@@ -45,6 +45,11 @@ import PageAddDataKosan from "./pages/Admin/PageKosan/PageAddDataKosan";
 import PageUpdateDataKosan from "./pages/Admin/PageKosan/PageUpdateDataKosan";
 import PageMyProfile from "./pages/Admin/PageMyProfile/PageMyProfile";
 import PageEditMyProfile from "./pages/Admin/PageMyProfile/PageEditMyProfile";
+import PageAddTestimonialCustomer from "./pages/PageAddTestimonialCustomer";
+
+import PageSellectForgotPassword from "./pages/PageSellectForgotPassword.jsx";
+import ForgotPasswordCustomer from "./components/ForgotPassword/ForgotPasswordCustomer.jsx";
+import ForgotPasswordSeller from "./components/ForgotPassword/ForgotPasswordSeller.jsx";
 
 function App() {
 
@@ -164,7 +169,10 @@ function App() {
 
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<PageAbout />} />
+
         <Route path="/testimonial" element={<PageTestimonial />} />
+        <Route path="/addTestimonial" element={<PageAddTestimonialCustomer />} />
+        
         <Route path="/team" element={<PageTeam />} />
 
         <Route path="/contact" element={<PageContact />} />
@@ -203,6 +211,11 @@ function App() {
         {/* Seller */}
         <Route path="/myProfile" element={<PageMyProfile />} />
         <Route path="/edit-myProfile/:id" element={<PageEditMyProfile />} />
+
+        <Route path="forgot-password" element={<PageSellectForgotPassword/>}/>
+        <Route path="/forgot-password/seller" element={<ForgotPasswordSeller/>}/>
+        <Route path="/forgot-password/customer" element={<ForgotPasswordCustomer/>}/>
+
 
 
          {/* <Route

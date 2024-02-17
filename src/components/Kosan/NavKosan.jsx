@@ -6,7 +6,7 @@ import { setAuthenticated } from "../../store/authSlice.js";
 import Swal from 'sweetalert2'; 
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-import defaultUserImg from '../../assets/img/def.webp';
+import defaultUserImg from '../../assets/img/default-user.png';
 import axios from '../../store/axiosInterceptor';
 
 
@@ -132,31 +132,31 @@ function NavKosan() {
                         </div>
                         {isAuthenticated ? (
                             <Dropdown>
-                                {UserData && (
-                                <>
                                 <Dropdown.Toggle variant="secondary" style={{borderRadius: '5px'}} id="dropdown-basic" className="text-black fw-bold">
-                                    <img src={UserData.url ? UserData.url : defaultUserImg} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
+                                    <img src={UserData && UserData.url ? UserData.url : defaultUserImg} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
                                     {username}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     <Dropdown.Item  className="text-black">{role}</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item  className="text-black">
-                                        <NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink>
-                                    </Dropdown.Item>
-                                    <Dropdown.Divider />
-                                    <Dropdown.Item  className="text-black">
-                                        <NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink>
-                                    </Dropdown.Item>
-                                    <Dropdown.Divider />
+                                    {role === 'ROLE_CUSTOMER' && ( // Memeriksa jika rolenya adalah ROLE_SELLER
+                                        <>
+                                        <Dropdown.Item  className="text-black">
+                                            <NavLink to="/profile" className="dropdown-item" activeClassName="active">Profile</NavLink>
+                                        </Dropdown.Item>
+                                        <Dropdown.Divider />
+                                        <Dropdown.Item  className="text-black">
+                                            <NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink>
+                                        </Dropdown.Item>
+                                        <Dropdown.Divider />
+                                        </>
+                                    )}
                                     <Dropdown.Item onClick={handleLogout} className="white text-white">
                                         <Button variant="danger" className="w-100" style={{borderRadius: '15px',}}>
                                             Logout
                                         </Button>
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
-                                </>
-                            )}
                             </Dropdown>
                         ) : (
                             <Link to="/login">

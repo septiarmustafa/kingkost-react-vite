@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import img from '../../../assets/Admin/img/avatar/avatar-illustrated-02.png';
 import { useSelector, useDispatch } from "react-redux";
@@ -6,6 +6,9 @@ import { setAuthenticated} from "../../../store/authSlice";
 import Swal from 'sweetalert2';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
+import defaultUserImg from '../../../assets/img/def.webp';
+import defaultUserImgAdm from '../../../assets/img/default-user.png';
+import axios from '../../../store/axiosInterceptor';
 
 function NavbarAdmin() {
     const isAuthenticated = useSelector((state) => state.authentication.isAuthenticated);
@@ -14,6 +17,25 @@ function NavbarAdmin() {
   
     const dispatch = useDispatch();
     const navigate = useNavigate(); // Menggunakan useNavigate untuk navigasi
+
+    const [UserData, setUserData] = useState(null);
+    const userId = useSelector((state) => state.authentication.userId);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log(userId)
+                const userDataResponse = await axios.get(`/seller/user/${userId}`);
+                const matchedUser = userDataResponse.data.data;
+                setUserData(matchedUser);
+               
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [userId]); 
 
     const handleLogout = () => {
         Swal.fire({
@@ -125,38 +147,37 @@ function NavbarAdmin() {
                     </div>
                     <div className="nav-user-wrapper">
                     {isAuthenticated ? (
-                        <>
                         <Dropdown>
-                                <Dropdown.Toggle variant="secondary" style={{borderRadius: '5px'}} id="dropdown-basic" className="text-black fw-bold">
-                                    <img src={img} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
-                                    {username}
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item  className="text-black">{role}</Dropdown.Item>
-                                    <Dropdown.Divider />
-                                    {role === 'ROLE_SELLER' && ( // Memeriksa jika rolenya adalah ROLE_SELLER
-                                        <>
-                                            <Dropdown.Item  className="text-black">
-                                                <NavLink to="/myProfile" className="dropdown-item" activeClassName="active">Profile</NavLink>
-                                            </Dropdown.Item>
-                                            <Dropdown.Divider />
-                                        </>
-                                    )}
-                                    <Dropdown.Item onClick={handleLogout} className="white text-white">
-                                        <Button variant="danger" className="w-100" style={{borderRadius: '15px',}}>
-                                            Logout
-                                        </Button>
-                                    </Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </>
+                            <Dropdown.Toggle variant="secondary" style={{ borderRadius: '5px' }} id="dropdown-basic" className="text-black fw-bold">
+                                <img src={UserData && UserData.url ? UserData.url : defaultUserImgAdm} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
+                                {username}
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item className="text-black">{role}</Dropdown.Item>
+                                <Dropdown.Divider />
+                                {role === 'ROLE_SELLER' && ( // Memeriksa jika rolenya adalah ROLE_SELLER
+                                    <>
+                                        <Dropdown.Item className="text-black">
+                                            <NavLink to="/myProfile" className="dropdown-item" activeClassName="active">Profile</NavLink>
+                                        </Dropdown.Item>
+                                        <Dropdown.Divider />
+                                    </>
+                                )}
+                                <Dropdown.Item onClick={handleLogout} className="white text-white">
+                                    <Button variant="danger" className="w-100" style={{ borderRadius: '15px' }}>
+                                        Logout
+                                    </Button>
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     ) : (
                         <Link to="/login">
-                        <button className="btn btn-warning mt1" style={{ borderRadius: '10px', color: 'black', fontWeight: 'bold' }} type="submit">
-                            LOGIN
-                        </button>
+                            <button className="btn btn-warning mt1" style={{ borderRadius: '10px', color: 'black', fontWeight: 'bold' }} type="submit">
+                                LOGIN
+                            </button>
                         </Link>
                     )}
+
                     </div>
                 </div>
             </div>
