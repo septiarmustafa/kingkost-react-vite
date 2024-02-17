@@ -1,47 +1,89 @@
-import React, {useState} from 'react';
-import axios from "axios";
-import Logo1 from "../../assets/img/logo_king.png";
-import {Link} from "react-router-dom";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import Logo1 from '../../assets/img/logo_king.png';
+import Swal from 'sweetalert2';
 
 function ForgotPasswordSeller() {
     const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
-
-    const handleForgotPassword = async () => {
-        try {
-
-            const response = await axios.post('http://localhost:8080/reset/request-seller', {
-                email: email
-            });
-
-            setMessage(response.data.message);
-            setError('');
-        } catch (error) {
-            setError('Failed to send reset password request.');
-            setMessage('');
-            console.error('Error sending reset password request:', error);
-        }
-    };
+    const [errors, setErrors] = useState({
+        email: "",
+    });
+    const [emailMatch, setEmailMatch] = useState(false);
+    const [emailIndicator, setEmailIndicator] = useState("");
+    const [loading, setLoading] = useState(false); // State untuk menangani status loading
 
     const validateEmail = (email) => {
         let re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(String(email).toLowerCase());
+    };
 
+    const validateForm = () => {
+        const validationErrors = {
+            email: !validateEmail(email) ? "Please enter a valid email address" : "",
+        };
+
+        setErrors(validationErrors);
+
+        const isFormValid = Object.values(validationErrors).every(error => error === "");
+
+        return isFormValid;
+    };
+
+    const handleForgotPassword = async () => {
+        try {
+            if (!validateForm()) {
+                return;
+            }
+
+            setLoading(true); // Atur loading menjadi true saat memulai proses
+            const response = await axios.post('http://localhost:8080/reset/request-seller', {
+                email: email
+            });
+
+            setLoading(false); // Atur loading kembali menjadi false setelah mendapat respons
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: response.data.message,
+            });
+        } catch (error) {
+            setLoading(false); // Atur loading kembali menjadi false jika terjadi kesalahan
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to send reset password request.',
+            });
+            console.error('Error sending reset password request:', error);
+        }
+    };
+
+    const handleChangeEmail = (e) => {
+        const setEmailValue = e.target.value;
+
+        setEmail(setEmailValue);
+
+        if (validateEmail(setEmailValue)) {
+            setEmailMatch(true);
+            setEmailIndicator("Email is valid");
+        } else {
+            setEmailMatch(false);
+            setEmailIndicator("Email must be in the format example@example.com");
+        }
     };
 
     return (
         <>
             <section className="nav"
-                     style={{background: 'linear-gradient(to bottom, #a36903, #873f00)', padding: '4em'}}>
-                <div className="container" style={{padding: '2em'}}>
+                style={{ background: 'linear-gradient(to bottom, #a36903, #873f00)', padding: '4em' }}>
+                <div className="container" style={{ padding: '2em' }}>
                     <div className="row d-flex justify-content-center align-items-center h-100">
                         <div className="col col-xl-12">
-                            <div className="card" style={{borderRadius: '2rem'}}>
+                            <div className="card" style={{ borderRadius: '2rem' }}>
                                 <div className="row container-fluid">
                                     <div className="col-md-6 col-lg-6 d-none d-md-block py-5 px-5">
                                         <img src={Logo1} alt="login form" className="img-fluid"
-                                             style={{borderRadius: '1rem 0 0 1rem', paddingTop: '5em'}}/>
+                                            style={{ borderRadius: '1rem 0 0 1rem', paddingTop: '5em' }} />
                                     </div>
                                     <div className="col-md-6 col-lg-6 d-flex align-items-center">
                                         <div className="card-body p-4 p-lg-5 text-black">
@@ -51,38 +93,31 @@ function ForgotPasswordSeller() {
                                                         <div className="card">
                                                             <div className="card-body">
                                                                 <Link to="/login" className="btn btn-outline-primary"
-                                                                      style={{borderRadius: '10px'}}>
+                                                                    style={{ borderRadius: '10px' }}>
                                                                     <i className="fas fa-arrow-left"> Back </i>
                                                                 </Link>
                                                                 <h2 className="m-2">Forgot Password</h2>
-                                                                {message && <div
-                                                                    className="alert alert-success">{message}</div>}
-                                                                {error &&
-                                                                    <div className="alert alert-danger">{error}</div>}
                                                                 <form>
                                                                     <div className="mb-3">
                                                                         <label htmlFor="email" className="form-label">Email
                                                                             address</label>
                                                                         <input
                                                                             type="email"
-                                                                            className="form-control"
+                                                                            className={`form-control ${errors.email && 'is-invalid'}`}
                                                                             id="email"
                                                                             value={email}
-                                                                            onChange={(e) => {
-                                                                                setEmail(e.target.value)
-                                                                                if (!validateEmail(e.target.value)) {
-                                                                                    setError('Please enter a valid email address.');
-                                                                                }
-                                                                            }}
+                                                                            onChange={handleChangeEmail}
                                                                         />
+                                                                        <div className={emailMatch ? "text-success mt-2" : "text-danger mt-2"}>{emailIndicator}</div>
+                                                                        <div className="invalid-feedback mt-2">{errors.email}</div>
                                                                     </div>
                                                                     <button
                                                                         type="button"
-                                                                        className="btn btn-primary"
+                                                                        className="btn btn-secondary fw-bold"
                                                                         onClick={handleForgotPassword}
-                                                                        disabled={!email || !validateEmail(email)}
+                                                                        disabled={!email || !validateEmail(email) || loading}
                                                                     >
-                                                                        Send Reset Link
+                                                                        {loading ? 'Loading...' : 'Send Reset Link'}
                                                                     </button>
                                                                 </form>
                                                             </div>
