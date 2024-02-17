@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../store/axiosInterceptor';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function AddDataKosan() {
     const navigate = useNavigate();
+    const role = useSelector((state) => state.authentication.role);
     const [newKosan, setNewKosan] = useState({
         name: "",
         description: "",
@@ -27,6 +29,8 @@ function AddDataKosan() {
     const [provinceOptions, setProvinceOptions] = useState([]);
     const [cityOptions, setCityOptions] = useState([]);
     const [subdistrictOptions, setSubdistrictOptions] = useState([]);
+
+    const userId = useSelector((state) => state.authentication.userId);
 
     const [errors, setErrors] = useState({
         name: "",
@@ -68,19 +72,39 @@ function AddDataKosan() {
         return isFormValid;
     };
     
-
     useEffect(() => {
-        // Fetch data for seller options
-        axios.get('http://localhost:8080/seller/v1')
-            .then(response => {
-                setSellerOptions(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching seller options:', error);
-            });
+        // If the user is ROLE_ADMIN, fetch seller options
+        if (role === "ROLE_ADMIN") {
+            axios.get(`/seller/v1`)
+                .then(response => {
+                    setSellerOptions(response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching seller options:', error);
+                });
+        }
+
+        if (role === "ROLE_SELLER") {
+            // Fetch data for seller options
+            axios.get(`/seller/user/${userId}`)
+                .then(response => {
+                    const matchedUser = response.data.data;
+                    const sellerId = matchedUser.id;
+
+                    //biar tidak usah isidi form input
+                    setNewKosan(prevState => ({
+                        ...prevState,
+                        sellerId: sellerId
+                    }));
+                })
+                .catch(error => {
+                    console.error('Error fetching seller options:', error);
+                });
+        }
+
 
         // Fetch data for gender options
-        axios.get('http://localhost:8080/gender/v1')
+        axios.get('/gender/v1')
             .then(response => {
                 setGenderOptions(response.data);
             })
@@ -89,7 +113,7 @@ function AddDataKosan() {
             });
 
         // Fetch data for province options
-        axios.get('http://localhost:8080/province')
+        axios.get('/province')
             .then(response => {
                 setProvinceOptions(response.data.data);
             })
@@ -100,7 +124,7 @@ function AddDataKosan() {
 
     const handleProvinceChange = (provinceId) => {
         // Fetch data for city options based on selected province
-        axios.get(`http://localhost:8080/city?province_id=${provinceId}`)
+        axios.get(`/city?province_id=${provinceId}`)
             .then(response => {
                 setCityOptions(response.data.data);
                 // Set provinceId to the selected value
@@ -113,7 +137,7 @@ function AddDataKosan() {
 
     const handleCityChange = (cityId) => {
         // Fetch data for subdistrict options based on selected city
-        axios.get(`http://localhost:8080/subdistrict?city_id=${cityId}`)
+        axios.get(`/subdistrict?city_id=${cityId}`)
             .then(response => {
                 setSubdistrictOptions(response.data.data);
                 // Set cityId to the selected value
@@ -137,7 +161,7 @@ function AddDataKosan() {
         formData.append('price', newKosan.price);
         formData.append('availableRoom', newKosan.availableRoom);
         for (let i = 0; i < newKosan.images.length; i++) { // Ubah image menjadi images
-            formData.append('images', newKosan.images[i]);
+            formData.append('image', newKosan.images[i]);
         }
         formData.append('seller_id', newKosan.sellerId);
         formData.append('isWifi', newKosan.isWifi);
@@ -257,23 +281,25 @@ function AddDataKosan() {
                                     <div className="invalid-feedback">{errors.availableRoom}</div>
                                 </div>
 
-                                {/* Seller */}
-                                <div className="col-6 mb-2">
-                                    <label htmlFor="sellerId" className="form-label">Seller</label>
-                                    <select
-                                        style={{ borderColor: 'black'}} 
-                                        id="sellerId"
-                                        className={`form-select ${errors.sellerId ? 'is-invalid' : ''}`}
-                                        value={newKosan.sellerId}
-                                        onChange={(e) => setNewKosan({ ...newKosan, sellerId: e.target.value })}
-                                    >
-                                        <option value="">Select seller</option>
-                                        {sellerOptions.map(seller => (
-                                            <option key={seller.id} value={seller.id}>{seller.fullName}</option>
-                                        ))}
-                                    </select>
-                                    <div className="invalid-feedback">{errors.sellerId}</div>
-                                </div>
+                                {/* Seller field for ROLE_ADMIN */}
+                                {role === "ROLE_ADMIN" && (
+                                    <div className="col-6 mb-2">
+                                        <label htmlFor="sellerId" className="form-label">Seller</label>
+                                        <select
+                                            style={{ borderColor: 'black'}} 
+                                            id="sellerId"
+                                            className={`form-select ${errors.sellerId ? 'is-invalid' : ''}`}
+                                            value={newKosan.sellerId}
+                                            onChange={(e) => setNewKosan({ ...newKosan, sellerId: e.target.value })}
+                                        >
+                                            <option value="">Select seller</option>
+                                            {sellerOptions.map(seller => (
+                                                <option key={seller.id} value={seller.id}>{seller.fullName}</option>
+                                            ))}
+                                        </select>
+                                        <div className="invalid-feedback">{errors.sellerId}</div>
+                                    </div>
+                                )}
 
                                 {/* isWifi */}
                                 <div className="col-6 mb-2">

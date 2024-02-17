@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import axios from '../../../store/axiosInterceptor';
+import { useSelector } from 'react-redux';
 
 function UpdateDataKosan() {
     const navigate = useNavigate();
     const { id } = useParams();
+
+    const role = useSelector((state) => state.authentication.role);
 
     const [kosanData, setKosanData] = useState({
         id: "",
@@ -37,7 +40,7 @@ function UpdateDataKosan() {
     const [subdistrictOptions, setSubdistrictOptions] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/kost/${id}`)
+        axios.get(`/kost/${id}`)
             .then(response => {
                 const { id, name, description, availableRoom, isWifi, isAc, isParking, kostPrice, genderType, seller, province, city, images, createdAt } = response.data.data;
 
@@ -68,7 +71,7 @@ function UpdateDataKosan() {
                 console.error('Error fetching kosan data:', error);
             });
 
-        axios.get('http://localhost:8080/gender/v1')
+        axios.get('/gender/v1')
             .then(response => {
                 setGenderOptions(response.data);
             })
@@ -76,15 +79,17 @@ function UpdateDataKosan() {
                 console.error('Error fetching gender options:', error);
             });
 
-        axios.get('http://localhost:8080/seller/v1')
-            .then(response => {
-                setSellerOptions(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching seller options:', error);
+        if (role === "ROLE_ADMIN") {
+            axios.get(`/seller/v1`)
+                .then(response => {
+                    setSellerOptions(response.data);
+                 })
+                .catch(error => {
+                    console.error('Error fetching seller options:', error);
             });
-
-        axios.get('http://localhost:8080/province')
+        }
+    
+        axios.get('/province')
             .then(response => {
                 setProvinceOptions(response.data.data);
             })
@@ -96,7 +101,7 @@ function UpdateDataKosan() {
 
     const handleProvinceChange = (provinceId) => {
         // Fetch data for city options based on selected province
-        axios.get(`http://localhost:8080/city?province_id=${provinceId}`)
+        axios.get(`/city?province_id=${provinceId}`)
             .then(response => {
                 setCityOptions(response.data.data);
                 // Set provinceId to the selected value and reset cityId when province changes
@@ -109,7 +114,7 @@ function UpdateDataKosan() {
     
     const handleCityChange = (cityId) => {
         // Fetch data for subdistrict options based on selected city
-        axios.get(`http://localhost:8080/subdistrict?city_id=${cityId}`)
+        axios.get(`/subdistrict?city_id=${cityId}`)
             .then(response => {
                 setSubdistrictOptions(response.data.data);
                 // Set cityId to the selected value and reset subdistrictId when city changes
@@ -122,7 +127,7 @@ function UpdateDataKosan() {
 
     const handleUpdateKosan = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:8080/kost`, kosanData)
+        axios.put(`/kost`, kosanData)
             .then(response => {
                 console.log('Kosan berhasil diubah:', response.data.data);
                 Swal.fire({
@@ -260,6 +265,8 @@ function UpdateDataKosan() {
                                         ))}
                                     </select>
                                 </div>
+
+                                {role === "ROLE_ADMIN" && (
                                 <div className="col-6">
                                     <label htmlFor="sellerId" className="form-label">Seller ID</label>
                                     <select
@@ -274,6 +281,7 @@ function UpdateDataKosan() {
                                         ))}
                                     </select>
                                 </div>
+                                 )}
 
                                 <div className="col-6">
                                     <label htmlFor="provinceId" className="form-label">Province</label>
@@ -326,7 +334,7 @@ function UpdateDataKosan() {
                                     </select>
                                 </div>
 
-                                <div className="col-12">
+                                {/* <div className="col-12">
                                     <label htmlFor="createdAt" className="form-label">Created At</label>
                                     <input
                                         type="text"
@@ -335,10 +343,10 @@ function UpdateDataKosan() {
                                         value={kosanData.createdAt}
                                         readOnly // Read-only input
                                     />
-                                </div>
+                                </div> */}
 
                                 {/* Form fields for images */}
-                                {kosanData.image.map((image, index) => (
+                                {/* {kosanData.image.map((image, index) => (
                                     <div key={index} className="row">
                                         <div className="col-6">
                                             <label htmlFor={`imageId-${index}`} className="form-label">Image ID</label>
@@ -402,7 +410,7 @@ function UpdateDataKosan() {
                                             </select>
                                         </div>
                                     </div>
-                                ))}
+                                ))} */}
 
                                 <div className="text-center" style={{ paddingTop: '30px' }}>
                                     <button type="submit" className="btn btn-success me-3" style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>Update Kosan</button>

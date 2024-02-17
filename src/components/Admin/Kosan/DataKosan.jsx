@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../../../store/axiosInterceptor';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axios from '../../../store/axiosInterceptor';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import defaultImage from '../../../assets/img/DefaultImage.jpg';
@@ -8,37 +9,32 @@ import defaultImage from '../../../assets/img/DefaultImage.jpg';
 function DataKosan() {
     const [kosanData, setKosanData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    const [totalPage, setTotalPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(5);
+    const userId = useSelector((state) => state.authentication.userId);
+    const userRole = useSelector((state) => state.authentication.role);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchData(0); // Fetch data for initial page (page 0)
-    }, []);
+        fetchData();
+    }, [currentPage]);
 
-    const fetchData = (page) => {
-        axios.get('/kost', {
-            params: {
-                page: page
+    const fetchData = async () => {
+        try {
+            let response;
+            if (userRole === "ROLE_SELLER") {
+                // Fetch data based on seller id
+                const userDataResponse = await axios.get(`/seller/user/${userId}`);
+                const matchedUser = userDataResponse.data.data;
+                const sellerId = matchedUser.id;
+                response = await axios.get(`/kost?sellerId=${sellerId}&page=${currentPage}`);
+            } else if (userRole === "ROLE_ADMIN") {
+                // Fetch all kosan data
+                response = await axios.get(`/kost?page=${currentPage}`);
             }
-        })
-        .then(response => {
-            console.log("data kosan " + response.data); // Periksa respons dari API
-            const { data, paggingResponse } = response.data; // Sesuaikan dengan struktur respons
-            setKosanData(data); // Set data kosan ke dalam state kosanData
-            setCurrentPage(paggingResponse.currentPage);
-            setTotalPage(paggingResponse.totalPage);
-            setItemsPerPage(paggingResponse.size);
-        })
-        .catch(error => {
+            const { data } = response.data;
+            setKosanData(data);
+        } catch (error) {
             console.error('Error fetching kosan data:', error);
-        });
-    };
-
-    // Change page
-    const paginate = (pageNumber) => {
-        setCurrentPage(pageNumber); // Update currentPage
-        fetchData(pageNumber - 1); // Fetch data for the selected page
+        }
     };
 
     const handleUpdate = (kosanId) => {
@@ -58,7 +54,6 @@ function DataKosan() {
             if (result.isConfirmed) {
                 axios.delete(`http://localhost:8080/kost/${kosanId}`)
                     .then(response => {
-                        // Update state to reflect the removal of the kosan
                         setKosanData(kosanData.filter(kosan => kosan.id !== kosanId));
                         console.log('Kosan deleted successfully');
                     })
@@ -72,6 +67,16 @@ function DataKosan() {
                 );
             }
         });
+    };
+
+    const handlePrevPage = () => {
+        if (currentPage >= 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
     };
 
     return (
@@ -152,21 +157,16 @@ function DataKosan() {
                             ))}
                         </tbody>
                     </table>
-                    {/* Pagination */}
                     <nav>
-                        <ul className="pagination">
-                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                                <button onClick={() => paginate(currentPage - 1)} className="page-link">Previous</button>
+                        <ul className="pagination justify-content-center">
+                            <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={handlePrevPage}>Previous</button>
                             </li>
-                            {Array.from({ length: totalPage }).map((_, index) => (
-                                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                                    <button onClick={() => paginate(index + 1)} className="page-link">
-                                        {index + 1}
-                                    </button>
-                                </li>
-                            ))}
-                            <li className={`page-item ${currentPage === totalPage ? 'disabled' : ''}`}>
-                                <button onClick={() => paginate(currentPage + 1)} className="page-link">Next</button>
+                            <li className="page-item disabled">
+                                <span className="page-link">{currentPage}</span>
+                            </li>
+                            <li className="page-item">
+                                <button className="page-link" onClick={handleNextPage}>Next</button>
                             </li>
                         </ul>
                     </nav>

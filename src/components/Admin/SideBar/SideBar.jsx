@@ -109,9 +109,11 @@ function SideBar() {
                         <li>
                             <NavLink to="/customer"><span className="icon"><i className="fas fa-users"></i></span>Customer</NavLink>
                         </li>
+                        {role === 'ROLE_ADMIN' && (
                         <li>
                             <NavLink to="/dataSeller"><span className="icon"><i className="fas fa-user"></i></span>Seller</NavLink>
                         </li>
+                        )}
                     </ul>
                     <span className="system-menu__title">Manage Data Kosan</span>
                     <ul className="sidebar-body-menu">
@@ -142,7 +144,7 @@ function SideBar() {
 
             </div>
 
-            <div className="sidebar-footer">
+            <div className="sidebar-footer mt-5">
             {isAuthenticated ? (
                 <>
                 <Link to="##" className="sidebar-user">

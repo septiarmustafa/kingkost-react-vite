@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from '../../../store/axiosInterceptor';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless, FaUpload } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import defaultUserImg from '../../../assets/img/def.webp';
 import { Card } from 'react-bootstrap';
@@ -118,7 +118,7 @@ function MyProfile() {
                                     <button onClick={handleEditProfile} className="btn btn-secondary" style={{ borderRadius: '10px' }}>Edit Profile</button>
                                 </div>
                                 <div className="d-flex align-items-center">
-                                    <div className="me-3">
+                                    <div className="me-3 position-relative">
                                         <img
                                             src={apiUserData.url ? apiUserData.url : defaultUserImg}
                                             className="rounded-circle border"
@@ -126,6 +126,9 @@ function MyProfile() {
                                             style={{ width: '120px', height: '120px', objectFit: 'cover', cursor: 'pointer' }}
                                             onClick={handleImageClick}
                                         />
+                                        <button className="btn btn-light position-absolute bottom-0 start-0" onClick={handleImageClick} style={{ borderRadius: '50%', padding: '10px' }}>
+                                            <FaUpload />
+                                        </button>
                                     </div>
                                     <div className='m-4'>
                                         <h5 className="card-text mb-2">FullName : {apiUserData.fullName}</h5>
