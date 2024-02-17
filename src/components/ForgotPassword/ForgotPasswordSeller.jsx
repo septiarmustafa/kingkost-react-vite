@@ -75,7 +75,7 @@ function ForgotPasswordSeller() {
     return (
         <>
             <section className="nav"
-                style={{ background: 'linear-gradient(to bottom, #a36903, #873f00)', padding: '4em' }}>
+                style={{ background: 'linear-gradient(to bottom, #a36903, #873f00)', padding: '5em' }}>
                 <div className="container" style={{ padding: '2em' }}>
                     <div className="row d-flex justify-content-center align-items-center h-100">
                         <div className="col col-xl-12">
