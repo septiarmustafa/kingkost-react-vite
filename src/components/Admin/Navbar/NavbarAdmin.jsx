@@ -87,18 +87,13 @@ function NavbarAdmin() {
                             EN
                             <i data-feather="chevron-down" aria-hidden="true"></i>
                         </button>
-                        <ul className="lang-menu dropdown-admin">
-                            <li><Link to="/">English</Link></li>
-                            <li><Link to="/">French</Link></li>
-                            <li><Link to="/">Uzbek</Link></li>
-                        </ul>
                     </div>
                     <button className="theme-switcher gray-circle-btn" type="button" title="Switch theme">
                         <span className="sr-only">Switch theme</span>
                         <i className="sun-icon" data-feather="sun" aria-hidden="true"></i>
                         <i className="moon-icon" data-feather="moon" aria-hidden="true"></i>
                     </button>
-                    <div className="notification-wrapper">
+                    {/* <div className="notification-wrapper">
                         <button className="gray-circle-btn dropdown-btn" title="To messages" type="button">
                             <span className="sr-only">To messages</span>
                             <span className="icon notification active" aria-hidden="true"></span>
@@ -144,11 +139,11 @@ function NavbarAdmin() {
                                 <Link className="link-to-page" to="/">Go to Notifications page</Link>
                             </li>
                         </ul>
-                    </div>
+                    </div> */}
                     <div className="nav-user-wrapper">
                     {isAuthenticated ? (
                         <Dropdown>
-                            <Dropdown.Toggle variant="secondary" style={{ borderRadius: '5px' }} id="dropdown-basic" className="text-black fw-bold">
+                            <Dropdown.Toggle variant="secondary" style={{ borderRadius: '15px' }} id="dropdown-basic" className="text-black fw-bold">
                                 <img src={UserData && UserData.url ? UserData.url : defaultUserImgAdm} alt="User" style={{ width: '30px', height: '30px', marginRight: '8px', borderRadius: '50%' }} />
                                 {username}
                             </Dropdown.Toggle>

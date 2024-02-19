@@ -182,6 +182,7 @@ function UpdateDataKosan() {
                                         onChange={(e) => setKosanData({ ...kosanData, name: e.target.value })}
                                     />
                                 </div>
+
                                 <div className="col-6">
                                     <label htmlFor="description" className="form-label">Description</label>
                                     <textarea
@@ -192,6 +193,7 @@ function UpdateDataKosan() {
                                         onChange={(e) => setKosanData({ ...kosanData, description: e.target.value })}
                                     ></textarea>
                                 </div>
+
                                 <div className="col-6">
                                     <label htmlFor="availableRoom" className="form-label">Available Room</label>
                                     <input
@@ -199,9 +201,13 @@ function UpdateDataKosan() {
                                         id="availableRoom"
                                         className="form-control"
                                         value={kosanData.availableRoom}
-                                        onChange={(e) => setKosanData({ ...kosanData, availableRoom: e.target.value })}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/\D/, ''); // Hanya menerima digit/angka
+                                            setKosanData({ ...kosanData, availableRoom: value })
+                                        }}
                                     />
                                 </div>
+
                                 <div className="col-6">
                                     <label htmlFor="isWifi" className="form-label">WiFi</label>
                                     <select
@@ -215,6 +221,7 @@ function UpdateDataKosan() {
                                         <option value="false">No</option>
                                     </select>
                                 </div>
+
                                 <div className="col-6">
                                     <label htmlFor="isAc" className="form-label">AC</label>
                                     <select
@@ -228,6 +235,7 @@ function UpdateDataKosan() {
                                         <option value="false">No</option>
                                     </select>
                                 </div>
+
                                 <div className="col-6">
                                     <label htmlFor="isParking" className="form-label">Parking</label>
                                     <select
@@ -241,6 +249,7 @@ function UpdateDataKosan() {
                                         <option value="false">No</option>
                                     </select>
                                 </div>
+
                                 <div className="col-6">
                                     <label htmlFor="price" className="form-label">Price</label>
                                     <input
@@ -248,9 +257,13 @@ function UpdateDataKosan() {
                                         id="price"
                                         className="form-control"
                                         value={kosanData.price}
-                                        onChange={(e) => setKosanData({ ...kosanData, price: e.target.value })}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/\D/, ''); // Hanya menerima digit/angka
+                                            setKosanData({ ...kosanData, price: value })
+                                        }}
                                     />
                                 </div>
+
                                 <div className="col-6">
                                     <label htmlFor="genderId" className="form-label">Gender</label>
                                     <select

@@ -13,6 +13,7 @@ function MyProfile() {
     const [genders, setGenders] = useState([]);
     const [profileCompletion, setProfileCompletion] = useState(0);
     const [imageUploaded, setImageUploaded] = useState(false); // State untuk menandai bahwa gambar telah diunggah
+    const [isUploading, setIsUploading] = useState(false); // State untuk menandai apakah sedang dalam proses upload
 
     const userId = useSelector((state) => state.authentication.userId);
     const navigate = useNavigate();
@@ -72,11 +73,12 @@ function MyProfile() {
         const file = event.target.files[0];
         if (file) {
             try {
+                setIsUploading(true); // Set isUploading to true when upload starts
                 const formData = new FormData();
                 formData.append("file", file);
     
                 // Post data ke endpoint yang ditentukan
-                await axios.post(`http://localhost:8080/seller/v1/upload/${userId}`, formData, {
+                await axios.post(`/seller/v1/upload/${userId}`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data"
                     }
@@ -95,9 +97,19 @@ function MyProfile() {
                 setImageUploaded(prevState => !prevState);
             } catch (error) {
                 console.error("Error uploading image:", error);
+                // Menampilkan pesan kesalahan
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to upload image. Please try again later.',
+                    showConfirmButton: true
+                });
+            } finally {
+                setIsUploading(false); // Set isUploading to false when upload finishes (either success or failure)
             }
         }
     };
+    
     
 
     return (
@@ -144,6 +156,13 @@ function MyProfile() {
                                 <p className="mt-2 text-center">Kelengkapan Profil: {profileCompletion.toFixed(2)}%</p>
                             </Card.Body>
                         </Card>
+                    </div>
+                </div>
+            )}
+            {isUploading && (
+                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center opacity-75">
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
                     </div>
                 </div>
             )}

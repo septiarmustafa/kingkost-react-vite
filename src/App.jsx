@@ -50,6 +50,11 @@ import PageAddTestimonialCustomer from "./pages/PageAddTestimonialCustomer";
 import PageSellectForgotPassword from "./pages/PageSellectForgotPassword.jsx";
 import ForgotPasswordCustomer from "./components/ForgotPassword/ForgotPasswordCustomer.jsx";
 import ForgotPasswordSeller from "./components/ForgotPassword/ForgotPasswordSeller.jsx";
+import PageDataBooking from "./pages/Admin/PageBooking/PageDataBooking.jsx";
+import PageAddDataBooking from "./pages/Admin/PageBooking/PageAddDataBooking.jsx";
+import PageApproveBooking from "./pages/Admin/PageBooking/PageApproveBooking.jsx";
+import PageNotFound from "./pages/PageNotFound.jsx";
+import PageTransactionCust from "./pages/PageTransactionCust.jsx";
 
 function App() {
 
@@ -181,7 +186,6 @@ function App() {
         <Route path="/kosan" element={<PageKosan />} />
         {/* <Route path="/detailkosan/:id" component={PageDetailKosan} /> */}
 
-        <Route path="/detailkosan/:id" element={<PageDetailKosan/>} />
 
         <Route path="/booking" element={<PageBooking />} />
 
@@ -216,6 +220,16 @@ function App() {
         <Route path="/forgot-password/seller" element={<ForgotPasswordSeller/>}/>
         <Route path="/forgot-password/customer" element={<ForgotPasswordCustomer/>}/>
 
+        <Route path="/dataBooking" element={<PageDataBooking />} />
+        <Route path="/addDataBooking" element={<PageAddDataBooking />} />
+
+        <Route path="/approveBooking/:id" element={<PageApproveBooking />} />
+
+        <Route path="/notFound" element={<PageNotFound />} />
+
+
+        <Route path="/detailkosan/:id" element={<PageDetailKosan/>}/>
+        <Route path="/myBooking" element={<PageTransactionCust/>}/>
 
 
          {/* <Route

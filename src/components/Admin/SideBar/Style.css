@@ -4291,3 +4291,21 @@
      flex-direction: column;
    }
  }
+
+ .marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.main-title {
+  animation: marquee 25s linear infinite; /* Ubah nilai 10s menjadi sesuai kebutuhan Anda */
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

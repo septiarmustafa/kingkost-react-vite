@@ -36,7 +36,7 @@ function Accordion() {
               className="accordion-collapse collapse show"
             >
               <div className="accordion-body">
-                To book a kosan with Kingkosa, you can follow these steps: [Add specific booking instructions or information].
+                To book a kosan with Kingkos, you can follow these steps: [Add specific booking instructions or information].
               </div>
             </div>
           </div>

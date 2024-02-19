@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from '../../store/axiosInterceptor';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless, FaStar } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless, FaUpload, FaUser, FaWhatsapp, FaMoneyBill, FaVoicemail, FaFileMedicalAlt, FaAddressBook, FaMoneyBillAlt, FaCashRegister } from 'react-icons/fa';
 import kos1 from '../../assets/img/kosan1.jpg';
 import kos2 from '../../assets/img/kosan2.jpg';
 import defaultUserImg from '../../assets/img/def.webp';
 import { Carousel, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import oop from '../../assets/img/oops.jpg';
 
 function Profile() {
     const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +19,9 @@ function Profile() {
     const [profileCompletion, setProfileCompletion] = useState(0);
     const [imageUploaded, setImageUploaded] = useState(false); // State untuk menandai bahwa gambar telah diunggah
     const [recommendedKos, setRecommendedKos] = useState([]);
+    const [isUploading, setIsUploading] = useState(false); // State untuk menandai bahwa sedang dalam proses upload
+    const [bookings, setBookings] = useState([]);
+    const [transactionDate, setTransactionDate] = useState(new Date());
 
     const user = useSelector(state => state.user);
     const userId = useSelector((state) => state.authentication.userId);
@@ -36,6 +42,10 @@ function Profile() {
                 const gendersResponse = await axios.get('/gender/v1');
                 setGenders(gendersResponse.data);
 
+                // Fetch booking data
+                const response = await axios.get(`/transactions?customerId=${matchedUser.id}`);
+                setBookings(response.data.data);
+
                 // Delay for 3 seconds to simulate loading
                 await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -46,11 +56,7 @@ function Profile() {
         };
 
         fetchData();
-    }, [userId, imageUploaded]); // Tambahkan imageUploaded ke dependencies agar useEffect dipanggil saat imageUploaded berubah
-
-    const handleEditProfile = () => {
-        navigate(`/edit-profile/${userId}`);
-    };
+    }, [userId, imageUploaded]);
 
     useEffect(() => {
         const fetchDataKost = async () => {
@@ -63,68 +69,25 @@ function Profile() {
         };
 
         fetchDataKost();
-    }, []); 
+    }, []);
+
+
+    const handleEditProfile = () => {
+        navigate(`/edit-profile/${userId}`);
+    };
 
     const handleImageClick = () => {
-        Swal.fire({
-            title: "Upload Image",
-            text: "Please upload an image",
-            icon: "info",
-            showCancelButton: true,
-            confirmButtonText: "Upload",
-            cancelButtonText: "Cancel",
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const input = document.createElement("input");
-                input.type = "file";
-                input.accept = "image/*";
-                input.onchange = (event) => handleFileInputChange(event, apiUserData.id);
-                input.click();
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                console.log("Upload canceled");
-            }
-        });
+        // Handling image upload
     };
-    
-    const handleFileInputChange = async (event, userId) => {
-        const file = event.target.files[0];
-        if (file) {
-            try {
-                const formData = new FormData();
-                formData.append("file", file);
-    
-                // Post data ke endpoint yang ditentukan
-                await axios.post(`http://localhost:8080/customer/v1/upload/${userId}`, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                });
-    
-                // Menampilkan pesan berhasil
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Upload Image Successful!',
-                    showConfirmButton: true,
-                    timer: 2000
-                });
-    
-                // Menandai bahwa gambar telah diunggah
-                setImageUploaded(prevState => !prevState);
-            } catch (error) {
-                console.error("Error uploading image:", error);
-            }
-        }
-    };
-    
+
     const formatRupiah = (value) => {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
-      };
+    };
 
-      const handleCariKosanClick = () => {
+    const handleCariKosanClick = () => {
         navigate('/kosan');
     };
+
 
     return (
         <div className="container mt-5">
@@ -147,7 +110,6 @@ function Profile() {
                                     {apiUserData && (
                                         <>
                                             <div className="d-flex align-items-center justify-content-start mb-3">
-                                                 {/* <img src={img} alt="Avatar" style={{ width: '70px', height: '70px', borderRadius: '20px' }} /> */}
                                                     <img
                                                         src={apiUserData.url ? apiUserData.url : defaultUserImg}
                                                         className="card-img-top"
@@ -177,10 +139,10 @@ function Profile() {
                                 <div className="card mb-3" style={{borderColor: 'white'}}>
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item">
-                                            <Link to="/myBooking" className="btn btn-outline-secondary w-100">My Booking Kos</Link>
+                                            <Link to="/myBooking" className="btn btn-outline-dark w-100">My Booking Kos</Link>
                                         </li> 
                                         <li className="list-group-item">
-                                            <Link to="/addTestimonial" className="btn btn-outline-secondary w-100">Give A Testimonial</Link>
+                                            <Link to="/addTestimonial" className="btn btn-outline-dark w-100">Give A Testimonial</Link>
                                         </li>
                                     </ul>
                                 </div>
@@ -188,30 +150,88 @@ function Profile() {
 
                         </div>
                         <div className="col-md-8">
-                            <div className="card wow fadeInUp"  style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                            <div className="card mt-3 p-3 wow fadeInUp" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
                                 <div className="card-body">
-                                    <h5 className="card-title">Kos Saya</h5>
-                                    {user.isFullProfile ? (
-                                        <div>
-                                            <p>Informasi tentang kos yang disewa</p>
-                                        </div>
+                                    {/* User's booked kos */}
+                                    {bookings.length > 0 ? (
+                                        bookings.map((booking) => (
+                                            <div key={booking.id}>
+                                                <h4>My Booking Kos</h4>
+                                                <hr />
+                                            
+                                                <div className="mb-3 d-flex">
+                                               
+                                                    <div>
+                                                        <img src={booking.kost.images[0].url} alt="Kost Image" style={{width: '25rem', height: '20rem', borderRadius: '20px'}} />
+                                                        <div className='mt-2'>
+                                                            <Link to={`https://wa.me/${booking.kost.seller.phoneNumber}`} target="_blank" className="btn btn-success mt-3 mb-2" style={{ borderRadius: '15px' }}>
+                                                                <FaWhatsapp style={{ marginRight: "5px" }} /> Chat Seller
+                                                            </Link>
+                                                        </div>
+                                                        <p className='mt-2'>
+                                                            <i className={`fa fa-wifi ${booking.kost.isWifi ? 'text-success' : 'text-danger'}`}></i> WiFi: {booking.kost.isWifi ? 'Yes' : 'No'} |
+                                                            <i className={`ps-1 fa fa-thermometer-three-quarters ${booking.kost.isAc ? 'text-success' : 'text-danger'}`}></i> AC: {booking.kost.isAc ? 'Yes' : 'No'} |
+                                                            <i className={`ps-1 fa fa-car ${booking.kost.isParking ? 'text-success' : 'text-danger'}`}></i> Park: {booking.kost.isParking ? 'Yes' : 'No'}
+                                                        </p>
+                                                        <label className='fw-bold' style={{color: 'black'}}>{booking.kost.name}</label>
+                                                        <label className='mx-4 mb-3' style={{color: 'black'}} htmlFor="">|| <FaMoneyBill className='mb-1 ms-3 me-2'/>  {formatRupiah(booking.kost.kostPrice.price)}</label>
+                                                        <p className=''><FaUser className='mb-1 me-2'/>Seller Name : {booking.kost.seller.fullName}</p>
+                                                    </div>
+                                                    <div className='ps-5 pt-2'>
+                                                        <h5>Description Kost :</h5>
+                                                        <p className='p'>{booking.kost.description}</p>
+
+                                                        <h5>Data Customer :</h5>
+                                                        <p className='mt-3 mb-2 pe-2'><FaUser /> {booking.customer.fullName}</p>
+                                                        <p className='mt-3 mb-2 pe-2'><FaEnvelope /> {booking.customer.email}</p>
+                                                        <p className='mt-3 mb-2 pe-2'><FaPhone /> {booking.customer.phoneNumber}</p>
+                                                        <p className='mt-3 mb-4 pe-2'><FaAddressBook /> {booking.customer.address}</p>
+
+                                                        <p>Payment Type : <FaMoneyBillAlt className='my-2 ms-5 me-1' /> {booking.paymentType.name}</p>
+                                                       
+                                                        <p className='me-2'>Transaction Date :
+                                                            <DatePicker className='ms-4' selected={transactionDate} onChange={date => setTransactionDate(date)} dateFormat="dd/MM/yyyy" />
+                                                        </p>
+                                                        
+                                                        <p>Status Booking : 
+                                                            <span className={`ms-5 badge text-white ${
+                                                                booking.aprStatus === 0 ? 'bg-info' :
+                                                                booking.aprStatus === 1 ? 'bg-danger' :
+                                                                booking.aprStatus === 2 ? 'bg-danger' :
+                                                                booking.aprStatus === 3 ? 'bg-success' : 'bg-danger'}`}
+                                                                style={{ padding: '10px', fontSize: '12px', borderRadius: '10px' }}>
+                                                                {booking.aprStatus === 0 ? 'Pending' :
+                                                                booking.aprStatus === 1 ? 'Cancel' :
+                                                                booking.aprStatus === 2 ? 'Reject' :
+                                                                booking.aprStatus === 3 ? 'Approve' : ''}
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
                                     ) : (
-                                        <div>
-                                            <p>Kamu belum menyewa kos</p>
-                                            <p>Coba cara ngekos modern dengan manfaat berikut ini:</p>
+                                        // If no bookings found
+                                        <div className="card-body wow fadeInUp" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                                            <div className='d-flex'>
+                                                <img src={oop} alt="Image Kos Not Found" style={{height: '10rem'}} />
+                                                <h5 className='mb-3 mt-5'> Oooppps !!! Kamu belum menyewa kos</h5>
+                                            </div>
+                                           
+                                            <p className='ms-3 mt-4 fw-bold'>Coba cara ngekos modern dengan manfaat berikut ini :</p>
                                             <ul>
-                                                <li>Tagihan dan kontrak sewa tercatat rapi</li>
-                                                <li>Kingkos menjaga keamanan transaksi</li>
-                                                <li>Cashless, dengan beragam metode pembayaran</li>
+                                                <li className='my-2'><FaFileMedicalAlt className='mb-1' /> <span className='ms-1'> Tagihan dan kontrak sewa tercatat rapi </span></li>
+                                                <li className='my-2'><FaUser className='mb-1'/> <span className='ms-1'> Kingkos menjaga keamanan transaksi </span></li>
+                                                <li className='my-2'><FaCashRegister className='mb-1'/> <span className='ms-1'>  Pembayaran dengan secara Cash </span></li>
                                             </ul>
-                                            <Button className='m-3' variant="secondary" onClick={handleCariKosanClick} style={{borderRadius: '15px'}}>Cari Kosan</Button>
+                                            <Button className='m-3' variant="secondary" onClick={handleCariKosanClick} style={{ borderRadius: '15px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>Cari Kosan</Button>
                                         </div>
                                     )}
                                 </div>
                             </div>
 
                              {/* Recommended Kos Carousel */}
-                            <div className="card mt-3 p-3" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                            <div className="card mt-3 p-3 wow fadeInUp" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
                                 <div className="card-body">
                                     <h5 className="card-title mb-4">Rekomendasi kos buat kamu</h5>
                                     <Carousel
@@ -266,6 +286,13 @@ function Profile() {
                         </div>
                     </div>
                 </>
+            )}
+            {isUploading && (
+                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white opacity-75">
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             )}
         </div>
     );

@@ -249,10 +249,14 @@ function AddSeller() {
                                         className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
                                         value={newSeller.phoneNumber}
                                         onChange={(e) => {
-                                            const value = e.target.value.replace(/\D/, ''); // Hanya menerima digit/angka
+                                            let value = e.target.value.replace(/\D/, ''); // Hanya menerima digit/angka
+                                            if (!value.startsWith("62")) { // Jika nomor telepon tidak diawali dengan "62"
+                                                value = "62" + value; // Tambahkan "62" di depan nomor telepon
+                                            }
                                             setNewSeller({ ...newSeller, phoneNumber: value });
                                         }}
                                     />
+
                                     <div className="invalid-feedback">{errors.phoneNumber}</div>
                                 </div>
                                 <div className="col-6">

@@ -29,6 +29,7 @@ function AddDataKosan() {
     const [provinceOptions, setProvinceOptions] = useState([]);
     const [cityOptions, setCityOptions] = useState([]);
     const [subdistrictOptions, setSubdistrictOptions] = useState([]);
+    const [isLoading, setIsLoading] = useState(false); // State untuk menandai apakah sedang dalam proses pengiriman data
 
     const userId = useSelector((state) => state.authentication.userId);
 
@@ -52,9 +53,9 @@ function AddDataKosan() {
         const validationErrors = {
             name: newKosan.name.trim() === "" ? "Name is required" : "",
             description: newKosan.description.trim() === "" ? "Description is required" : "",
-            price: newKosan.price.trim() === "" ? "Price is required" : "",
-            availableRoom: newKosan.availableRoom.trim() === "" ? "Available room is required" : "",
-            images: newKosan.images === null ? "Images is required" : "",
+            price: newKosan.price.trim() === "" ? "Price is required" : isNaN(newKosan.price) ? "Price must be a number" : "",
+            availableRoom: newKosan.availableRoom.trim() === "" ? "Available room is required" : isNaN(newKosan.availableRoom) ? "Available room must be a number" : "",
+            images: newKosan.images.length === 0 ? "Images is required" : "", // Ubah image menjadi images
             sellerId: newKosan.sellerId === "" ? "Seller is required" : "",
             isWifi: newKosan.isWifi === "" ? "Wi-Fi option is required" : "",
             isAc: newKosan.isAc === "" ? "Air Conditioner (AC) option is required" : "",
@@ -71,6 +72,7 @@ function AddDataKosan() {
     
         return isFormValid;
     };
+    
     
     useEffect(() => {
         // If the user is ROLE_ADMIN, fetch seller options
@@ -155,6 +157,8 @@ function AddDataKosan() {
             return;
         }
 
+        setIsLoading(true); // Set isLoading to true when submitting the form
+
         const formData = new FormData();
         formData.append('name', newKosan.name);
         formData.append('description', newKosan.description);
@@ -178,6 +182,7 @@ function AddDataKosan() {
             }
         })
         .then(() => {
+            setIsLoading(false); // Set isLoading to false when the request is successful
             Swal.fire({
               icon: 'success',
               title: 'Add Kosan Successful',
@@ -189,6 +194,7 @@ function AddDataKosan() {
             });
           })
         .catch(err => {
+            setIsLoading(false); // Set isLoading to false if there's an error
             console.error(err);
             
         });
@@ -263,7 +269,10 @@ function AddDataKosan() {
                                         id="price"
                                         className={`form-control ${errors.price ? 'is-invalid' : ''}`}
                                         value={newKosan.price}
-                                        onChange={(e) => setNewKosan({ ...newKosan, price: e.target.value })}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/\D/, ''); // Hanya menerima digit/angka
+                                            setNewKosan({ ...newKosan, price: value });
+                                        }}
                                     />
                                     <div className="invalid-feedback">{errors.price}</div>
                                 </div>
@@ -276,7 +285,10 @@ function AddDataKosan() {
                                         style={{ borderColor: 'black'}} 
                                         className={`form-control ${errors.availableRoom ? 'is-invalid' : ''}`}
                                         value={newKosan.availableRoom}
-                                        onChange={(e) => setNewKosan({ ...newKosan, availableRoom: e.target.value })}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/\D/, ''); // Hanya menerima digit/angka
+                                            setNewKosan({ ...newKosan, availableRoom: value })
+                                        }}
                                     />
                                     <div className="invalid-feedback">{errors.availableRoom}</div>
                                 </div>
@@ -423,7 +435,15 @@ function AddDataKosan() {
 
                                 {/* Submit button */}
                                 <div className="text-center mt-4">
-                                    <button type="submit" className="btn btn-primary">Submit</button>
+                                    {isLoading ? (
+                                        <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center opacity-100">
+                                            <div className="spinner-border text-primary" role="status">
+                                                <span className="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <button type="submit" className="btn btn-primary">Submit</button>
+                                    )}
                                 </div>
                             </form>
                         </div>

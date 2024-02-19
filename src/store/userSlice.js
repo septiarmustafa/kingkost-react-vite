@@ -100,10 +100,11 @@ export const loginUser = (username, password) => async (dispatch) => {
         const userResponse = await axios.get(`http://localhost:8080/seller/user/${user.userId}`);
         const userData = userResponse.data.data;
 
-        console.log("user data " + userData);
+        console.log(userData);
 
         // Periksa apakah status active pengguna adalah true atau false
-        if (userData.active === "true") {
+        //disini yang bisa error itu petik untuk truenya harus pastikan responnya pake "" atau ngga 
+        if (userData.active === true) {
           const { userId, username, email, role, active } = user;
 
           dispatch(setAuthUserId(userId));
@@ -122,7 +123,7 @@ export const loginUser = (username, password) => async (dispatch) => {
           localStorage.setItem("isLoggedIn", true);
           console.log("Login Successful!");
           console.log(user, "User Data");
-        } else if (userData && userData.active === "false") {
+        } else if (userData && userData.active === false) {
           // Jika status active adalah false, tampilkan SweetAlert
           Swal.fire({
             icon: 'error',

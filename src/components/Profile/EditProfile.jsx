@@ -60,6 +60,23 @@ function EditProfile() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleChangePhoneNumber = (e) => {
+        let { name, value } = e.target;
+    
+    // Jika field yang diubah adalah phoneNumber, format nomor telepon dengan awalan "62"
+    if (name === 'phoneNumber') {
+        // Hapus semua karakter non-digit
+        value = value.replace(/\D/g, '');
+        // Pastikan nomor telepon dimulai dengan "62"
+        if (!value.startsWith("62")) {
+            value = "62" + value;
+        }
+    }
+
+    // Update state formData dengan nilai yang baru
+    setFormData({ ...formData, [name]: value });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -169,7 +186,8 @@ function EditProfile() {
                                         <FaPhone className="me-2" />
                                         Phone Number:
                                     </label>
-                                    <input type="text" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} className="form-control" />
+                                    <input type="text" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} 
+                                    onChange={handleChangePhoneNumber} className="form-control" />
                                     {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
                                 </div>
                                 <div className="mb-3">

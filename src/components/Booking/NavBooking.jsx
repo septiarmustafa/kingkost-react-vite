@@ -118,9 +118,9 @@ function NavBooking() {
                         <div className="navbar-nav ms-auto py-0">
                             <NavLink to="/" className="nav-item nav-link" activeClassName="active">Home</NavLink>
                             <div className="nav-item dropdown">
-                                <Link to="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Cari Apa? </Link>
+                                <Link to="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Looking For ? </Link>
                                 <div className="dropdown-menu m-0">
-                                    <NavLink to="/kosan" className="dropdown-item" activeClassName="active">Kosan</NavLink>
+                                    <NavLink to="/kosan" className="dropdown-item" activeClassName="active">Kos</NavLink>
                                     <Link to="/booking" className="dropdown-item" activeClassName="active">Booking</Link>
                                     <Link to="/testimonial" className="dropdown-item" activeClassName="active">Testimonial</Link>
                                 </div>
@@ -146,7 +146,7 @@ function NavBooking() {
                                         </Dropdown.Item>
                                         <Dropdown.Divider />
                                         <Dropdown.Item  className="text-black">
-                                            <NavLink to="/mykosan" className="dropdown-item" activeClassName="active">My Kosan</NavLink>
+                                            <NavLink to="/myBooking" className="dropdown-item" activeClassName="active">My Booking</NavLink>
                                         </Dropdown.Item>
                                         <Dropdown.Divider />
                                         </>
@@ -159,11 +159,19 @@ function NavBooking() {
                                 </Dropdown.Menu>
                             </Dropdown>
                         ) : (
+                            <>
                             <Link to="/login">
                                 <button className="btn btn-warning mt1" style={{ borderRadius: '10px', color: 'black', fontWeight: 'bold' }} type="submit">
                                     LOGIN
                                 </button>
                             </Link>
+
+                            <Link to="/register">
+                                <button className="ms-2 btn btn-warning mt1" style={{ borderRadius: '10px', color: 'black', fontWeight: 'bold' }} type="submit">
+                                REGISTER
+                                </button>
+                            </Link>
+                            </>
                         )}
                     </div>
                 </nav>

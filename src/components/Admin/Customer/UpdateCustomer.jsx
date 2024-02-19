@@ -243,8 +243,19 @@ function UpdateCustomer() {
                                         id="phoneNumber"
                                         className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
                                         value={customerData.phoneNumber}
-                                        onChange={(e) => setCustomerData({ ...customerData, phoneNumber: e.target.value })}
+                                        onChange={(e) => {
+                                            let phoneNumber = e.target.value;
+                                            // Hapus semua karakter non-digit
+                                            phoneNumber = phoneNumber.replace(/\D/g, '');
+                                            // Pastikan nomor telepon dimulai dengan "62"
+                                            if (!phoneNumber.startsWith("62")) {
+                                                phoneNumber = "62" + phoneNumber;
+                                            }
+                                            // Update state customerData dengan nomor telepon yang sudah diformat
+                                            setCustomerData({ ...customerData, phoneNumber });
+                                        }}
                                     />
+
                                     <div className="invalid-feedback">{errors.phoneNumber}</div>
                                 </div>
                                 <div className="col-6">

@@ -3,11 +3,15 @@ import axios from '../../../store/axiosInterceptor';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import defaultUserImg from '../../../assets/img/default-user.png';
+import { BsSearch } from 'react-icons/bs';
 
 function Customer() {
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(5);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchGender, setSearchGender] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -61,6 +65,20 @@ function Customer() {
     // Change page
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleGenderChange = (e) => {
+        setSearchGender(e.target.value);
+    };
+
+    const filteredCustomers = customers.filter(customer =>
+        (customer.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+         customer.address.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        (searchGender === '' || customer.genderTypeId.name.toLowerCase().includes(searchGender.toLowerCase()))
+    );
+
     return (
         <div className="container-fluid mt-5">
             <div className="card mb-4 p-3">
@@ -76,13 +94,43 @@ function Customer() {
                     <i className="fa fa-user" style={{ marginRight: "10px" }}></i>
                     DATA CUSTOMER
                 </div>
-                <div className="mt-4" style={{ width: "550px", marginLeft: "18px" }}>
+                <div className="mt-4 mb-4" style={{ width: "550px", marginLeft: "18px" }}>
                     <Link to="/addCustomer" className="btn btn-success" style={{borderRadius: '10px'}}>Add Customer</Link>
                 </div>
-                <div className="mt-4" style={{ width: "550px", marginLeft: "18px" }}>
-                    {/* Add category-related buttons */}
-                </div>
                 <div className="card-body">
+                    {/* Search Input */}
+                    <div className="row mb-2">
+                        <div className="col-md-6 mb-4">
+                            <div className="input-group">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Search by Full Name or Address"
+                                    value={searchTerm}
+                                    onChange={handleSearchChange}
+                                    style={{ borderRadius: '15px 0 0 15px' }}
+                                />
+                                <button className="btn btn-primary" type="button" style={{ borderRadius: '0 15px 15px 0' }}>
+                                    <BsSearch color='white' />
+                                </button>
+                            </div>
+                        </div>
+                        <div className="col-md-3 mb-4">
+                            <div className="input-group">
+                                <select
+                                    className="form-select"
+                                    aria-label="Default select example"
+                                    onChange={handleGenderChange}
+                                    style={{ borderRadius: '15px 0 0 15px', minWidth: '80px' }}
+                                >
+                                    <option value="">Search By Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Table */}
                     <table className="table table-striped table-bordered">
                         <thead >
                             <tr>
@@ -93,11 +141,12 @@ function Customer() {
                                 <th>Gender</th>
                                 <th>Phone Number</th>
                                 <th>Address</th>
+                                <th>Image</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {currentItems.map((customer, index) => (
+                            {filteredCustomers.map((customer, index) => (
                                 <tr key={customer.id} >
                                     <td>{index + 1}</td>
                                     <td>{customer.fullName}</td>
@@ -106,6 +155,14 @@ function Customer() {
                                     <td>{customer.genderTypeId.name}</td>
                                     <td>{customer.phoneNumber}</td>
                                     <td>{customer.address}</td>
+                                    <td>
+                                        <img
+                                            className="img-fluid"
+                                            src={customer.url ? customer.url : defaultUserImg}
+                                            alt={customer.url ? customer.url : 'Placeholder Image'}
+                                            style={{ height: '40px', width: '40px', borderRadius: '100%' }}
+                                        />
+                                    </td>
                                     <td>
                                         <button className="btn btn-secondary me-2" onClick={() => handleUpdate(customer.id)}>
                                             <i className="fa fa-edit"></i>

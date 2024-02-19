@@ -262,9 +262,10 @@ function UpdateSeller() {
                                         type="text"
                                         id="phoneNumber"
                                         className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
-                                        value={sellerData.phoneNumber}
-                                        onChange={(e) => setSellerData({ ...sellerData, phoneNumber: e.target.value })}
+                                        value={sellerData.phoneNumber.startsWith("62") ? sellerData.phoneNumber : `62${sellerData.phoneNumber}`} // Menambahkan "62" di depan nomor jika belum ada
+                                        onChange={(e) => setSellerData({ ...sellerData, phoneNumber: e.target.value.startsWith("62") ? e.target.value : `62${e.target.value}` })} // Menambahkan "62" di depan nomor jika belum ada saat memperbarui nilai nomor telepon
                                     />
+
                                     <div className="invalid-feedback">{errors.phoneNumber}</div>
                                 </div>
                                 <div className="col-6">

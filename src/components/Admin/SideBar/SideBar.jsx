@@ -107,27 +107,27 @@ function SideBar() {
                     <span className="system-menu__title">Manage Data Users</span>
                     <ul className="sidebar-body-menu">
                         <li>
-                            <NavLink to="/customer"><span className="icon"><i className="fas fa-users"></i></span>Customer</NavLink>
+                            <NavLink to="/customer"><span className="icon"><i className="fas fa-users"></i></span>Data Customer</NavLink>
                         </li>
                         {role === 'ROLE_ADMIN' && (
                         <li>
-                            <NavLink to="/dataSeller"><span className="icon"><i className="fas fa-user"></i></span>Seller</NavLink>
+                            <NavLink to="/dataSeller"><span className="icon"><i className="fas fa-user"></i></span>Data Seller</NavLink>
                         </li>
                         )}
                     </ul>
                     <span className="system-menu__title">Manage Data Kosan</span>
                     <ul className="sidebar-body-menu">
                         <li>
-                            <NavLink to="/datakosan"><span className="icon"><i className="fas fa-building"></i></span>Kosan</NavLink>
+                            <NavLink to="/datakosan"><span className="icon"><i className="fas fa-building"></i></span>Data Kosan</NavLink>
                         </li>
                         <li>
-                            <NavLink to="/manage-order"><span className="icon"><i className="fas fa-shopping-cart"></i></span>Booking</NavLink>
+                            <NavLink to="/dataBooking"><span className="icon"><i className="fas fa-shopping-cart"></i></span>Data Booking</NavLink>
                         </li>
                     </ul>
                     <span className="system-menu__title">Manage Data Testimonial</span>
                     <ul className="sidebar-body-menu">
                         <li>
-                            <NavLink to="/dataTestimoni"><span className="icon"><i className="fas fa-comment"></i></span>Testimoni</NavLink>
+                            <NavLink to="/dataTestimoni"><span className="icon"><i className="fas fa-comment"></i></span>Data Testimoni</NavLink>
                         </li>
                     </ul>
                     {role === 'ROLE_SELLER' && ( // Memeriksa jika rolenya adalah ROLE_SELLER

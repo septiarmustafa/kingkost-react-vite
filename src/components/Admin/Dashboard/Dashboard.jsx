@@ -3,31 +3,25 @@ import axios from '../../../store/axiosInterceptor';
 import { Link } from 'react-router-dom';
 import SideBar from '../../../components/Admin/SideBar/SideBar';
 import NavbarAdmin from '../../../components/Admin/Navbar/NavbarAdmin';
-import cat1 from '../../../assets/Admin/img/categories/01.jpg'
-import cat2 from '../../../assets/Admin/img/categories/02.jpg'
-import cat3 from '../../../assets/Admin/img/categories/03.jpg'
-import cat4 from '../../../assets/Admin/img/categories/04.jpg'
-
-import avatar1 from '../../../assets/Admin/img/avatar/avatar-face-02.png'
-import avatar2 from '../../../assets/Admin/img/avatar/avatar-face-03.png'
-import avatar3 from '../../../assets/Admin/img/avatar/avatar-face-04.png'
-import avatar4 from '../../../assets/Admin/img/avatar/avatar-face-05.png'
-
+import { Fade } from 'react-reveal';
+import { FaChartLine } from 'react-icons/fa';
 
 function Dashboard() {
 
+    const [kosanData, setKosanData] = useState([]);
 
     const [totalCustomers, setTotalCustomers] = useState(0);
     const [totalSellers, setTotalSellers] = useState(0);
     const [totalKosans, setTotalKosans] = useState(0);
     const [totalReviews, setTotalReviews] = useState(0);
+    const [totalBooking, setTotalBooking] = useState(0);
 
     useEffect(() => {
         axios.get('/customer/v1')
             .then(response => {
-                const customers = response.data; // Ambil data customer dari respons API
-                const total = customers.length; // Hitung jumlah data customer
-                setTotalCustomers(total); // Update state dengan jumlah total customer
+                const customers = response.data; 
+                const total = customers.length;
+                setTotalCustomers(total); 
             })
             .catch(error => {
                 console.error('Error fetching customer data:', error);
@@ -52,6 +46,7 @@ function Dashboard() {
                 const kosans = response.data.data; 
                 const total = kosans.length;
                 setTotalKosans(total); 
+                setKosanData(kosans);
             })
             .catch(error => {
                 console.error('Error fetching kosan data:', error);
@@ -70,266 +65,161 @@ function Dashboard() {
             });
     }, []);
 
+    useEffect(() => {
+        axios.get('/transactions')
+            .then(response => {
+                const booking = response.data.data; 
+                const total = booking.length;
+                setTotalBooking(total); 
+            })
+            .catch(error => {
+                console.error('Error fetching Booking data:', error);
+            });
+    }, []);
+
   return (
     <main className="main users chart-page" id="skip-target">
       <div className="container">
-        <h2 className="main-title">Dashboard</h2>
-        <div className="row stat-cards">
+        <div className="marquee-container my-3 mb-5" style={{ borderRadius: '10px', backgroundColor: '#e88b10', boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)', textAlign: 'center' }}>
+            <p className="main-title pt-3" style={{ color: '#000000', textShadow: '2px 2px 4px rgba(0,0,0,0.2)' }}>
+                Welcome to Dashboard <span style={{ color: '#ffff'}}> Kingkos </span> App
+            </p>
+        </div>
+
+
+        <Fade top>
+            <h1 className="main-title mb-4 mt-3" style={{ color: '#241609', fontFamily: 'revert-layer' }}>
+                <FaChartLine style={{ marginRight: '10px', color: '#ba5e07' }} />
+                Dashboard<span style={{ color: '#ba5e07', fontWeight: 'bold' }}> Kingkos </span> App
+            </h1>
+        </Fade>
+        <hr className="mb-5" />
+        <div className="row g-3">
             <div className="col-md-6 col-xl-3">
-                <article className="stat-cards-item">
-                    <div className="stat-cards-icon primary">
-                        <i data-feather="users" aria-hidden="true"></i>
+                <div className="card text-white px-2" style={{backgroundColor: '#000000', borderRadius: '20px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                    <div className="card-body">
+                        <i className="bi bi-people" style={{ fontSize: '2.5rem' }}></i>
+                        <p className="card-text text-secondary fw-bold">Total : {totalCustomers}</p>
+                        <p className="card-text text-white fw-bold">Customer</p>
                     </div>
-                    <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">Total : {totalCustomers}</p>
-                        <p className="stat-cards-info__title">Customer</p>
-                    </div>
-                </article>
+                </div>
             </div>
             <div className="col-md-6 col-xl-3">
-                <article className="stat-cards-item">
-                    <div className="stat-cards-icon primary">
-                        <i data-feather="user" aria-hidden="true"></i>
+                <div className="card text-white px-2" style={{backgroundColor: '#000000', borderRadius: '20px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                    <div className="card-body">
+                        <i className="bi bi-person" style={{ fontSize: '2.5rem' }}></i>
+                        <p className="card-text text-secondary fw-bold" style={{fontSize : '15px'}}>Total : {totalSellers}</p>
+                        <p className="card-text text-white fw-bold">Seller</p>
                     </div>
-                    <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">Total : {totalSellers}</p>
-                        <p className="stat-cards-info__title">Seller</p>
-                    </div>
-                </article>
+                </div>
             </div>
             <div className="col-md-6 col-xl-3">
-                <article className="stat-cards-item">
-                    <div className="stat-cards-icon primary">
-                        <i data-feather="home" aria-hidden="true"></i>
+                <div className="card text-white px-2" style={{backgroundColor: '#000000', borderRadius: '20px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                    <div className="card-body">
+                        <i className="bi bi-house" style={{ fontSize: '2.5rem' }}></i>
+                        <p className="card-text text-secondary fw-bold" style={{fontSize : '15px'}}>Total : {totalKosans}</p>
+                        <p className="card-text text-white fw-bold">Kosan</p>
                     </div>
-                    <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">Total : {totalKosans}</p>
-                        <p className="stat-cards-info__title">Kosan</p>
-                    </div>
-                </article>
+                </div>
             </div>
             <div className="col-md-6 col-xl-3">
-                <article className="stat-cards-item">
-                    <div className="stat-cards-icon primary">
-                        <i data-feather="star" aria-hidden="true"></i>
+                <div className="card text-white px-2" style={{backgroundColor: '#000000', borderRadius: '20px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                    <div className="card-body">
+                        <i className="bi bi-star" style={{ fontSize: '2.5rem' }}></i>
+                        <p className="card-text text-secondary fw-bold" style={{fontSize : '15px'}}>Total : {totalBooking}</p>
+                        <p className="card-text text-white fw-bold">Booking</p>
                     </div>
-                    <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
-                        <p className="stat-cards-info__title">Testimonial</p>
-                    </div>
-                </article>
+                </div>
             </div>
         </div>
-        <div className="row stat-cards">
-            <div className="col-md-6 col-xl-3">
-                <article className="stat-cards-item">
-                    <div className="stat-cards-icon primary">
-                        <i data-feather="star" aria-hidden="true"></i>
+        <div className="row g-3 mt-2">
+        <div className="col-md-6 col-xl-3">
+                <div className="card text-white px-2" style={{backgroundColor: '#000000', borderRadius: '20px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                    <div className="card-body">
+                        <i className="bi bi-star" style={{ fontSize: '2.5rem' }}></i>
+                        <p className="card-text text-secondary fw-bold" style={{fontSize : '15px'}}>Total : {totalReviews}</p>
+                        <p className="card-text text-white fw-bold">Testimonial</p>
                     </div>
-                    <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
-                        <p className="stat-cards-info__title">Testimonial</p>
-                    </div>
-                </article>
+                </div>
             </div>
             <div className="col-md-6 col-xl-3">
-                <article className="stat-cards-item">
-                    <div className="stat-cards-icon primary">
-                        <i data-feather="star" aria-hidden="true"></i>
+                <div className="card text-white px-2" style={{backgroundColor: '#000000', borderRadius: '20px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                    <div className="card-body">
+                        <i className="bi bi-star" style={{ fontSize: '2.5rem' }}></i>
+                        <p className="card-text text-secondary fw-bold" style={{fontSize : '15px'}}>Total : {totalReviews}</p>
+                        <p className="card-text text-white fw-bold">Testimonial</p>
                     </div>
-                    <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
-                        <p className="stat-cards-info__title">Testimonial</p>
-                    </div>
-                </article>
+                </div>
             </div>
             <div className="col-md-6 col-xl-3">
-                <article className="stat-cards-item">
-                    <div className="stat-cards-icon primary">
-                        <i data-feather="star" aria-hidden="true"></i>
+                <div className="card text-white px-2" style={{backgroundColor: '#000000', borderRadius: '20px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                    <div className="card-body">
+                        <i className="bi bi-star" style={{ fontSize: '2.5rem' }}></i>
+                        <p className="card-text text-secondary fw-bold" style={{fontSize : '15px'}}>Total : {totalReviews}</p>
+                        <p className="card-text text-white fw-bold">Testimonial</p>
                     </div>
-                    <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
-                        <p className="stat-cards-info__title">Testimonial</p>
-                    </div>
-                </article>
+                </div>
             </div>
             <div className="col-md-6 col-xl-3">
-                <article className="stat-cards-item">
-                    <div className="stat-cards-icon primary">
-                        <i data-feather="star" aria-hidden="true"></i>
+                <div className="card text-white px-2" style={{backgroundColor: '#000000', borderRadius: '20px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                    <div className="card-body">
+                        <i className="bi bi-star" style={{ fontSize: '2.5rem' }}></i>
+                        <p className="card-text text-secondary fw-bold" style={{fontSize : '15px'}}>Total : {totalReviews}</p>
+                        <p className="card-text text-white fw-bold">Testimonial</p>
                     </div>
-                    <div className="stat-cards-info">
-                        <p className="stat-cards-info__num">Total : {totalReviews}</p>
-                        <p className="stat-cards-info__title">Testimonial</p>
-                    </div>
-                </article>
+                </div>
             </div>
-        
         </div>
-        <div className="row">
+        <div className="row mt-5">
             <div className="col-lg-12">
-                <div className="users-table table-wrapper">
-                    <table className="posts-table">
+                <div className="table-responsive">
+                    <h4 className="table-title"><i className="fas fa-home me-2"></i>Data Kosan</h4>
+                    <hr className="mb-4" />
+                    <table className="table table-striped table-hover">
                         <thead>
-                            <tr className="users-table-info">
-                                <th>
-                                    <label className="users-table__checkbox ms-20">
-                                        <input type="checkbox" className="check-all" />Thumbnail
-                                    </label>
-                                </th>
-                                <th>Title</th>
-                                <th>Author</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Action</th>
+                            <tr>
+                                <th>No</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th>Available Room</th>
+                                <th>WiFi</th>
+                                <th>AC</th>
+                                <th>Parking</th>
+                                <th>Gender Type</th>
+                                <th>Seller</th>
+                                <th>Province</th>
+                                <th>City</th>
+                                <th>Subdistrict</th>
+                                <th>Images</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                        {kosanData.map((kosan, index) => (
+                            <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{kosan.name}</td>
+                                <td>{kosan.description}</td>
+                                <td>{kosan.kostPrice.price}</td>
+                                <td>{kosan.availableRoom}</td>
+                                <td>{kosan.isWifi ? 'Yes' : 'No'}</td>
+                                <td>{kosan.isAc ? 'Yes' : 'No'}</td>
+                                <td>{kosan.isParking ? 'Yes' : 'No'}</td>
+                                <td>{kosan.genderType.name}</td>
+                                <td>{kosan.seller.fullName}</td>
+                                <td>{kosan.province.name}</td>
+                                <td>{kosan.city.name}</td>
+                                <td>{kosan.subdistrict.name}</td>
                                 <td>
-                                    <label className="users-table__checkbox">
-                                        <input type="checkbox" className="check" />
-                                        <div className="categories-table-img">
-                                            <picture>
-                                                <img src={cat1} alt="category" />
-                                            </picture>
-                                        </div>
-                                    </label>
-                                </td>
-                                <td><Link to="#">Starting your traveling blog with Vasco</Link></td>
-                                <td>
-                                    <div className="pages-table-img">
-                                        <picture>
-                                            <img src={avatar1} alt="User Name" />
-                                        </picture>
-                                        <Link to="#">Jenny Wilson</Link>
-                                    </div>
-                                </td>
-                                <td><span className="badge-pending">Pending</span></td>
-                                <td>17.04.2021</td>
-                                <td>
-                                    <span className="p-relative">
-                                        <button className="dropdown-btn transparent-btn" type="button" title="More info">
-                                            <div className="sr-only">More info</div>
-                                            <i data-feather="more-horizontal" aria-hidden="true"></i>
-                                        </button>
-                                        <ul className="users-item-dropdown dropdown">
-                                            <li><Link to="#">Edit</Link></li>
-                                            <li><Link to="#">Quick edit</Link></li>
-                                            <li><Link to="#">Trash</Link></li>
-                                        </ul>
-                                    </span>
+                                    <img
+                                        className="img-fluid"
+                                        src={kosan.images.length > 0 ? kosan.images[0].url : defaultImage}
+                                        alt={kosan.images.length > 0 ? kosan.images[0].fileName : 'Placeholder'}
+                                        style={{ height: '40px', width: '40px', borderRadius: '20px' }}
+                                    />
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <label className="users-table__checkbox">
-                                        <input type="checkbox" className="check" />
-                                        <div className="categories-table-img">
-                                            <picture>
-                                                <img src={cat2} alt="category" />
-                                            </picture>
-                                        </div>
-                                    </label>
-                                </td>
-                                <td><Link to="#">Start a blog to reach your creative peak</Link></td>
-                                <td>
-                                    <div className="pages-table-img">
-                                        <picture>
-                                            <img src={avatar2} alt="User Name" />
-                                        </picture>
-                                        <Link to="#">Annette Black</Link>
-                                    </div>
-                                </td>
-                                <td><span className="badge-pending">Pending</span></td>
-                                <td>23.04.2021</td>
-                                <td>
-                                    <span className="p-relative">
-                                        <button className="dropdown-btn transparent-btn" type="button" title="More info">
-                                            <div className="sr-only">More info</div>
-                                            <i data-feather="more-horizontal" aria-hidden="true"></i>
-                                        </button>
-                                        <ul className="users-item-dropdown dropdown">
-                                            <li><Link to="#">Edit</Link></li>
-                                            <li><Link to="#">Quick edit</Link></li>
-                                            <li><Link to="#">Trash</Link></li>
-                                        </ul>
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label className="users-table__checkbox">
-                                        <input type="checkbox" className="check" />
-                                        <div className="categories-table-img">
-                                            <picture>
-                                                <img src={cat3} alt="category" />
-                                            </picture>
-                                        </div>
-                                    </label>
-                                </td>
-                                <td><Link to="#">Helping a local business reinvent itself</Link></td>
-                                <td>
-                                    <div className="pages-table-img">
-                                        <picture>
-                                            <img src={avatar3} alt="User Name" />
-                                        </picture>
-                                        <Link to="#">Kathryn Murphy</Link>
-                                    </div>
-                                </td>
-                                <td><span className="badge-active">Active</span></td>
-                                <td>17.04.2021</td>
-                                <td>
-                                    <span className="p-relative">
-                                        <button className="dropdown-btn transparent-btn" type="button" title="More info">
-                                            <div className="sr-only">More info</div>
-                                            <i data-feather="more-horizontal" aria-hidden="true"></i>
-                                        </button>
-                                        <ul className="users-item-dropdown dropdown">
-                                            <li><Link to="#">Edit</Link></li>
-                                            <li><Link to="#">Quick edit</Link></li>
-                                            <li><Link to="#">Trash</Link></li>
-                                        </ul>
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label className="users-table__checkbox">
-                                        <input type="checkbox" className="check" />
-                                        <div className="categories-table-img">
-                                            <picture>
-                                                <img src={cat4} alt="category" />
-                                            </picture>
-                                        </div>
-                                    </label>
-                                </td>
-                                <td><Link to="#">Helping a local business reinvent itself</Link></td>
-                                <td>
-                                    <div className="pages-table-img">
-                                        <picture>
-                                            <img src={avatar4} alt="User Name" />
-                                        </picture>
-                                        <Link to="#">Kathryn Murphy</Link>
-                                    </div>
-                                </td>
-                                <td><span className="badge-active">Active</span></td>
-                                <td>17.04.2021</td>
-                                <td>
-                                    <span className="p-relative">
-                                        <button className="dropdown-btn transparent-btn" type="button" title="More info">
-                                            <div className="sr-only">More info</div>
-                                            <i data-feather="more-horizontal" aria-hidden="true"></i>
-                                        </button>
-                                        <ul className="users-item-dropdown dropdown">
-                                            <li><Link to="#">Edit</Link></li>
-                                            <li><Link to="#">Quick edit</Link></li>
-                                            <li><Link to="#">Trash</Link></li>
-                                        </ul>
-                                    </span>
-                                </td>
-                            </tr>
+                        ))}
                         </tbody>
                     </table>
                 </div>

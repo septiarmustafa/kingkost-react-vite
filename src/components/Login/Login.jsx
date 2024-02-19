@@ -48,6 +48,8 @@ function Login() {
         // Ambil data user dari local storage setelah login berhasil
         const user = JSON.parse(localStorage.getItem("userLogin"));
 
+        console.log(user);
+
         if (user || user.active) { // Memeriksa apakah status seller aktif setelah login berhasil
           Swal.fire({
             icon: 'success',

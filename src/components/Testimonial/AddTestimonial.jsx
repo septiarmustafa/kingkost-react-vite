@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { Card, Form, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate dari react-router-dom
+import { Link, useNavigate } from 'react-router-dom';
 
 function AddTestimonial() {
     const userId = useSelector((state) => state.authentication.userId);
@@ -105,6 +105,11 @@ function AddTestimonial() {
 
     return (
         <div className="container mt-5">
+            <div className='w-20 mb-5'>
+                <Link to="/profile" className="btn btn-outline-secondary" style={{ borderRadius: '10px' }}>
+                    <i className="fas fa-arrow-left"> Back </i>
+                </Link>
+            </div>
             <h2 className="mb-4">Berikan Testimonial</h2>
             <Card className="shadow">
                 <Card.Body>
