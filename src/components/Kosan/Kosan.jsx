@@ -1,74 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../store/axiosInterceptor';
-import { Link } from 'react-router-dom';
 import DefaultImage from '../../assets/img/DefaultImage.jpg';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Kosan() {
-  const [provinceFilter, setProvinceFilter] = useState('');
-  const [cityFilter, setCityFilter] = useState('');
-  const [districtFilter, setDistrictFilter] = useState('');
+  const [provinceOptions, setProvinceOptions] = useState([]);
+  const [cityOptions, setCityOptions] = useState([]);
+  const [subdistrictOptions, setSubdistrictOptions] = useState([]);
+
+  const [provinceId, setProvinceId] = useState('');
+  const [cityId, setCityId] = useState('');
+  const [subdistrictId, setSubdistrictId] = useState('');
+
   const [genderFilter, setGenderFilter] = useState('');
-  const [loading, setLoading] = useState(true); // Loading state
-  const [lokasiData, setLokasiData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(6);
-  const [provinces, setProvinces] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [districts, setDistricts] = useState([]);
+
+  const [kosanData, setKosanData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [customerId, setCustomerId] = useState(null); // Add customerId state
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    fetchData(1);
-    fetchProvinces();
+    const fetchData = async () => {
+      try {
+        const responseLogin = JSON.parse(localStorage.getItem('userLogin'));
+        const responseCustomer = await axios.get(`/customer/user/${responseLogin.userId}`);
+        setCustomerId(responseCustomer.data.data.id);
+      } catch (error) {
+        console.error('Error fetching customer data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const fetchProvinces = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/province');
-      setProvinces(response.data.data);
-    } catch (error) {
-      console.error('Error fetching provinces:', error);
-      setError('Failed to fetch provinces');
-    }
-  };
+  useEffect(() => {
+    axios.get('/province')
+      .then(response => {
+        setProvinceOptions(response.data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching province options:', error);
+      });
+  }, []);
 
-  const fetchCities = async (provinceId) => {
-    try {
-      const response = await axios.get(`http://localhost:8080/city?province_id=${provinceId}`);
-      setCities(response.data.data);
-    } catch (error) {
-      console.error('Error fetching cities:', error);
-      setError('Failed to fetch cities');
+  useEffect(() => {
+    if (provinceId) {
+      axios.get(`/city?province_id=${provinceId}`)
+        .then(response => {
+          setCityOptions(response.data.data);
+          setCityId("");
+        })
+        .catch(error => {
+          console.error('Error fetching city options:', error);
+        });
     }
-  };
+  }, [provinceId]);
 
-  const fetchDistricts = async (cityId) => {
-    try {
-      const response = await axios.get(`http://localhost:8080/subdistrict?city_id=${cityId}`);
-      setDistricts(response.data.data);
-    } catch (error) {
-      console.error('Error fetching districts:', error);
-      setError('Failed to fetch districts');
+  useEffect(() => {
+    if (cityId) {
+      axios.get(`/subdistrict?city_id=${cityId}`)
+        .then(response => {
+          setSubdistrictOptions(response.data.data);
+          setSubdistrictId("");
+        })
+        .catch(error => {
+          console.error('Error fetching subdistrict options:', error);
+        });
     }
-  };
+  }, [cityId]);
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage]);
 
   const fetchData = async (page) => {
     try {
-      const response = await axios.get('/kost', {
-        params: {
-          page: page - 1,
-          size: itemsPerPage,
-          province: provinceFilter,
-          city: cityFilter,
-          district: districtFilter,
-          gender: genderFilter
-        }
-      });
-      const { data, paggingResponse } = response.data;
-      setLokasiData(data);
-      setTotalPages(paggingResponse.totalPages);
-      setCurrentPage(paggingResponse.pageNumber + 1);
+      const response = await axios.get(`/kost?page=${page}`);
+      const { data } = response.data;
+      setKosanData(data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -77,37 +90,64 @@ function Kosan() {
     }
   };
 
-  const handleProvinceChange = (event) => {
-    const selectedProvince = event.target.value;
-    setProvinceFilter(selectedProvince);
-    setCityFilter('');
-    setDistrictFilter('');
-    fetchCities(selectedProvince);
-  };
-
-  const handleCityChange = (event) => {
-    const selectedCity = event.target.value;
-    setCityFilter(selectedCity);
-    setDistrictFilter('');
-    fetchDistricts(selectedCity);
-  };
-
-  const handleDistrictChange = (event) => {
-    setDistrictFilter(event.target.value);
-  };
-
-  const handleGenderChange = (event) => {
-    setGenderFilter(event.target.value);
-  };
-
   const formatRupiah = (value) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
   };
 
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    fetchData(pageNumber);
+  const filteredKosans = kosanData.filter(kosan =>
+    (genderFilter === '' || kosan.genderType.name.toLowerCase().includes(genderFilter.toLowerCase())) &&
+    (provinceId === '' || kosan.province.id === provinceId) &&
+    (cityId === '' || kosan.city.id === cityId) &&
+    (subdistrictId === '' || kosan.subdistrict.id === subdistrictId)
+  );
+
+  const handleGenderChange = (e) => {
+    setGenderFilter(e.target.value);
   };
+
+  const handleProvinceChange = (e) => {
+    const provinceId = e.target.value;
+    setProvinceId(provinceId);
+    setCityId(""); // Reset city selection when province changes
+    setSubdistrictId(""); // Reset subdistrict selection when province changes
+  };
+
+  const handleCityChange = (e) => {
+    const cityId = e.target.value;
+    setCityId(cityId);
+    setSubdistrictId(""); // Reset subdistrict selection when city changes
+  };
+
+  const handleSubdistrictChange = (e) => {
+    setSubdistrictId(e.target.value);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage >= 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handleButtonClick = (kosan) => {
+    if (kosan.currentBookingStatus === "0") {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Kosan ini sudah pernah Anda booking dan dalam tahap pending/proses.',
+      });
+    } else {
+      // Redirect ke halaman /kost/id dengan navigate
+      // Pastikan untuk mengimpor fungsi navigate dari react-router-dom
+      // import { useNavigate } from 'react-router-dom';
+      // const navigate = useNavigate();
+      navigate(`/kost/id?kostId=${kosan.id}&customerId=${customerId}`);
+    }
+  };
+  
 
   return (
     <div className="container" style={{ paddingTop: '5em', paddingBottom: '10em' }}>
@@ -129,11 +169,11 @@ function Kosan() {
               <div className="col">
                 <select
                   className="form-select"
-                  value={provinceFilter}
+                  value={provinceId}
                   onChange={handleProvinceChange}
                 >
                   <option value="">Pilih Provinsi</option>
-                  {provinces.map(province => (
+                  {provinceOptions.map(province => (
                     <option key={province.id} value={province.id}>{province.name}</option>
                   ))}
                 </select>
@@ -141,12 +181,12 @@ function Kosan() {
               <div className="col">
                 <select
                   className="form-select"
-                  value={cityFilter}
+                  value={cityId}
                   onChange={handleCityChange}
-                  disabled={!provinceFilter}
+                  disabled={!provinceId}
                 >
                   <option value="">Pilih Kota</option>
-                  {cities.map(city => (
+                  {cityOptions.map(city => (
                     <option key={city.id} value={city.id}>{city.name}</option>
                   ))}
                 </select>
@@ -154,108 +194,101 @@ function Kosan() {
               <div className="col">
                 <select
                   className="form-select"
-                  value={districtFilter}
-                  onChange={handleDistrictChange}
-                  disabled={!cityFilter}
+                  value={subdistrictId}
+                  onChange={handleSubdistrictChange}
+                  disabled={!cityId}
                 >
                   <option value="">Pilih Kecamatan</option>
-                  {districts.map(district => (
-                    <option key={district.id} value={district.id}>{district.name}</option>
+                  {subdistrictOptions.map(subdistrict => (
+                    <option key={subdistrict.id} value={subdistrict.id}>{subdistrict.name}</option>
                   ))}
                 </select>
               </div>
               <div className="col">
                 <select
                   className="form-select"
-                  value={genderFilter}
+                  aria-label="Default select example"
                   onChange={handleGenderChange}
+                  style={{ borderRadius: '15px 0 0 15px', minWidth: '80px' }}
                 >
-                  <option value="">Filter by Gender</option>
-                  {lokasiData.map(kosan => (
-                    <option key={kosan.genderType.id} value={kosan.genderType.name}>{kosan.genderType.name}</option>
-                  ))}
+                  <option value="">Search By Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
-              </div>
-              <div className="col">
-                <button className="btn btn-primary" onClick={() => fetchData(1)}>Cari</button>
               </div>
             </div>
           </div>
           {/* Kosan cards */}
           <div className="row g-4 justify-content-center mt-4">
-            {lokasiData.length > 0 ? (
-              lokasiData.map(kosan => (
-                <div key={kosan.id} className="col-lg-4 col-md-6">
-                  <div className="card">
-                    <Link to={`/detailkosan/${kosan.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <div className="overflow-hidden" style={{ height: '200px' }}>
-                        <img
-                          className="img-fluid"
-                          src={kosan.images.length > 0 ? kosan.images[0].url : DefaultImage}
-                          alt={kosan.images.length > 0 ? kosan.images[0].fileName : 'Placeholder'}
-                          style={{ height: '100%', width: '100%', objectFit: 'cover' }}
-                        />
+            {filteredKosans.map((kosan, index) => (
+              <div key={kosan.id} className="col-lg-4 col-md-6">
+                <div className="card">
+                  {/* <Link to={`/kost/id?kostId=${kosan.id}&customerId=${customerId}`} style={{ textDecoration: 'none', color: 'inherit' }}> */}
+                    <div className="overflow-hidden" style={{ height: '200px' }}>
+                      <img
+                        className="img-fluid"
+                        src={kosan.images.length > 0 ? kosan.images[0].url : DefaultImage}
+                        alt={kosan.images.length > 0 ? kosan.images[0].fileName : 'Placeholder'}
+                        style={{ height: '100%', width: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+                    <div className="card-body">
+                      <div className="d-flex border-bottom">
+                        <small className="flex-fill text-center border-end py-2">
+                          <i className="fa fa-map-marker-alt text-primary me-2"></i>
+                          {kosan.city.name}
+                        </small>
+                        <small className="flex-fill text-center border-end py-2">
+                          <i className="fa fa-calendar-alt text-primary me-2"></i>
+                          Available Rooms: {kosan.availableRoom}
+                        </small>
+                        <small className="flex-fill text-center py-2">
+                          <i className="fa fa-solid fa-venus-mars text-primary me-2"></i>
+                          Gender Kosan: {kosan.genderType.name}
+                        </small>
+                        <p>status : {kosan.currentBookingStatus}</p>
                       </div>
-                      <div className="card-body">
-                        <div className="d-flex border-bottom">
-                          <small className="flex-fill text-center border-end py-2">
-                            <i className="fa fa-map-marker-alt text-primary me-2"></i>
-                            {kosan.city.name}
-                          </small>
-                          <small className="flex-fill text-center border-end py-2">
-                            <i className="fa fa-calendar-alt text-primary me-2"></i>
-                            Available Rooms: {kosan.availableRoom}
-                          </small>
-                          <small className="flex-fill text-center py-2">
-                            <i className="fa fa-solid fa-venus-mars text-primary me-2"></i>
-                            Gender Kosan: {kosan.genderType.name}
-                          </small>
+                      <div className="text-center p-4">
+                        <h4 className="mb-2">{formatRupiah(kosan.kostPrice.price)}/month</h4>
+                        <p className='mb-2'>{kosan.name}</p>
+                        <label className='mb-3'>Seller: {kosan.seller.fullName}</label>
+                        <div className="">
+                          {Array.from({ length: kosan.rating }, (_, index) => (
+                            <small key={index} className="fa fa-star text-primary"></small>
+                          ))}
                         </div>
-                        <div className="text-center p-4">
-                          <h4 className="mb-2">{formatRupiah(kosan.kostPrice.price)}/month</h4>
-                          <p className='mb-2'>{kosan.name}</p>
-                          <label className='mb-3'>Seller: {kosan.seller.fullName}</label>
-                          <div className="">
-                            {Array.from({ length: kosan.rating }, (_, index) => (
-                              <small key={index} className="fa fa-star text-primary"></small>
-                            ))}
-                          </div>
-                          <p>{kosan.description}</p>
+                        <p>{kosan.description}</p>
+                        <div>
+                          <p className='mb-2 text-dark'>Address: {kosan.subdistrict.name}, {kosan.city.name}, {kosan.province.name}</p>
                           <div>
-                            <p className='mb-2 text-dark'>Address: {kosan.subdistrict.name}, {kosan.city.name}, {kosan.province.name}</p>
-                            <div>
-                              <p className='mb-4'>
-                                <i className={`fa fa-wifi ${kosan.isWifi ? 'text-success' : 'text-danger'}`}></i> WiFi: {kosan.isWifi ? 'Yes' : 'No'} |
-                                <i className={`ps-1 fa fa-thermometer-three-quarters ${kosan.isAc ? 'text-success' : 'text-danger'}`}></i> AC: {kosan.isAc ? 'Yes' : 'No'} |
-                                <i className={`ps-1 fa fa-car ${kosan.isParking ? 'text-success' : 'text-danger'}`}></i> Park: {kosan.isParking ? 'Yes' : 'No'}
-                              </p>
-                            </div>
+                            <p className='mb-4'>
+                              <i className={`fa fa-wifi ${kosan.isWifi ? 'text-success' : 'text-danger'}`}></i> WiFi: {kosan.isWifi ? 'Yes' : 'No'} |
+                              <i className={`ps-1 fa fa-thermometer-three-quarters ${kosan.isAc ? 'text-success' : 'text-danger'}`}></i> AC: {kosan.isAc ? 'Yes' : 'No'} |
+                              <i className={`ps-1 fa fa-car ${kosan.isParking ? 'text-success' : 'text-danger'}`}></i> Park: {kosan.isParking ? 'Yes' : 'No'}
+                            </p>
                           </div>
                         </div>
+                        <div>
+                        <button className='btn btn-secondary' onClick={() => handleButtonClick(kosan)}>View Detail</button>
+                        </div>
                       </div>
-                    </Link>
-                  </div>
+                    </div>
+                  {/* </Link> */}
                 </div>
-              ))
-            ) : (
-              <div className="col text-center">
-                <p>No data found</p>
               </div>
-            )}
+            ))}
           </div>
           {/* Pagination */}
-          <nav className="mt-4" aria-label="Page navigation example">
+          <nav className='mt-5'>
             <ul className="pagination justify-content-center">
-              <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                <button className="page-link" onClick={() => paginate(currentPage - 1)}>Previous</button>
+              <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
+                <button className="page-link" onClick={handlePrevPage}>Previous</button>
               </li>
-              {Array.from({ length: totalPages }, (_, index) => (
-                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                  <button className="page-link" onClick={() => paginate(index + 1)}>{index + 1}</button>
-                </li>
-              ))}
-              <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                <button className="page-link" onClick={() => paginate(currentPage + 1)}>Next</button>
+              <li className="page-item disabled">
+                <span className="page-link">{currentPage}</span>
+              </li>
+              <li className="page-item">
+                <button className="page-link" onClick={handleNextPage}>Next</button>
               </li>
             </ul>
           </nav>

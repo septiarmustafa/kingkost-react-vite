@@ -64,13 +64,7 @@ function Footer() {
                     <div className="col-lg-3 col-md-6 ps-5">
                         <h4 className="mb-3">Newsletter</h4>
                         <p>Stay updated with our latest offers and news. Sign up for our newsletter!</p>
-                        <div className="mx-auto" >
-                            <Link to="/register/customer" type="button" className="btn btn-primary mt-2 me-2" style={{padding: '2px 10px 2px 10px ', borderRadius: '15px'}}>Sign Up</Link>
-                        </div>
-                        <div style={{ marginTop: '20px', padding: '10px 0' }}>
-                            <img src={logogplay} alt="Google Play" style={{ marginRight: '10px' }} />
-                            <img src={logoapp} alt="App Store" />
-                        </div>
+                        
                     </div>
                 </div>
             </div>

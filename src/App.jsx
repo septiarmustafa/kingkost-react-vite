@@ -228,8 +228,10 @@ function App() {
         <Route path="/notFound" element={<PageNotFound />} />
 
 
-        <Route path="/detailkosan/:id" element={<PageDetailKosan/>}/>
+        <Route path="/kost/id" element={<PageDetailKosan/>}/>
         <Route path="/myBooking" element={<PageTransactionCust/>}/>
+
+        <Route path="/booking/:id" element={<PageBooking/>}/>
 
 
          {/* <Route
