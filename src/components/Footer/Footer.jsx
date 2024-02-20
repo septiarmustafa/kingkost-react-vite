@@ -4,10 +4,7 @@ import img1 from '../../assets/img/kosan1.jpg'
 import img2 from '../../assets/img/kosan2.jpg'
 import img3 from '../../assets/img/kosan3.jpg'
 
-import logogplay from '../../assets/img/get-it-on-playstore.svg'
-import logoapp from '../../assets/img/get-it-on-appstore.svg'
 import logo from '../../assets/img/king.png';
-import { Button } from 'bootstrap';
 
 function Footer() {
     return (
@@ -19,7 +16,7 @@ function Footer() {
                             <img src={logo} alt="KingKos Logo" className="logo-image" style={{ marginRight: '1rem', height: '30px' }} />
                             KingKos
                         </p>
-                        <p className="mb-2">Dapatkan "info kost murah" hanya di Kingkos App. Mau "Sewa Kost Murah"? </p>
+                        <p className="mb-2">Get "cheap boarding house info" only on the Kingkos App. Want to "Rent a Cheap Boarding House"? </p>
                         <Link className="btn btn-link text-black" to="/about">About Us</Link>
                         <Link className="btn btn-link text-black" to="/contact">Contact Us</Link>
                         <Link className="btn btn-link text-black" to="/testimonial">Testimonial</Link>
@@ -73,7 +70,7 @@ function Footer() {
                     <div className="row">
                         <div className="col-md-6 text-center text-md-start mb-3 mb-md-0">
                             &copy; <Link to="#" className="border-bottom text-black">King Kosan</Link>, All Right Reserved.
-                            Designed By <Link to="/" className="border-bottom text-black">Kelompok 2 Pascal || Enigmacamp</Link>
+                            Designed By <Link to="/" className="border-bottom text-black">Group 2 Pascal || Enigmacamp</Link>
                         </div>
                         <div className="col-md-6 text-center text-md-end">
                             <div className="footer-menu">

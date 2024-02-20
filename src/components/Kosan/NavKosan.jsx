@@ -121,7 +121,6 @@ function NavKosan() {
                                 <Link to="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Looking For ? </Link>
                                 <div className="dropdown-menu m-0">
                                     <NavLink to="/kosan" className="dropdown-item" activeClassName="active">Kos</NavLink>
-                                    <Link to="/booking" className="dropdown-item" activeClassName="active">Booking</Link>
                                     <Link to="/testimonial" className="dropdown-item" activeClassName="active">Testimonial</Link>
                                 </div>
                             </div>

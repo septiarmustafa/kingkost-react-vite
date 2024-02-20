@@ -107,6 +107,25 @@ const BookingKost = () => {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
     };
 
+    const monthText = {
+        ONE_MONTH: '1 Month',
+        TWO_MONTH: '2 Month',
+        THREE_MONTH: '3 Month',
+        FOUR_MONTH: '4 Month',
+        FIVE_MONTH: '5 Month',
+        SIX_MONTH: '6 Month',
+        SEVEN_MONTH: '7 Month',
+        EIGHT_MONTH: '8 Month',
+        NINE_MONTH: '9 Month',
+        TEN_MONTH: '10 Month',
+        ELEVEN_MONTH: '11 Month',
+        TWELVE_MONTH: '12 Month'
+    };
+    
+
+    
+    
+
     return (
         <div className="container-fluid mt-5">
             <div className="card mb-4 p-3">
@@ -203,13 +222,18 @@ const BookingKost = () => {
                             <div className='booking-card p-4 col-md-7 d-flex'  style={{ borderRadius: '15px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}>
                                 <div>
                                     <p>Silahkan Pilih Berapa lama waktu Kos :</p>
-                                    <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} style={{ width: "70%", padding: "5px", borderRadius: "5px" }}>
-                                        {monthType.map((monthType) => (
-                                            <option key={monthType.id} value={monthType.id}>
-                                                {monthType.name}
+                                    <select
+                                        value={selectedMonth}
+                                        onChange={(e) => setSelectedMonth(e.target.value)}
+                                        style={{ width: "70%", padding: "5px", borderRadius: "5px" }}
+                                    >
+                                        {monthType.map((month) => (
+                                            <option key={month.id} value={month.id}>
+                                                {monthText[month.name]}
                                             </option>
                                         ))}
                                     </select>
+
                                 </div>
 
                                 <div className='ps-5'>

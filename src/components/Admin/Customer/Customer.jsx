@@ -175,24 +175,6 @@ function Customer() {
                             ))}
                         </tbody>
                     </table>
-                    {/* Pagination */}
-                    {/* <nav>
-                        <ul className="pagination">
-                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                                <button onClick={() => paginate(currentPage - 1)} className="page-link">Previous</button>
-                            </li>
-                            {Array.from({ length: Math.ceil(customers.length / itemsPerPage) }).map((_, index) => (
-                                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                                    <button onClick={() => paginate(index + 1)} className="page-link">
-                                        {index + 1}
-                                    </button>
-                                </li>
-                            ))}
-                            <li className={`page-item ${currentPage === Math.ceil(customers.length / itemsPerPage) ? 'disabled' : ''}`}>
-                                <button onClick={() => paginate(currentPage + 1)} className="page-link">Next</button>
-                            </li>
-                        </ul>
-                    </nav> */}
                 </div>
             </div>
         </div>

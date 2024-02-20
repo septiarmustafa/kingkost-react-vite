@@ -193,16 +193,21 @@ function RegisterCustomer() {
                                                             Gender:
                                                         </label>
                                                         <select
-                                                            style={{borderColor: 'black'}}
+                                                            style={{ borderColor: 'black' }}
                                                             id="form3Example1c"
                                                             className="form-select"
                                                             onChange={e => setNewCustomer({ ...newCustomer, genderTypeId: e.target.value })}
                                                         >
                                                             <option value="" disabled selected>Select gender</option>
-                                                            {genderTypes.map(gender => (
-                                                                <option key={gender.id} value={gender.id}>{gender.name}</option>
-                                                            ))}
+                                                            {genderTypes
+                                                                .filter(gender => gender.name === 'MALE' || gender.name === 'FEMALE')
+                                                                .map(gender => (
+                                                                    <option key={gender.id} value={gender.id}>
+                                                                        {gender.name}
+                                                                    </option>
+                                                                ))}
                                                         </select>
+
                                                         <div className="text-danger">{errors.genderTypeId}</div>
                                                     </div>
                                                 </div>

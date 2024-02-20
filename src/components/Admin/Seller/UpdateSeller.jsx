@@ -204,16 +204,21 @@ function UpdateSeller() {
                                     <label htmlFor="genderTypeId" className="form-label">Gender</label>
                                     <select
                                         id="genderTypeId"
-                                        style={{ borderColor: 'black'}} 
+                                        style={{ borderColor: 'black' }}
                                         className={`form-select ${errors.genderTypeId ? 'is-invalid' : ''}`}
                                         value={sellerData.genderTypeId}
                                         onChange={(e) => setSellerData({ ...sellerData, genderTypeId: e.target.value })}
                                     >
                                         <option value="">Select Gender</option>
-                                        {genderTypes.map(gender => (
-                                            <option key={gender.id} value={gender.id}>{gender.name}</option>
-                                        ))}
+                                        {genderTypes
+                                            .filter(gender => gender.name === 'MALE' || gender.name === 'FEMALE')
+                                            .map(gender => (
+                                                <option key={gender.id} value={gender.id}>
+                                                    {gender.name}
+                                                </option>
+                                            ))}
                                     </select>
+
                                     <div className="invalid-feedback">{errors.genderTypeId}</div>
                                 </div>
                                 <div className="col-6">

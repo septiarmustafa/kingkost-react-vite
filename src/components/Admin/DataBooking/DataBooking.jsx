@@ -14,6 +14,8 @@ function DataBooking() {
     const navigate = useNavigate();
     const [isUploading, setIsUploading] = useState(false);
 
+    const role = useSelector((state) => state.authentication.role);
+
     const [searchTerm, setSearchTerm] = useState('');
     const [provinceOptions, setProvinceOptions] = useState([]);
     const [cityOptions, setCityOptions] = useState([]);
@@ -303,7 +305,9 @@ function DataBooking() {
                                 <th>Month Type</th>
                                 <th>Payment Type</th>
                                 <th>Seller Name</th>
+                                {role === 'ROLE_SELLER' && (
                                 <th>Action</th>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
@@ -333,6 +337,8 @@ function DataBooking() {
                                 <td>{transaction.monthType.name}</td>
                                 <td>{transaction.paymentType.name}</td>
                                 <td>{transaction.kost.seller.fullName}</td>
+                                {role === 'ROLE_SELLER' && (
+                                <> 
                                 <td style={{ display: 'flex'}} className='py-3'>
                                     {/* Tampilkan tombol approve dan cancel hanya jika aprStatus === 0 */}
                                     {transaction.aprStatus === 0 && (
@@ -346,6 +352,8 @@ function DataBooking() {
                                         </>
                                     )}
                                 </td>
+                                </>
+                                )}
                             </tr>
                         ))}
 

@@ -27,6 +27,8 @@ function DataKosan() {
     const [cityId, setCityId] = useState('');
     const [subdistrictId, setSubdistrictId] = useState('');
 
+    const role = useSelector((state) => state.authentication.role);
+
     useEffect(() => {
         axios.get('/province')
             .then(response => {
@@ -348,9 +350,11 @@ function DataKosan() {
                                         />
                                     </td>
                                     <td style={{ display: 'flex'}} className='py-5'>
+                                        {role === 'ROLE_SELLER' && (
                                         <button className="btn btn-secondary me-2" onClick={() => handleUpdate(kosan.id)}>
                                             <i className="fa fa-edit"></i>
                                         </button>
+                                        )}
                                         <button className="btn btn-danger" onClick={() => handleDelete(kosan.id)}>
                                             <i className="fa fa-trash"></i>
                                         </button>

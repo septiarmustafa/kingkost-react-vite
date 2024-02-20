@@ -121,7 +121,6 @@ function Navbar() {
                                 <Link to="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Looking For ? </Link>
                                 <div className="dropdown-menu m-0">
                                     <NavLink to="/kosan" className="dropdown-item" activeClassName="active">Kos</NavLink>
-                                    <Link to="/booking" className="dropdown-item" activeClassName="active">Booking</Link>
                                     <Link to="/testimonial" className="dropdown-item" activeClassName="active">Testimonial</Link>
                                 </div>
                             </div>
@@ -176,18 +175,14 @@ function Navbar() {
                     </div>
                 </nav>
 
-                <div className="container-fluid py-4 hero-header">
-                    <div className="container">
-                        <div className="row justify-content-center py-5">
-                            <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center p-5">
-                                <h2 className="display-3 text-white mb-4 animated slideInDown">Find Your Ideal Kosan</h2>
-                                <h2 className="text-white mb-4 animated slideInDown">With Kingkos App</h2>
-                                <h3 className=" text-white mb-3 animated slideInDown">Discover Comfortable and Affordable Kosan Options</h3>
-                                <p className="fs-4 text-white mb-4 animated slideInDown">Explore a variety of kosan options tailored for you.</p>
-                                <div className="position-relative w-75 mx-auto animated slideInDown">
-                                    {/* <input className="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Enter Location or Keyword" />
-                                    <button type="button" className="btn btn-warning rounded-pill py-2 px-4 position-absolute top-0 end-0 me-2" style={{ marginTop: '7px' }}>Search</button> */}
-                                </div>
+                <div class="container-fluid py-4 hero-header">
+                    <div class="container">
+                        <div class="row justify-content-center py-5">
+                            <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center p-5">
+                                <h2 class="display-3 text-white mb-4 animated slideInDown">Find Your Ideal Kosan</h2>
+                                <h2 class="text-white mb-4 animated slideInDown">With Kingkos App</h2>
+                                <h3 class="text-white mb-3 animated slideInDown">Discover Comfortable and Affordable Kosan Options</h3>
+                                <p class="fs-4 text-white mb-4 animated slideInDown">Explore a variety of kosan options tailored for you.</p>
                             </div>
                         </div>
                     </div>

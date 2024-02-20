@@ -133,7 +133,7 @@ function Kosan() {
   };
 
   const handleButtonClick = (kosan) => {
-    if (kosan.currentBookingStatus === "0") {
+    if (kosan.currentBookingStatus === 0) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -172,7 +172,7 @@ function Kosan() {
                   value={provinceId}
                   onChange={handleProvinceChange}
                 >
-                  <option value="">Pilih Provinsi</option>
+                  <option value="">Select Province</option>
                   {provinceOptions.map(province => (
                     <option key={province.id} value={province.id}>{province.name}</option>
                   ))}
@@ -185,7 +185,7 @@ function Kosan() {
                   onChange={handleCityChange}
                   disabled={!provinceId}
                 >
-                  <option value="">Pilih Kota</option>
+                  <option value="">Select City</option>
                   {cityOptions.map(city => (
                     <option key={city.id} value={city.id}>{city.name}</option>
                   ))}
@@ -198,7 +198,7 @@ function Kosan() {
                   onChange={handleSubdistrictChange}
                   disabled={!cityId}
                 >
-                  <option value="">Pilih Kecamatan</option>
+                  <option value="">Select Subdistrict</option>
                   {subdistrictOptions.map(subdistrict => (
                     <option key={subdistrict.id} value={subdistrict.id}>{subdistrict.name}</option>
                   ))}
@@ -211,7 +211,7 @@ function Kosan() {
                   onChange={handleGenderChange}
                   style={{ borderRadius: '15px 0 0 15px', minWidth: '80px' }}
                 >
-                  <option value="">Search By Gender</option>
+                  <option value="">Select By Gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
@@ -246,7 +246,6 @@ function Kosan() {
                           <i className="fa fa-solid fa-venus-mars text-primary me-2"></i>
                           Gender Kosan: {kosan.genderType.name}
                         </small>
-                        <p>status : {kosan.currentBookingStatus}</p>
                       </div>
                       <div className="text-center p-4">
                         <h4 className="mb-2">{formatRupiah(kosan.kostPrice.price)}/month</h4>

@@ -166,12 +166,24 @@ function EditProfile() {
                                         <FaGenderless className="me-2" />
                                         Gender:
                                     </label>
-                                    <select id="genderTypeId" name="genderTypeId" value={formData.genderTypeId} onChange={handleChange} className="form-select">
+                                    <select
+                                        id="genderTypeId"
+                                        name="genderTypeId"
+                                        value={formData.genderTypeId}
+                                        onChange={handleChange}
+                                        className="form-select"
+                                    >
                                         <option value="">Select Gender</option>
-                                        {genders.map(gender => (
-                                            <option key={gender.id} value={gender.id}>{gender.name}</option>
-                                        ))}
+                                        {genders
+                                            .filter(gender => gender.name === 'MALE' || gender.name === 'FEMALE')
+                                            .map(gender => (
+                                                <option key={gender.id} value={gender.id}>
+                                                    {gender.name}
+                                                </option>
+                                            ))}
                                     </select>
+
+                                    
                                     {errors.genderTypeId && <div className="text-danger">{errors.genderTypeId}</div>}
                                 </div>
                                 <div className="mb-3">
