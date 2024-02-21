@@ -6,6 +6,9 @@ import defaultUserImg from '../../assets/img/default-user.png';
 
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless, FaUpload, FaUser, FaWhatsapp, FaMoneyBill, FaVoicemail, FaFileMedicalAlt, FaAddressBook, FaMoneyBillAlt, FaCashRegister } from 'react-icons/fa';
 
+import { useNavigate } from 'react-router-dom';
+
+
 const BookingKost = () => {
     const [customers, setCustomers] = useState([]);
     const [kosans, setKosans] = useState([]);
@@ -67,6 +70,7 @@ const BookingKost = () => {
         fetchData();
     }, [id]);
 
+
     const handleBooking = async () => {
         if (kosans.some(kosan => kosan.availableRoom < 1)) {
             Swal.fire({
@@ -76,6 +80,16 @@ const BookingKost = () => {
             });
             return;
         }
+    
+        if (kosans.some(kosan => kosan.currentBookingStatus === 0)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'You have already booked this boarding house and it is in the pending/process stage.',
+            });
+            return;
+        }
+    
         setLoading(true); // Set loading to true when booking process starts
         try {
             const response = await axios.post('/transactions', {
@@ -84,12 +98,19 @@ const BookingKost = () => {
                 paymentTypeId: selectedPayment, // Use paymentTypeId instead of paymentId
                 monthTypeId: selectedMonth,
             });
-
+    
             console.log('Booking successful:', response.data);
             Swal.fire({
                 icon: 'success',
                 title: 'Booking Successful',
                 text: 'Your booking has been successfully placed!',
+            }).then((result) => {
+                // Redirect to seller's WhatsApp when the user clicks OK
+                if (result.isConfirmed) {
+                    const sellerPhoneNumber = kosans[0].seller.phoneNumber;
+                    const whatsappLink = `https://wa.me/${sellerPhoneNumber}`;
+                    window.open(whatsappLink, '_blank');
+                }
             });
         } catch (error) {
             console.error('Error booking kost:', error);
@@ -102,6 +123,8 @@ const BookingKost = () => {
             setLoading(false); // Set loading to false when booking process ends
         }
     };
+    
+    
 
     const formatRupiah = (value) => {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
@@ -155,10 +178,8 @@ const BookingKost = () => {
                                 <div className='booking-card ms-4' style={{ height: '100%' }}>
                                     
                                     <label className='fw-bold' style={{ color: 'black' }}>{kosan.name}</label>
-
                                     
                                     <label className='mx-4 mb-3' style={{ color: 'black' }} htmlFor="">|| <FaMoneyBill className='mb-1 ms-3 me-2' /> {formatRupiah(kosan.kostPrice.price)}</label>
-                                    
                                     
                                     <p className="detail-address text-dark">{kosan.province.name} || {kosan.city.name} || {kosan.subdistrict.name}</p>
                                     <p className='pt-3'>{kosan.description}</p>
