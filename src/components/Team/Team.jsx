@@ -1,11 +1,5 @@
 import React from 'react';
-import Ihsan from '../../assets/img/team/ihsan.jpg';
-import Ryan from '../../assets/img/team/ryan.jpg';
-import Andre from '../../assets/img/team/andre.jpg';
-import Leo from '../../assets/img/team/leo.jpg';
-import Tiar from '../../assets/img/team/tiar.jpg';
-import Baim from '../../assets/img/team/baim.jpg';
-import TeamKel from '../../assets/img/team/kel2.jpeg';
+
 import { Link } from 'react-router-dom';
 import './Style.css';
 
@@ -22,7 +16,7 @@ function Team() {
             <div className="col-lg-7 col-md-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-delay="0.1s">
                 <div className="team-item mx-auto border rounded shadow" style={{ borderColor: 'blue' }}>
                     <div className="overflow-hidden">
-                        <img className="img-fluid border" src={TeamKel} alt="" />
+                        <img className="img-fluid border" src="https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/3753a1e4-8cdc-41f5-8fb0-245a90eba72bkel2.jpeg?alt=media" alt="" />
                     </div>
                     <div className="position-relative d-flex justify-content-center mt-3">
                         <p className='fw-bold'>Kelompok 2 || Enigmacamp</p>
@@ -35,7 +29,7 @@ function Team() {
             <div className="col-lg-3 col-md-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-delay="0.1s">
               <div className="team-item mx-auto border rounded shadow" style={{ borderColor: 'blue' }}>
                 <div className="overflow-hidden">
-                  <img className="img-fluid border" src={Ryan} alt="" />
+                  <img className="img-fluid border" src="https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/2ec9863a-4065-453d-9597-69abebb75c00ryan.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
                   <Link className="btn btn-square mx-1" style={{ backgroundColor: 'gold', color: 'black' }} to="https://github.com/RyanRamadhan11" target='_blank'><i className="fab fa-github"></i></Link>
@@ -52,7 +46,7 @@ function Team() {
             <div className="col-lg-3 col-md-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-delay="0.1s">
               <div className="team-item mx-auto  border rounded shadow">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src={Leo} alt="" />
+                  <img className="img-fluid" src="https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/2aac8385-5822-4ff6-86f0-843a926437e0leo.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
                   <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
@@ -69,7 +63,7 @@ function Team() {
             <div className="col-lg-3 col-md-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-delay="0.1s">
               <div className="team-item mx-auto border rounded shadow">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src={Andre} alt="" />
+                  <img className="img-fluid" src="https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/53195e25-44bd-474b-b857-5ce34e6c0ee7andre.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
                   <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
@@ -86,7 +80,7 @@ function Team() {
             <div className="col-lg-3 col-md-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-delay="0.1s">
               <div className="team-item mx-auto border rounded shadow">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src={Ihsan} alt="" />
+                  <img className="img-fluid" src="https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/106731e8-9ac9-449a-9c2d-f6e4e26b38d0ihsan.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
                   <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
@@ -103,7 +97,7 @@ function Team() {
             <div className="col-lg-3 col-md-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-delay="0.1s">
               <div className="team-item mx-auto border rounded shadow">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src={Tiar} alt="" />
+                  <img className="img-fluid" src="https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/5319081e-74ea-47c6-b672-4c74e7ce3a86tiar.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
                   <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://github.com/septiarmustafa" target='_blank'><i className="fab fa-github"></i></Link>
@@ -120,7 +114,7 @@ function Team() {
             <div className="col-lg-3 col-md-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-delay="0.1s">
               <div className="team-item mx-auto border rounded shadow">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src={Baim} alt="" />
+                  <img className="img-fluid" src=" https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/d915f117-70d4-4fb5-aa29-179c207e7d8cbaim.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
                   <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
