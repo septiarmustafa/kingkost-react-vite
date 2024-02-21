@@ -387,7 +387,7 @@ function AddDataKosan() {
 
                                 {/* Gender */}
                                 <div className="col-6 mb-2">
-                                    <label htmlFor="genderId" className="form-label">Gender</label>
+                                    <label htmlFor="genderId" className="form-label">Type Kos</label>
                                     <select
                                         style={{ borderColor: 'black'}} 
                                         id="genderId"
@@ -395,7 +395,7 @@ function AddDataKosan() {
                                         value={newKosan.genderId}
                                         onChange={(e) => setNewKosan({ ...newKosan, genderId: e.target.value })}
                                     >
-                                        <option value="">Select gender</option>
+                                        <option value="">Select Type</option>
                                         {genderOptions.map(gender => (
                                             <option key={gender.id} value={gender.id}>{gender.name}</option>
                                         ))}

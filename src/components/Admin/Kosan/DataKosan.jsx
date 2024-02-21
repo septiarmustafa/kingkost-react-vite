@@ -347,7 +347,7 @@ function DataKosan() {
                                 <th>WiFi</th>
                                 <th>AC</th>
                                 <th>Parking</th>
-                                <th>Gender Type</th>
+                                <th>Type Kos</th>
                                 <th>Seller</th>
                                 <th>Province</th>
                                 <th>City</th>

@@ -303,7 +303,7 @@ function UpdateDataKosan() {
                                 </div>
 
                                 <div className="col-6">
-                                    <label htmlFor="genderId" className="form-label">Gender</label>
+                                    <label htmlFor="genderId" className="form-label">Type Kos</label>
                                     <select
                                         id="genderId"
                                         className="form-select"

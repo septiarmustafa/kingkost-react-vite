@@ -233,7 +233,7 @@ function Kosan() {
                   onChange={handleGenderChange}
                   style={{ borderRadius: '15px 0 0 15px', minWidth: '80px' }}
                 >
-                  <option value="">Select By Gender</option>
+                  <option value="">Select By Type</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
