@@ -12,6 +12,7 @@ function ApproveBooking() {
     const [isLoading, setIsLoading] = useState(false);
     const [approveValue, setApproveValue] = useState('');
     const [sellerId, setSellerId] = useState('');
+
     const tokenString = localStorage.getItem('userLogin');
     const token = tokenString ? JSON.parse(tokenString).token : null;
 
@@ -32,16 +33,16 @@ function ApproveBooking() {
             });
     }, [userId]);
 
+
     const handleApproveBooking = (e) => {
         e.preventDefault();
-
+    
         setIsLoading(true);
-
-        // Mengirim permintaan POST ke endpoint localhost:8080/approv
-        axios.post(`/approv?transactionId=${id}&approv=${approveValue}&sellerId=${sellerId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+    
+        axios.post(`/approv?transactionId=${id}&approv=${approveValue}&sellerId=${sellerId}`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             })
             .then(() => {
                 setIsLoading(false);
@@ -59,7 +60,7 @@ function ApproveBooking() {
                 console.error('Error approving booking:', error);
             });
     };
-
+    
     return (
         <section className="section">
             {/* Konten form approve booking */}

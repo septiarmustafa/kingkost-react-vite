@@ -57,11 +57,14 @@ const TransactionHistory = () => {
                 });
             const customerId = responseCustomer.data.data.id;
 
-            await axios.post(`/transactions/cancel?transactionId=${transactionId}&customerId=${customerId}`, {
-                headers: {
+            await axios.post(
+                `/transactions/cancel?transactionId=${transactionId}&customerId=${customerId}`, null,
+                {
+                  headers: {
                     Authorization: `Bearer ${token}`
-                }
-            });
+                  }
+                });
+              
             // Refresh transaction history after cancellation
             const response = await axios.get(`/transactions?customerId=${customerId}`, {
                 headers: {
