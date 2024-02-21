@@ -44,7 +44,7 @@ const BookingKost = () => {
 
             try {
                 // Mengambil data kosan menggunakan kostId dan customerId
-                const responseKosan = await axios.get(`http://43.218.87.110:8080/kost/id`, {
+                const responseKosan = await axios.get(`/kost/id`, {
                     params: {
                         kostId: id,
                         customerId: customerId

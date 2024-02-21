@@ -5,6 +5,7 @@ import axios from '../../../store/axiosInterceptor';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { BsCheck, BsX, BsSearch } from 'react-icons/bs'; 
+import { FaCheck, FaHamburger } from 'react-icons/fa';
 
 function DataBooking() {
     const [bookingData, setBookingData] = useState([]);
@@ -380,12 +381,14 @@ function DataBooking() {
                                     {/* Tampilkan tombol approve dan cancel hanya jika aprStatus === 0 */}
                                     {transaction.aprStatus === 0 && (
                                         <>
-                                            <button style={{ borderRadius: '10px' }} className={`btn btn-dark me-2`} onClick={() => handleApprove(transaction.id, transaction.aprStatus)}>
-                                                <BsCheck color='black' className='bg-white mb-1' style={{ borderRadius: '100%' }}/> Approve
+                                            <button
+                                                style={{ borderRadius: '10px', color: 'white', border: 'none', padding: '0.5rem 1rem' }}
+                                                className={`btn me-2 bg-dark`}
+                                                onClick={() => handleApprove(transaction.id, transaction.aprStatus)}
+                                            >
+                                                <FaHamburger style={{ marginRight: '0.5rem' }} /> Change Status
                                             </button>
-                                            <button style={{ borderRadius: '10px' }} className={`btn btn-danger`} onClick={() => handleReject(transaction.id, transaction.customer.id, transaction.aprStatus)}>
-                                                <BsX color='black' className='bg-white mb-1' style={{ borderRadius: '100%' }}/> Cancel
-                                            </button>
+                                            
                                         </>
                                     )}
                                 </td>
