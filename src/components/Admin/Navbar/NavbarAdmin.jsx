@@ -20,12 +20,18 @@ function NavbarAdmin() {
 
     const [UserData, setUserData] = useState(null);
     const userId = useSelector((state) => state.authentication.userId);
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 console.log(userId)
-                const userDataResponse = await axios.get(`/seller/user/${userId}`);
+                const userDataResponse = await axios.get(`/seller/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const matchedUser = userDataResponse.data.data;
                 setUserData(matchedUser);
                

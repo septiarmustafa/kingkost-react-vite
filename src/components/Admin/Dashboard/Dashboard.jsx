@@ -1,13 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import axios from '../../../store/axiosInterceptor'
-import {Fade} from 'react-reveal';
-import {FaChartLine} from 'react-icons/fa';
-import {useSelector} from "react-redux";
+import React, { useState, useEffect } from 'react';
+import axios from '../../../store/axiosInterceptor';
+import { Fade } from 'react-reveal';
+import { FaChartLine } from 'react-icons/fa';
+import { useSelector } from "react-redux";
 
 function Dashboard() {
 
     const userId = useSelector((state) => state.authentication.userId);
-    const role = useSelector((state) => state.authentication.role)
+    const role = useSelector((state) => state.authentication.role);
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
 
     const [sellerId, setSellerId] = useState('')
@@ -24,7 +26,11 @@ function Dashboard() {
     const [totalApprove, setTotalApprove] = useState(0)
 
     useEffect(() => {
-        axios.get('/customer/v1')
+        axios.get('/customer/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
                 const customers = response.data;
                 const total = customers.length;
@@ -33,10 +39,14 @@ function Dashboard() {
             .catch(error => {
                 console.error('Error fetching customer data:', error);
             });
-    }, []);
+    }, [token]);
 
     useEffect(() => {
-        axios.get('/seller/v1')
+        axios.get('/seller/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
                 const sellers = response.data;
                 const total = sellers.length;
@@ -45,11 +55,15 @@ function Dashboard() {
             .catch(error => {
                 console.error('Error fetching seller data:', error);
             });
-    }, []);
+    }, [token]);
 
     useEffect(() => {
         if (role === 'ROLE_ADMIN') {
-            axios.get('/kost')
+            axios.get('/kost', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then(response => {
                     const kosans = response.data.data;
                     const total = kosans.length;
@@ -62,11 +76,19 @@ function Dashboard() {
         } else if (role === 'ROLE_SELLER') {
             const fetchSellerId = async () => {
                 try {
-                    const response = await axios.get(`seller/user/${userId}`);
+                    const response = await axios.get(`seller/user/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const responseSellerId = response.data.data.id;
                     setSellerId(responseSellerId);
 
-                    const kosansResponse = await axios.get(`/kost?sellerId=${responseSellerId}`);
+                    const kosansResponse = await axios.get(`/kost?sellerId=${responseSellerId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const kosans = kosansResponse.data.data;
                     const total = kosans.length;
                     setTotalKosans(total);
@@ -77,10 +99,14 @@ function Dashboard() {
             };
             fetchSellerId();
         }
-    }, [userId, role]);
+    }, [userId, role, token]);
 
     useEffect(() => {
-        axios.get('/review/v1')
+        axios.get('/review/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
                 const reviews = response.data;
                 const total = reviews.length;
@@ -89,12 +115,16 @@ function Dashboard() {
             .catch(error => {
                 console.error('Error fetching kosan data:', error);
             });
-    }, []);
+    }, [token]);
 
     // total Pending
     useEffect(() => {
         if (role === 'ROLE_ADMIN') {
-            axios.get('/transactions')
+            axios.get('/transactions', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then(response => {
                     const transactions = response.data.data;
                     const total = transactions.length;
@@ -107,11 +137,19 @@ function Dashboard() {
         } else if (role === 'ROLE_SELLER') {
             const fetchTransactionSellerId = async () => {
                 try {
-                    const response = await axios.get(`seller/user/${userId}`);
+                    const response = await axios.get(`seller/user/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const responseSellerId = response.data.data.id;
                     setSellerId(responseSellerId);
 
-                    const bookingResponse = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=0`);
+                    const bookingResponse = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=0`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const bookingPending = bookingResponse.data.data;
                     const total = bookingPending.length;
                     setTotalPending(total);
@@ -122,16 +160,24 @@ function Dashboard() {
             };
             fetchTransactionSellerId();
         }
-    }, [sellerId]);
+    }, [sellerId, userId, role, token]);
 
     // total Reject
     useEffect(() => {
         if (role === 'ROLE_ADMIN') {
             const fetchAllTransaction = async () => {
                 try {
-                    const bookingResponseCancel = await axios.get(`/transactions?approveStatus=1`);
+                    const bookingResponseCancel = await axios.get(`/transactions?approveStatus=1`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const bookingCancel = bookingResponseCancel.data.data;
-                    const bookingResponseReject = await axios.get(`/transactions?approveStatus=1`);
+                    const bookingResponseReject = await axios.get(`/transactions?approveStatus=1`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const bookingReject = bookingResponseReject.data.data;
                     const total = bookingCancel.length + bookingReject.length;
                     setTotalReject(total);
@@ -144,13 +190,25 @@ function Dashboard() {
         } else if (role === 'ROLE_SELLER') {
             const fetchTransaction = async () => {
                 try {
-                    const response = await axios.get(`seller/user/${userId}`);
+                    const response = await axios.get(`seller/user/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const responseSellerId = response.data.data.id;
                     setSellerId(responseSellerId);
 
-                    const bookingResponseCancel = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=1`);
+                    const bookingResponseCancel = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=1`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const bookingCancel = bookingResponseCancel.data.data;
-                    const bookingResponseReject = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=1`);
+                    const bookingResponseReject = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=1`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const bookingReject = bookingResponseReject.data.data;
                     const total = bookingCancel.length + bookingReject.length;
                     setTotalReject(total);
@@ -161,12 +219,16 @@ function Dashboard() {
             };
             fetchTransaction();
         }
-    }, [sellerId]);
+    }, [sellerId, userId, role, token]);
 
     // total Approve
     useEffect(() => {
         if (role === 'ROLE_ADMIN') {
-            axios.get('/transactions?approveStatus=3')
+            axios.get('/transactions?approveStatus=3', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then(response => {
                     const transactions = response.data.data;
                     const total = transactions.length;
@@ -179,11 +241,19 @@ function Dashboard() {
         } else if (role === 'ROLE_SELLER') {
             const fetchTransactionSellerId = async () => {
                 try {
-                    const response = await axios.get(`seller/user/${userId}`);
+                    const response = await axios.get(`seller/user/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const responseSellerId = response.data.data.id;
                     setSellerId(responseSellerId);
 
-                    const bookingResponse = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=3`);
+                    const bookingResponse = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=3`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const bookingPending = bookingResponse.data.data;
                     const total = bookingPending.length;
                     setTotalApprove(total);
@@ -194,11 +264,15 @@ function Dashboard() {
             };
             fetchTransactionSellerId();
         }
-    }, [sellerId]);
+    }, [sellerId, userId, role, token]);
 
     useEffect(() => {
         if (role === 'ROLE_ADMIN') {
-            axios.get('/transactions')
+            axios.get('/transactions', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then(response => {
                     const booking = response.data.data;
                     const total = booking.length;
@@ -210,12 +284,20 @@ function Dashboard() {
         } else if (role === 'ROLE_SELLER') {
             const fetchTransactionSellerId = async () => {
                 try {
-                    const response = await axios.get(`seller/user/${userId}`);
+                    const response = await axios.get(`seller/user/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const responseSellerId = response.data.data.id;
                     setSellerId(responseSellerId);
                     console.log("HAHAH", sellerId)
 
-                    const bookingResponse = await axios.get(`/transactions?sellerId=${sellerId}`);
+                    const bookingResponse = await axios.get(`/transactions?sellerId=${sellerId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                     const booking = bookingResponse.data.data;
                     const total = booking.length;
                     setTotalBooking(total);
@@ -225,7 +307,7 @@ function Dashboard() {
             };
             fetchTransactionSellerId();
         }
-    }, [sellerId]);
+    }, [sellerId, userId, role, token]);
 
     return (
         <main className="main users chart-page" id="skip-target">

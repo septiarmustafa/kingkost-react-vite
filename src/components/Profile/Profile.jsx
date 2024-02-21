@@ -24,11 +24,18 @@ function Profile() {
     const userId = useSelector((state) => state.authentication.userId);
     const navigate = useNavigate();
 
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 console.log(userId)
-                const userDataResponse = await axios.get(`/customer/user/${userId}`);
+                const userDataResponse = await axios.get(`/customer/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const matchedUser = userDataResponse.data.data;
                 setApiUserData(matchedUser);
                 const completedFields = Object.values(matchedUser).filter(value => value !== null && value !== '').length;
@@ -40,7 +47,11 @@ function Profile() {
                 setGenders(gendersResponse.data);
 
                 // Fetch booking data
-                const response = await axios.get(`/transactions?customerId=${matchedUser.id}`);
+                const response = await axios.get(`/transactions?customerId=${matchedUser.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                  });
                 setBookings(response.data.data);
 
                 // Delay for 3 seconds to simulate loading
@@ -58,7 +69,11 @@ function Profile() {
     useEffect(() => {
         const fetchDataKost = async () => {
             try {
-                const kostResponse = await axios.get('http://localhost:8080/kost');
+                const kostResponse = await axios.get('/kost', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                  });
                 setRecommendedKos(kostResponse.data.data);
             } catch (error) {
                 console.error('Error fetching recommended kos data:', error);

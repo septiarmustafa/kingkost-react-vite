@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 
 function AddDataTestimonial() {
     const navigate = useNavigate();
+    
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const [newReview, setNewReview] = useState({
         message: "",
@@ -20,7 +23,11 @@ function AddDataTestimonial() {
     const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/customer/v1')
+        axios.get('/customer/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setCustomers(response.data);
             })
@@ -49,7 +56,11 @@ function AddDataTestimonial() {
             return;
         }
 
-        axios.post(`http://localhost:8080/review/v1`, newReview)
+        axios.post(`/review/v1`, newReview, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(() => {
                 Swal.fire({
                     icon: 'success',

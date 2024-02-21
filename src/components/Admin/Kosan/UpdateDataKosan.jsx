@@ -9,6 +9,8 @@ function UpdateDataKosan() {
     const { id } = useParams();
 
     const role = useSelector((state) => state.authentication.role);
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const [kosanData, setKosanData] = useState({
         id: "",
@@ -40,7 +42,11 @@ function UpdateDataKosan() {
     const [subdistrictOptions, setSubdistrictOptions] = useState([]);
 
     useEffect(() => {
-        axios.get(`/kost/id?kostId=${id}`)
+        axios.get(`/kost/id?kostId=${id}` , {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 const { id, name, description, availableRoom, isWifi, isAc, isParking, kostPrice, genderType, seller, province, city, images, createdAt } = response.data.data;
 
@@ -80,7 +86,11 @@ function UpdateDataKosan() {
             });
 
         if (role === "ROLE_ADMIN") {
-            axios.get(`/seller/v1`)
+            axios.get(`/seller/v1` , {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then(response => {
                     setSellerOptions(response.data);
                  })
@@ -89,7 +99,11 @@ function UpdateDataKosan() {
             });
         }
     
-        axios.get('/province')
+        axios.get('/province' , {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setProvinceOptions(response.data.data);
             })
@@ -101,7 +115,11 @@ function UpdateDataKosan() {
 
     const handleProvinceChange = (provinceId) => {
         // Fetch data for city options based on selected province
-        axios.get(`/city?province_id=${provinceId}`)
+        axios.get(`/city?province_id=${provinceId}` , {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setCityOptions(response.data.data);
                 // Set provinceId to the selected value and reset cityId when province changes
@@ -114,7 +132,11 @@ function UpdateDataKosan() {
     
     const handleCityChange = (cityId) => {
         // Fetch data for subdistrict options based on selected city
-        axios.get(`/subdistrict?city_id=${cityId}`)
+        axios.get(`/subdistrict?city_id=${cityId}` , {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setSubdistrictOptions(response.data.data);
                 // Set cityId to the selected value and reset subdistrictId when city changes
@@ -127,7 +149,11 @@ function UpdateDataKosan() {
 
     const handleUpdateKosan = (e) => {
         e.preventDefault();
-        axios.put(`/kost`, kosanData)
+        axios.put(`/kost`, kosanData , {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 console.log('Kosan berhasil diubah:', response.data.data);
                 Swal.fire({
@@ -277,7 +303,7 @@ function UpdateDataKosan() {
                                 </div>
 
                                 <div className="col-6">
-                                    <label htmlFor="genderId" className="form-label">Gender</label>
+                                    <label htmlFor="genderId" className="form-label">Type Kos</label>
                                     <select
                                         id="genderId"
                                         className="form-select"

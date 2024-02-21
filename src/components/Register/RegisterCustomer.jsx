@@ -43,7 +43,7 @@ function RegisterCustomer() {
   
     useEffect(() => {
         // Fetch gender types from API
-        axios.get('http://localhost:8080/gender/v1')
+        axios.get('http://43.218.87.110:8080/gender/v1')
             .then(response => {
                 setGenderTypes(response.data);
             })

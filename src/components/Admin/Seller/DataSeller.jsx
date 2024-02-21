@@ -14,9 +14,16 @@ function DataSeller() {
     const [searchGender, setSearchGender] = useState('');
     const [searchAddress, setSearchAddress] = useState('');
     const navigate = useNavigate();
+    
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
-        axios.get('/seller/v1')
+        axios.get('/seller/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 console.log('Response from API:', response.data);
                 setSellers(response.data);
@@ -47,7 +54,11 @@ function DataSeller() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`/seller/v1/${sellerId}`)
+                axios.delete(`/seller/v1/${sellerId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                    })
                     .then(response => {
                         // Update state to reflect the removal of the seller
                         setSellers(sellers.filter(seller => seller.id !== sellerId));

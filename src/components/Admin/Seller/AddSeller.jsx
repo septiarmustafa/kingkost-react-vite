@@ -7,6 +7,9 @@ import { Link } from 'react-router-dom';
 
 function AddSeller() {
     const navigate = useNavigate();
+    
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const [newSeller, setNewSeller] = useState({
         fullName: "",
@@ -120,7 +123,11 @@ function AddSeller() {
             return;
         }
 
-        axios.post(`/api/auth/register/seller`, newSeller)
+        axios.post(`/api/auth/register/seller`, newSeller, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(() => {
                 Swal.fire({
                     icon: 'success',

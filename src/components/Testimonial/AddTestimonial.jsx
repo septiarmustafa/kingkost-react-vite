@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../store/axiosInterceptor';
 import { useSelector } from 'react-redux';
 import { Card, Form, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
@@ -7,7 +7,11 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function AddTestimonial() {
     const userId = useSelector((state) => state.authentication.userId);
-    const navigate = useNavigate(); // Gunakan useNavigate untuk navigasi antar halaman
+    const navigate = useNavigate(); 
+
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
+
 
     const [formData, setFormData] = useState({
         message: '',
@@ -30,7 +34,11 @@ function AddTestimonial() {
     useEffect(() => {
         const fetchCustomerData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/customer/user/${userId}`);
+                const response = await axios.get(`/customer/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const customerData = response.data.data;
                 setFormData({
                     ...formData,
@@ -67,9 +75,13 @@ function AddTestimonial() {
 
         if (validateForm()) {
             try {
-                await axios.post('http://localhost:8080/review/v1', {
+                await axios.post('/review/v1', {
                     message: formData.message,
                     customerId: formData.customerId
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
 
                 setFormData({

@@ -43,7 +43,7 @@ function RegisterSeller() {
   
     useEffect(() => {
         // Fetch gender types from API
-        axios.get('http://localhost:8080/gender/v1')
+        axios.get('http://43.218.87.110:8080/gender/v1')
             .then(response => {
                 setGenderTypes(response.data);
             })
@@ -195,7 +195,7 @@ function RegisterSeller() {
                                                             style={{ borderColor: 'black' }}
                                                             id="form3Example1c"
                                                             className="form-select"
-                                                            onChange={e => setNewCustomer({ ...newCustomer, genderTypeId: e.target.value })}
+                                                            onChange={e => setNewSeller({ ...newSeller, genderTypeId: e.target.value })}
                                                         >
                                                             <option value="" disabled selected>Select gender</option>
                                                             {genderTypes

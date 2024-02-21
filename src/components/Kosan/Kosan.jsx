@@ -19,7 +19,10 @@ function Kosan() {
   const [currentPage, setCurrentPage] = useState(0);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [customerId, setCustomerId] = useState(null); // Add customerId state
+  const [customerId, setCustomerId] = useState(null); 
+
+  const tokenString = localStorage.getItem('userLogin');
+  const token = tokenString ? JSON.parse(tokenString).token : null;
 
   const navigate = useNavigate();
 
@@ -28,7 +31,11 @@ function Kosan() {
     const fetchData = async () => {
       try {
         const responseLogin = JSON.parse(localStorage.getItem('userLogin'));
-        const responseCustomer = await axios.get(`/customer/user/${responseLogin.userId}`);
+        const responseCustomer = await axios.get(`/customer/user/${responseLogin.userId}`, {
+          headers: {
+              Authorization: `Bearer ${token}`
+          }
+        });
         setCustomerId(responseCustomer.data.data.id);
       } catch (error) {
         console.error('Error fetching customer data:', error);
@@ -39,7 +46,11 @@ function Kosan() {
   }, []);
 
   useEffect(() => {
-    axios.get('/province')
+    axios.get('/province', {
+      headers: {
+          Authorization: `Bearer ${token}`
+      }
+    })
       .then(response => {
         setProvinceOptions(response.data.data);
       })
@@ -50,7 +61,11 @@ function Kosan() {
 
   useEffect(() => {
     if (provinceId) {
-      axios.get(`/city?province_id=${provinceId}`)
+      axios.get(`/city?province_id=${provinceId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+       })
         .then(response => {
           setCityOptions(response.data.data);
           setCityId("");
@@ -63,7 +78,11 @@ function Kosan() {
 
   useEffect(() => {
     if (cityId) {
-      axios.get(`/subdistrict?city_id=${cityId}`)
+      axios.get(`/subdistrict?city_id=${cityId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+        })
         .then(response => {
           setSubdistrictOptions(response.data.data);
           setSubdistrictId("");
@@ -80,7 +99,11 @@ function Kosan() {
 
   const fetchData = async (page) => {
     try {
-      const response = await axios.get(`/kost?page=${page}`);
+      const response = await axios.get(`/kost?page=${page}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+      });
       const { data } = response.data;
       setKosanData(data);
       setLoading(false);
@@ -142,10 +165,7 @@ function Kosan() {
     });
     
     } else {
-      // Redirect ke halaman /kost/id dengan navigate
-      // Pastikan untuk mengimpor fungsi navigate dari react-router-dom
-      // import { useNavigate } from 'react-router-dom';
-      // const navigate = useNavigate();
+    
       navigate(`/kost/id?kostId=${kosan.id}&customerId=${customerId}`);
     }
   };
@@ -213,7 +233,7 @@ function Kosan() {
                   onChange={handleGenderChange}
                   style={{ borderRadius: '15px 0 0 15px', minWidth: '80px' }}
                 >
-                  <option value="">Select By Gender</option>
+                  <option value="">Select By Type</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>

@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 function AddDataKosan() {
     const navigate = useNavigate();
     const role = useSelector((state) => state.authentication.role);
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
     const [newKosan, setNewKosan] = useState({
         name: "",
         description: "",
@@ -77,7 +79,11 @@ function AddDataKosan() {
     useEffect(() => {
         // If the user is ROLE_ADMIN, fetch seller options
         if (role === "ROLE_ADMIN") {
-            axios.get(`/seller/v1`)
+            axios.get(`/seller/v1`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+                })
                 .then(response => {
                     setSellerOptions(response.data);
                 })
@@ -88,7 +94,11 @@ function AddDataKosan() {
 
         if (role === "ROLE_SELLER") {
             // Fetch data for seller options
-            axios.get(`/seller/user/${userId}`)
+            axios.get(`/seller/user/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+                })
                 .then(response => {
                     const matchedUser = response.data.data;
                     const sellerId = matchedUser.id;
@@ -115,7 +125,11 @@ function AddDataKosan() {
             });
 
         // Fetch data for province options
-        axios.get('/province')
+        axios.get('/province', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setProvinceOptions(response.data.data);
             })
@@ -126,7 +140,11 @@ function AddDataKosan() {
 
     const handleProvinceChange = (provinceId) => {
         // Fetch data for city options based on selected province
-        axios.get(`/city?province_id=${provinceId}`)
+        axios.get(`/city?province_id=${provinceId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setCityOptions(response.data.data);
                 // Set provinceId to the selected value
@@ -139,7 +157,11 @@ function AddDataKosan() {
 
     const handleCityChange = (cityId) => {
         // Fetch data for subdistrict options based on selected city
-        axios.get(`/subdistrict?city_id=${cityId}`)
+        axios.get(`/subdistrict?city_id=${cityId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setSubdistrictOptions(response.data.data);
                 // Set cityId to the selected value
@@ -176,11 +198,13 @@ function AddDataKosan() {
         formData.append('cityId', newKosan.cityId);
         formData.append('subdistrictId', newKosan.subdistrictId);
 
-        axios.post(`http://localhost:8080/kost`, formData, {
+        axios.post(`/kost`, formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`
             }
         })
+        
         .then(() => {
             setIsLoading(false); // Set isLoading to false when the request is successful
             Swal.fire({
@@ -363,7 +387,7 @@ function AddDataKosan() {
 
                                 {/* Gender */}
                                 <div className="col-6 mb-2">
-                                    <label htmlFor="genderId" className="form-label">Gender</label>
+                                    <label htmlFor="genderId" className="form-label">Type Kos</label>
                                     <select
                                         style={{ borderColor: 'black'}} 
                                         id="genderId"
@@ -371,7 +395,7 @@ function AddDataKosan() {
                                         value={newKosan.genderId}
                                         onChange={(e) => setNewKosan({ ...newKosan, genderId: e.target.value })}
                                     >
-                                        <option value="">Select gender</option>
+                                        <option value="">Select Type</option>
                                         {genderOptions.map(gender => (
                                             <option key={gender.id} value={gender.id}>{gender.name}</option>
                                         ))}

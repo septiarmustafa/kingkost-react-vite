@@ -13,14 +13,25 @@ const TransactionHistory = () => {
     const [loading, setLoading] = useState(false); // State to manage loading status
     const userId = useSelector((state) => state.authentication.userId);
     const [transactionDate, setTransactionDate] = useState(new Date());
+    
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
-                const userDataResponse = await axios.get(`/customer/user/${userId}`);
+                const userDataResponse = await axios.get(`/customer/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const matchedUser = userDataResponse.data.data;
                 const customerId = matchedUser.id;
-                const response = await axios.get(`/transactions?customerId=${customerId}`);
+                const response = await axios.get(`/transactions?customerId=${customerId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 setTransactions(response.data.data);
             } catch (error) {
                 console.error('Error fetching transactions:', error);
@@ -39,12 +50,24 @@ const TransactionHistory = () => {
             setLoading(true); // Set loading to true when cancellation process starts
 
             const responseLogin = JSON.parse(localStorage.getItem('userLogin'));
-            const responseCustomer = await axios.get(`/customer/user/${responseLogin.userId}`);
+            const responseCustomer = await axios.get(`/customer/user/${responseLogin.userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+                });
             const customerId = responseCustomer.data.data.id;
 
-            await axios.post(`/transactions/cancel?transactionId=${transactionId}&customerId=${customerId}`);
+            await axios.post(`/transactions/cancel?transactionId=${transactionId}&customerId=${customerId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             // Refresh transaction history after cancellation
-            const response = await axios.get(`/transactions?customerId=${customerId}`);
+            const response = await axios.get(`/transactions?customerId=${customerId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setTransactions(response.data.data);
 
             setLoading(false); // Set loading to false after cancellation process is completed

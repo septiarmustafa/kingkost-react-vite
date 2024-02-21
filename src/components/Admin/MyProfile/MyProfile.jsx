@@ -16,12 +16,18 @@ function MyProfile() {
     const [isUploading, setIsUploading] = useState(false); // State untuk menandai apakah sedang dalam proses upload
 
     const userId = useSelector((state) => state.authentication.userId);
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userDataResponse = await axios.get(`/seller/user/${userId}`);
+                const userDataResponse = await axios.get(`/seller/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const matchedUser = userDataResponse.data.data;
                 setApiUserData(matchedUser);
                 const completedFields = Object.values(matchedUser).filter(value => value !== null && value !== '').length;
@@ -80,9 +86,12 @@ function MyProfile() {
                 // Post data ke endpoint yang ditentukan
                 await axios.post(`/seller/v1/upload/${userId}`, formData, {
                     headers: {
-                        "Content-Type": "multipart/form-data"
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${token}`
                     }
                 });
+
+                
     
                 // Menampilkan pesan berhasil
                 Swal.fire({

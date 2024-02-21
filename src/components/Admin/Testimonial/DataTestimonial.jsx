@@ -13,9 +13,16 @@ function DataTestimonial() {
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
 
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
+
     useEffect(() => {
         // Fetch reviews
-        axios.get('/review/v1')
+        axios.get('/review/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setReviews(response.data);
             })
@@ -24,7 +31,11 @@ function DataTestimonial() {
             });
 
         // Fetch customers
-        axios.get('/customer/v1')
+        axios.get('/customer/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setCustomers(response.data);
             })
@@ -63,7 +74,11 @@ function DataTestimonial() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`/review/v1/${reviewId}`)
+                axios.delete(`/review/v1/${reviewId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                    })
                     .then(response => {
                         // Update state to reflect the removal of the review
                         setReviews(reviews.filter(review => review.id !== reviewId));

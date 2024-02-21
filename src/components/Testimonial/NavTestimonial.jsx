@@ -16,6 +16,10 @@ function NavTestimonial() {
     const username = useSelector((state) => state.authentication.username);
     const role = useSelector((state) => state.authentication.role);
     const userId = useSelector((state) => state.authentication.userId);
+
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
+
   
     console.log('isAuthenticated:', isAuthenticated);
     console.log('username:', username);
@@ -61,7 +65,11 @@ function NavTestimonial() {
         const fetchData = async () => {
             try {
                 console.log(userId)
-                const userDataResponse = await axios.get(`/customer/user/${userId}`);
+                const userDataResponse = await axios.get(`/customer/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                  });
                 const matchedUser = userDataResponse.data.data;
                 setUserData(matchedUser);
                
