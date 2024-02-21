@@ -57,7 +57,6 @@ import PageNotFound from "./pages/PageNotFound.jsx";
 import PageTransactionCust from "./pages/PageTransactionCust.jsx";
 
 function App() {
-
   
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.authentication.isAuthenticated);
@@ -103,7 +102,6 @@ function App() {
             <Login />
           )}
         />
-
 
         {/* Page Customer */}
         <Route path="/register/customer" element={<PageRegisterCustomer />} />
@@ -180,7 +178,6 @@ function App() {
           } 
         />
 
-
         {/* Page Admin/Seller After Login */}
         <Route path="/dashboard" element={isLoggedIn ? (<PageDashboard />) : (<Navigate to="/login" replace />)} />
 
@@ -217,15 +214,3 @@ function App() {
 }
 
 export default App;
-
-
-function PrivateRoute({ element, ...rest }) {
-  const isLoggedIn = useSelector((state) => state.authentication.isAuthenticated);
-
-  return (
-    <Route
-      {...rest}
-      element={isLoggedIn ? element : <Navigate to="/login" replace />}
-    />
-  );
-}
