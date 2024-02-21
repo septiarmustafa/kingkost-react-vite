@@ -1,4 +1,3 @@
-// import '../../../assets/Admin/css/style.min.css';
 import './Style.css';
 
 import React, { useState, useEffect } from 'react';
@@ -9,12 +8,8 @@ import defaultUserImg from '../../../assets/img/default-user.png';
 import { useSelector, useDispatch } from "react-redux";
 import { setAuthenticated} from "../../../store/authSlice"; // Menambahkan import setUserData
 import Swal from 'sweetalert2';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Button from 'react-bootstrap/Button';
 
 import axios from '../../../store/axiosInterceptor';
-
-
 
 function SideBar() {
 
@@ -23,7 +18,7 @@ function SideBar() {
     const role = useSelector((state) => state.authentication.role);
   
     const dispatch = useDispatch();
-    const navigate = useNavigate(); // Hapus deklarasi navigate yang kedua
+    const navigate = useNavigate(); 
   
     const [UserData, setUserData] = useState(null);
     const userId = useSelector((state) => state.authentication.userId);

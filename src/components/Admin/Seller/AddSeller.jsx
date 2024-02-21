@@ -200,16 +200,21 @@ function AddSeller() {
                                     <label htmlFor="genderTypeId" className="form-label">Gender</label>
                                     <select
                                         id="genderTypeId"
-                                        style={{ borderColor: 'black'}} 
+                                        style={{ borderColor: 'black' }}
                                         className={`form-select ${errors.genderTypeId ? 'is-invalid' : ''}`}
                                         value={newSeller.genderTypeId}
                                         onChange={(e) => setNewSeller({ ...newSeller, genderTypeId: e.target.value })}
                                     >
-                                        <option value="" disabled>Select gender</option>
-                                        {genderTypes.map(gender => (
-                                            <option key={gender.id} value={gender.id}>{gender.name}</option>
-                                        ))}
+                                        <option value="" disabled>Select Gender</option>
+                                        {genderTypes
+                                            .filter(gender => gender.name === 'MALE' || gender.name === 'FEMALE')
+                                            .map(gender => (
+                                                <option key={gender.id} value={gender.id}>
+                                                    {gender.name}
+                                                </option>
+                                            ))}
                                     </select>
+
                                     <div className="invalid-feedback">{errors.genderTypeId}</div>
                                 </div>
                                 <div className="col-6">

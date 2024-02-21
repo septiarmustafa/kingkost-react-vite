@@ -40,7 +40,7 @@ function UpdateDataKosan() {
     const [subdistrictOptions, setSubdistrictOptions] = useState([]);
 
     useEffect(() => {
-        axios.get(`/kost/${id}`)
+        axios.get(`/kost/id?kostId=${id}`)
             .then(response => {
                 const { id, name, description, availableRoom, isWifi, isAc, isParking, kostPrice, genderType, seller, province, city, images, createdAt } = response.data.data;
 
@@ -59,7 +59,7 @@ function UpdateDataKosan() {
                     cityId: city.id,
                     subdistrictId: city.id, // Adjust according to your data structure
                     createdAt,
-                    image: images.map(img => ({
+                    listImage: images.map(img => ({
                         id: img.id,
                         url: img.url,
                         kost_id: id,
@@ -171,6 +171,18 @@ function UpdateDataKosan() {
                         <div className="card-body p-5">
                             <h3 className="card-title text-center mb-5">Form Update Kosan</h3>
                             <form className="row g-3" onSubmit={handleUpdateKosan}>
+
+                                <div className="col-6">
+                                    <label htmlFor="name" className="form-label">Id</label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className="form-control"
+                                        value={kosanData.name}
+                                        onChange={(e) => setKosanData({ ...kosanData, name: e.target.value })}
+                                    />
+                                </div>
+
                                 {/* Form fields */}
                                 <div className="col-6">
                                     <label htmlFor="name" className="form-label">Name</label>

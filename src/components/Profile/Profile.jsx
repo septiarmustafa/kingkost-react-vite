@@ -2,22 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from '../../store/axiosInterceptor';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless, FaUpload, FaUser, FaWhatsapp, FaMoneyBill, FaVoicemail, FaFileMedicalAlt, FaAddressBook, FaMoneyBillAlt, FaCashRegister } from 'react-icons/fa';
-import kos1 from '../../assets/img/kosan1.jpg';
-import kos2 from '../../assets/img/kosan2.jpg';
-import defaultUserImg from '../../assets/img/def.webp';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless, FaWhatsapp, FaMoneyBill, FaUser, FaFileMedicalAlt, FaAddressBook, FaMoneyBillAlt, FaCashRegister } from 'react-icons/fa';
 import { Carousel, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import oop from '../../assets/img/oops.jpg';
+import defaultUserImg from '../../assets/img/def.webp';
 
 function Profile() {
     const [isLoading, setIsLoading] = useState(true);
     const [apiUserData, setApiUserData] = useState(null);
     const [genders, setGenders] = useState([]);
     const [profileCompletion, setProfileCompletion] = useState(0);
-    const [imageUploaded, setImageUploaded] = useState(false); // State untuk menandai bahwa gambar telah diunggah
     const [recommendedKos, setRecommendedKos] = useState([]);
     const [isUploading, setIsUploading] = useState(false); // State untuk menandai bahwa sedang dalam proses upload
     const [bookings, setBookings] = useState([]);
@@ -56,7 +53,7 @@ function Profile() {
         };
 
         fetchData();
-    }, [userId, imageUploaded]);
+    }, [userId]);
 
     useEffect(() => {
         const fetchDataKost = async () => {
@@ -101,22 +98,22 @@ function Profile() {
                 <>
                     <div className="row">
                         <div className="col-md-4">
-                            <div className="card wow fadeInUp" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                            <div className="card mt-3 p-3">
                                 <div className="card-body">
                                     <div className="d-flex justify-content-between align-items-center mb-3">
                                         <h5 className="card-title">Profil Pengguna</h5>
-                                        <button onClick={handleEditProfile} className="btn btn-secondary" style={{ borderRadius: '10px' }}>Edit Profile</button>
+                                        <button onClick={handleEditProfile} className="btn btn-secondary">Edit Profile</button>
                                     </div>
                                     {apiUserData && (
                                         <>
                                             <div className="d-flex align-items-center justify-content-start mb-3">
-                                                    <img
-                                                        src={apiUserData.url ? apiUserData.url : defaultUserImg}
-                                                        className="card-img-top"
-                                                        alt="Kos 1"
-                                                        style={{ width: '70px', height: '70px', borderRadius: '20px' , objectFit: 'cover', cursor: 'pointer' }}
-                                                        onClick={handleImageClick}
-                                                    />
+                                                <img
+                                                    src={apiUserData.url ? apiUserData.url : defaultUserImg}
+                                                    className="card-img-top"
+                                                    alt="Kos 1"
+                                                    style={{ width: '70px', height: '70px', borderRadius: '20px', objectFit: 'cover', cursor: 'pointer' }}
+                                                    onClick={handleImageClick}
+                                                />
                                                 <h5 className="card-text text-center ms-3">{apiUserData.fullName}</h5>
                                             </div>
                                             <ul className="list-group list-group-flush">
@@ -135,7 +132,6 @@ function Profile() {
                                     )}
                                 </div>
 
-                                 {/* Action Buttons */}
                                 <div className="card mb-3" style={{borderColor: 'white'}}>
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item">
@@ -150,9 +146,8 @@ function Profile() {
 
                         </div>
                         <div className="col-md-8">
-                            <div className="card mt-3 p-3 wow fadeInUp" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                            <div className="card mt-3 p-3">
                                 <div className="card-body">
-                                    {/* User's booked kos */}
                                     {bookings.length > 0 ? (
                                         bookings.map((booking) => (
                                             <div key={booking.id}>
@@ -164,7 +159,7 @@ function Profile() {
                                                     <div>
                                                         <img src={booking.kost.images[0].url} alt="Kost Image" style={{width: '25rem', height: '20rem', borderRadius: '20px'}} />
                                                         <div className='mt-2'>
-                                                            <Link to={`https://wa.me/${booking.kost.seller.phoneNumber}`} target="_blank" className="btn btn-success mt-3 mb-2" style={{ borderRadius: '15px' }}>
+                                                            <Link to={`https://wa.me/${booking.kost.seller.phoneNumber}`} target="_blank" className="btn btn-success mt-3 mb-2">
                                                                 <FaWhatsapp style={{ marginRight: "5px" }} /> Chat Seller
                                                             </Link>
                                                         </div>
@@ -211,8 +206,7 @@ function Profile() {
                                             </div>
                                         ))
                                     ) : (
-                                        // If no bookings found
-                                        <div className="card-body wow fadeInUp" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                                        <div className="card-body">
                                             <div className='d-flex'>
                                                 <img src={oop} alt="Image Kos Not Found" style={{height: '10rem'}} />
                                                 <h5 className='mb-3 mt-5'> Oooppps !!! Kamu belum menyewa kos</h5>
@@ -224,27 +218,26 @@ function Profile() {
                                                 <li className='my-2'><FaUser className='mb-1'/> <span className='ms-1'> Kingkos menjaga keamanan transaksi </span></li>
                                                 <li className='my-2'><FaCashRegister className='mb-1'/> <span className='ms-1'>  Pembayaran dengan secara Cash </span></li>
                                             </ul>
-                                            <Button className='m-3' variant="secondary" onClick={handleCariKosanClick} style={{ borderRadius: '15px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>Cari Kosan</Button>
+                                            <Button className='m-3' variant="secondary" onClick={handleCariKosanClick}>Cari Kosan</Button>
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                             {/* Recommended Kos Carousel */}
-                            <div className="card mt-3 p-3 wow fadeInUp" style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }}>
+                            <div className="card mt-3 p-3">
                                 <div className="card-body">
                                     <h5 className="card-title mb-4">Rekomendasi kos buat kamu</h5>
                                     <Carousel
                                         prevIcon={<span className="carousel-control-prev-icon" />}
                                         nextIcon={<span className="carousel-control-next-icon" />}
-                                        slidesToShow={1} // Mengatur jumlah item yang ditampilkan dalam satu slide
+                                        slidesToShow={1}
                                         slidesToScroll={1}
                                     >
                                         {recommendedKos.map((kos, index) => (
                                             <Carousel.Item key={kos.id}>
                                                 <div className="d-flex justify-content-around">
-                                                    {recommendedKos.slice(index, index + 3).map((kosItem) => ( // Mengambil 3 item dalam satu slide
-                                                        <div className="card m-3" style={{ width: '28rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', borderRadius: '15px' }} key={kosItem.id}>
+                                                    {recommendedKos.slice(index, index + 3).map((kosItem) => (
+                                                        <div className="card m-3" style={{ width: '28rem', borderRadius: '15px' }} key={kosItem.id}>
                                                             <img src={kosItem.images.length > 0 ? kosItem.images[0].url : DefaultImage} className="card-img-top" alt={kosItem.images.length > 0 ? kosItem.images[0].fileName : 'Placeholder'} />
                                                             <div className="card-body">
                                                                 <div className="d-flex border-bottom">
@@ -280,7 +273,6 @@ function Profile() {
                                             </Carousel.Item>
                                         ))}
                                     </Carousel>
-
                                 </div>
                             </div>
                         </div>

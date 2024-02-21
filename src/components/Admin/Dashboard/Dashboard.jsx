@@ -1,16 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import axios from '../../../store/axiosInterceptor'
-import {Fade} from 'react-reveal';
-import {FaChartLine} from 'react-icons/fa';
-import {useSelector} from "react-redux";
+import React, { useState, useEffect } from 'react';
+import axios from '../../../store/axiosInterceptor';
+import { Link } from 'react-router-dom';
+import SideBar from '../../../components/Admin/SideBar/SideBar';
+import NavbarAdmin from '../../../components/Admin/Navbar/NavbarAdmin';
+import { Fade } from 'react-reveal';
+import { FaChartLine } from 'react-icons/fa';
 
 function Dashboard() {
-
-    const userId = useSelector((state) => state.authentication.userId);
-    const role = useSelector((state) => state.authentication.role)
-
-
-    const [sellerId, setSellerId] = useState('')
 
     const [kosanData, setKosanData] = useState([]);
 
@@ -19,16 +15,13 @@ function Dashboard() {
     const [totalKosans, setTotalKosans] = useState(0);
     const [totalReviews, setTotalReviews] = useState(0);
     const [totalBooking, setTotalBooking] = useState(0);
-    const [totalPending, setTotalPending] = useState(0)
-    const [totalReject, setTotalReject] = useState(0)
-    const [totalApprove, setTotalApprove] = useState(0)
 
     useEffect(() => {
         axios.get('/customer/v1')
             .then(response => {
-                const customers = response.data;
+                const customers = response.data; 
                 const total = customers.length;
-                setTotalCustomers(total);
+                setTotalCustomers(total); 
             })
             .catch(error => {
                 console.error('Error fetching customer data:', error);
@@ -38,9 +31,9 @@ function Dashboard() {
     useEffect(() => {
         axios.get('/seller/v1')
             .then(response => {
-                const sellers = response.data;
+                const sellers = response.data; 
                 const total = sellers.length;
-                setTotalSellers(total);
+                setTotalSellers(total); 
             })
             .catch(error => {
                 console.error('Error fetching seller data:', error);
@@ -48,43 +41,24 @@ function Dashboard() {
     }, []);
 
     useEffect(() => {
-        if (role === 'ROLE_ADMIN') {
-            axios.get('/kost')
-                .then(response => {
-                    const kosans = response.data.data;
-                    const total = kosans.length;
-                    setTotalKosans(total);
-                    setKosanData(kosans);
-                })
-                .catch(error => {
-                    console.error('Error fetching kosan data:', error);
-                });
-        } else if (role === 'ROLE_SELLER') {
-            const fetchSellerId = async () => {
-                try {
-                    const response = await axios.get(`seller/user/${userId}`);
-                    const responseSellerId = response.data.data.id;
-                    setSellerId(responseSellerId);
-
-                    const kosansResponse = await axios.get(`/kost?sellerId=${responseSellerId}`);
-                    const kosans = kosansResponse.data.data;
-                    const total = kosans.length;
-                    setTotalKosans(total);
-                    setKosanData(kosans);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            };
-            fetchSellerId();
-        }
-    }, [userId, role]);
+        axios.get('/kost')
+            .then(response => {
+                const kosans = response.data.data; 
+                const total = kosans.length;
+                setTotalKosans(total); 
+                setKosanData(kosans);
+            })
+            .catch(error => {
+                console.error('Error fetching kosan data:', error);
+            });
+    }, []);
 
     useEffect(() => {
         axios.get('/review/v1')
             .then(response => {
-                const reviews = response.data;
+                const reviews = response.data; 
                 const total = reviews.length;
-                setTotalReviews(total);
+                setTotalReviews(total); 
             })
             .catch(error => {
                 console.error('Error fetching kosan data:', error);

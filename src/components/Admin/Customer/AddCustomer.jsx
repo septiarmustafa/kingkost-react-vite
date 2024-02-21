@@ -201,17 +201,20 @@ function AddCustomer() {
                                 <div className="col-6">
                                     <label htmlFor="genderTypeId" className="form-label">Gender</label>
                                     <select
-                                        style={{ borderColor: 'black'}} 
+                                        style={{ borderColor: 'black' }}
                                         id="genderTypeId"
                                         className={`form-select ${errors.genderTypeId ? 'is-invalid' : ''}`}
                                         value={newCustomer.genderTypeId}
                                         onChange={(e) => setNewCustomer({ ...newCustomer, genderTypeId: e.target.value })}
                                     >
                                         <option value="" disabled>Select gender</option>
-                                        {genderTypes.map(gender => (
-                                            <option key={gender.id} value={gender.id}>{gender.name}</option>
-                                        ))}
+                                        {genderTypes
+                                            .filter(gender => gender.name === 'MALE' || gender.name === 'FEMALE')
+                                            .map(gender => (
+                                                <option key={gender.id} value={gender.id}>{gender.name}</option>
+                                            ))}
                                     </select>
+
                                     <div className="invalid-feedback">{errors.genderTypeId}</div>
                                 </div>
                                 <div className="col-6">

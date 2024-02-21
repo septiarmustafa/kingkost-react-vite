@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Swal from "sweetalert2";
 import { useParams, Link } from 'react-router-dom';
-import { Carousel } from 'react-bootstrap'; 
+import { Carousel } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function DetailKosan() {
@@ -23,11 +23,11 @@ function DetailKosan() {
                 const userDataResponse = await axios.get(`http://localhost:8080/customer/user/${userId}`);
                 const matchedUser = userDataResponse.data.data;
                 const customerId = matchedUser.id;
-    
+
                 // Mendapatkan kostId dari URL
                 const searchParams = new URLSearchParams(window.location.search);
                 const kostId = searchParams.get('kostId');
-    
+
                 // Mengambil data kosan menggunakan kostId dan customerId
                 const responseKosan = await axios.get(`http://localhost:8080/kost/id`, {
                     params: {
@@ -36,24 +36,24 @@ function DetailKosan() {
                     }
                 });
                 const kosan = responseKosan.data.data;
-    
+
                 setKosanData(kosan);
             } catch (error) {
                 console.error('Error fetching data:', error.message);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Kosan ini sudah pernah Anda booking dan dalam tahap pending/proses.',
+                    text: 'You have already booked this boarding house and it is in the pending/process stage.',
                 });
+                
                 // Redirect ke halaman /kosan
                 navigate(`/kosan`);
             }
         };
-    
+
         fetchData();
-    }, [userId]);  
-    
-    
+    }, [userId, navigate]);
+
     const handleStartDateChange = (e) => {
         setStartDate(e.target.value);
     };
@@ -70,12 +70,11 @@ function DetailKosan() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Terjadi kesalahan saat menghitung biaya. Silakan coba lagi nanti.',
+                text: 'An error occurred while calculating the cost. Please try again later.',
             });
+            
         }
     };
-    
-    
 
     if (!kosanData) {
         return <div>Data Kosong</div>;
@@ -115,10 +114,12 @@ function DetailKosan() {
                             <div className="col-md-12">
                                 <div className="detail-header">
                                     <div className="detail-header-info mt-3">
-                                        <h4 className="detail-title" style={{fontFamily: 'sans-serif'}}>{kosanData.name}</h4>
+                                        <h4 className="detail-title" style={{ fontFamily: 'sans-serif' }}>{kosanData.name}</h4>
                                         <p className='mb-2'> {kosanData.description} </p>
+
                                         <label className="detail-address text-dark">{kosanData.province && kosanData.province.name} || {kosanData.city && kosanData.city.name}</label>
                                         <p className="detail-title">{kosanData.subdistrict && kosanData.subdistrict.name}</p>
+
                                         <div className="detail-features row">
                                             <div className="col-md-4">
                                                 <div className="detail-feature ms-2">
@@ -194,21 +195,35 @@ function DetailKosan() {
                                 style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}>
                                 <i className="fas fa-comment"></i> Chat Pemilik Kos
                             </Link>
-                            <Link to={`/booking/${kosanData.id}`} className="btn btn-danger mt-3"
-                                style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}>
-                                Book Now
-                            </Link>
+                            {kosanData.currentBookingStatus === 0 ? (
+                                <button className="btn btn-danger mt-3"
+                                    style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}
+                                    onClick={() => {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'Kosan ini sudah pernah Anda booking dan dalam tahap pending/proses.',
+                                        });
+                                    }}>
+                                    Book Now
+                                </button>
+                            ) : (
+                                <Link to={`/booking/${kosanData.id}`} className="btn btn-danger mt-3"
+                                    style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}>
+                                    Book Now
+                                </Link>
+                            )}
                         </div>
                     </div>
                     <div className="detail-contact pb-5">
-                        <div className="card shadow" style={{borderRadius: '15px'}}>
+                        <div className="card shadow" style={{ borderRadius: '15px' }}>
                             <div className="card-body">
                                 <h5 className="card-title">Hubungi Penyewa/Seller Kosan</h5>
                                 <div className="contact-info d-flex align-items-center">
                                     <div className="contact-detail flex-grow-1">
                                         <span>{kosanData.seller && kosanData.seller.fullName}</span>
                                         <p className='pt-2'>
-                                            <i className="bi bi-geo-alt-fill"></i> {kosanData.seller && kosanData.seller.address}<br/>
+                                            <i className="bi bi-geo-alt-fill"></i> {kosanData.seller && kosanData.seller.address}<br />
                                             <i className="bi bi-envelope-fill"></i> {kosanData.seller && kosanData.seller.email}</p>
                                     </div>
                                 </div>

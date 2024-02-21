@@ -57,7 +57,6 @@ import PageNotFound from "./pages/PageNotFound.jsx";
 import PageTransactionCust from "./pages/PageTransactionCust.jsx";
 
 function App() {
-
   
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.authentication.isAuthenticated);
@@ -104,233 +103,110 @@ function App() {
           )}
         />
 
-        {/* <Route path={"/login"} element={<SelectLogin />} /> */}
-{/* 
-        <Route
-          path="/login/customer"
-          element={
-            isLoggedIn ? (
-              // Jika pengguna sudah login
-              role === "ROLE_SELLER" || role === "ROLE_ADMIN" ? (
-                // Jika role adalah ROLE_SELLER atau ROLE_ADMIN, redirect ke Dashboard
-                <Navigate to="/dashboard" replace />
-              ) : role === "ROLE_CUSTOMER" ? (
-                // Jika role adalah ROLE_CUSTOMER, redirect ke Home
-                <Navigate to="/" replace />
-              ) : (
-                // Jika role tidak sesuai dengan yang diharapkan, tampilkan halaman Home
-                <Home />
-              )
-            ) : (
-              // Jika pengguna belum login, tampilkan halaman LoginCustomer
-              <LoginCustomer />
-            )
-        }
-        /> */}
-
-        {/* <Route
-          path="/login/seller"
-          element={
-            isLoggedIn ? (
-              // Jika pengguna sudah login
-              role === "ROLE_SELLER" ? (
-                // Jika role adalah ROLE_SELLER, redirect ke halaman Seller Dashboard
-                <Navigate to="/dashboard" replace />
-              ) : (
-                // Jika role pengguna bukan ROLE_SELLER, tampilkan halaman Home
-                <Home />
-              )
-            ) : (
-              // Jika pengguna belum login, tampilkan halaman LoginSeller
-              <LoginSeller />
-            )
-        }
-        />
-
-        <Route
-          path="/login/admin"
-          element={
-            isLoggedIn ? (
-              // Jika pengguna sudah login
-              role === "ROLE_ADMIN" ? (
-                // Jika role adalah ROLE_ADMIN, redirect ke halaman Admin Dashboard
-                <Navigate to="/dashboard" replace />
-              ) : (
-                // Jika role pengguna bukan ROLE_ADMIN, tampilkan halaman Home
-                <Home />
-              )
-            ) : (
-              // Jika pengguna belum login, tampilkan halaman LoginAdmin
-              <LoginAdmin />
-            )
-        }
-        /> */}
-
-
-        {/* <Route path="/login" element={<Login />} /> */}
+        {/* Page Customer */}
         <Route path="/register/customer" element={<PageRegisterCustomer />} />
         <Route path="/register/seller" element={<PageRegisterSeller />} />
         <Route path="/register" element={<PageSelectRegister />} />
-
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<PageAbout />} />
-
-        <Route path="/testimonial" element={<PageTestimonial />} />
-        <Route path="/addTestimonial" element={<PageAddTestimonialCustomer />} />
-        
-        <Route path="/team" element={<PageTeam />} />
-
-        <Route path="/contact" element={<PageContact />} />
-        <Route path="/TermsAndConditions" element={<PageTermsAndConditions />} />
-
-        <Route path="/kosan" element={<PageKosan />} />
-        {/* <Route path="/detailkosan/:id" component={PageDetailKosan} /> */}
-
-
-        <Route path="/booking" element={<PageBooking />} />
-
-        {/* customer */}
-        <Route path="/profile" element={<PageProfile />} />
-        <Route path="/edit-profile/:id" element={<PageEditProfile />} />
-
-
-        <Route path="/dashboard" element={<PageDashboard />} />
-        
-        <Route path="/customer" element={<PageCustomer />} />
-        <Route path="/addCustomer" element={<PageAddCustomer />} />
-        <Route path="/updateCustomer/:id" element={<PageUpdateCustomer />} />
-
-        <Route path="/datakosan" element={<PageDataKosan />} />
-        <Route path="/addDataKosan" element={<PageAddDataKosan />} />
-        <Route path="/updateDataKosan/:id" element={<PageUpdateDataKosan />} />
-
-        <Route path="/dataSeller" element={<PageDataSeller />} />
-        <Route path="/addDataSeller" element={<PageAddSeller />} />
-        <Route path="/updateSeller/:id" element={<PageUpdateSeller />} />
-
-        <Route path="/dataTestimoni" element={<PageDataTestimonial />} />
-        <Route path="/addDataTestimoni" element={<PageAddTestimonial />} />
-        <Route path="/updateDataTestimoni/:id" element={<PageUpdateTestimonial />} />
-
-        {/* Seller */}
-        <Route path="/myProfile" element={<PageMyProfile />} />
-        <Route path="/edit-myProfile/:id" element={<PageEditMyProfile />} />
 
         <Route path="forgot-password" element={<PageSellectForgotPassword/>}/>
         <Route path="/forgot-password/seller" element={<ForgotPasswordSeller/>}/>
         <Route path="/forgot-password/customer" element={<ForgotPasswordCustomer/>}/>
 
-        <Route path="/dataBooking" element={<PageDataBooking />} />
-        <Route path="/addDataBooking" element={<PageAddDataBooking />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<PageAbout />} />
+        <Route path="/testimonial" element={<PageTestimonial />} />
+        <Route path="/team" element={<PageTeam />} />
+        <Route path="/contact" element={<PageContact />} />
+        <Route path="/TermsAndConditions" element={<PageTermsAndConditions />} />
+        <Route path="/kosan" element={<PageKosan />} />
 
-        <Route path="/approveBooking/:id" element={<PageApproveBooking />} />
-
-        <Route path="/notFound" element={<PageNotFound />} />
-
-
-        <Route path="/kost/id" element={<PageDetailKosan/>}/>
-        <Route path="/myBooking" element={<PageTransactionCust/>}/>
-
-        <Route path="/booking/:id" element={<PageBooking/>}/>
-
-
-         {/* <Route
-          path="/dashboard"
-          element={
-            isLoggedIn ? (
-              // Jika pengguna sudah login
-              role === "ROLE_ADMIN" || role === "ROLE_SELLER" ? (
-                // Jika rolenya adalah ROLE_ADMIN atau ROLE_SELLER, tampilkan halaman Dashboard
-                <PageDashboard />
-              ) : (
-                // Jika rolenya bukan ROLE_ADMIN atau ROLE_SELLER, redirect ke halaman Home
-                <Navigate to="/" replace />
-              )
+        {/* Page After Customer Login */}
+        <Route path="/addTestimonial" 
+              element={isLoggedIn ? ( <PageAddTestimonialCustomer />
             ) : (
-              // Jika pengguna belum login, redirect ke halaman Login
-              <Navigate to="/loginfsfs" replace />
+              <Navigate to="/login" replace />
             )
           }
-        /> */}
-
-
-
-        {/* <Route
-          path="/dashboard"
-          element={
-            isLoggedIn ? (
-              // Jika pengguna sudah login
-              role === "ROLE_ADMIN" || role === "ROLE_SELLER" ? (
-                // Jika rolenya adalah ROLE_ADMIN atau ROLE_SELLER, tampilkan halaman Dashboard
-                <PageDashboard />
-              ) : (
-                // Jika rolenya bukan ROLE_ADMIN atau ROLE_SELLER, redirect ke halaman Home
-                <Navigate to="/" replace />
-              )
-            ) : (
-              // Jika pengguna belum login, redirect ke halaman Login
-              <Navigate to="/login" replace />
-            )
-        }
         />
 
-
-        <Route
-          path="/customer"
-          element={
-            isLoggedIn ? (
-              // Jika pengguna sudah login
-              role !== "ROLE_CUSTOMER" ? (
-                // Jika rolenya bukan ROLE_CUSTOMER, tampilkan halaman Customer
-                <PageCustomer />
-              ) : (
-                // Jika rolenya adalah ROLE_CUSTOMER, redirect ke halaman Home
-                <Navigate to="/" replace />
-              )
+        <Route path="/booking" element={isLoggedIn ? ( <PageBooking />
             ) : (
-              // Jika pengguna belum login, redirect ke halaman Login
               <Navigate to="/login" replace />
             )
-        }
+          }
         />
 
-        <Route
-          path="/addCustomer"
-          element={
-            isLoggedIn ? (
-              // Jika pengguna sudah login
-              role !== "ROLE_CUSTOMER" ? (
-                // Jika rolenya bukan ROLE_CUSTOMER, tampilkan halaman Add Customer
-                <PageAddCustomer />
-              ) : (
-                // Jika rolenya adalah ROLE_CUSTOMER, redirect ke halaman Home
-                <Navigate to="/" replace />
-              )
+        <Route path="/profile" element={isLoggedIn ? ( <PageProfile />
             ) : (
-              // Jika pengguna belum login, redirect ke halaman Login
               <Navigate to="/login" replace />
             )
-        }
+          }
         />
 
-        <Route
-          path="/updateCustomer/:id"
-          element={
-            isLoggedIn ? (
-              // Jika pengguna sudah login
-              role !== "ROLE_CUSTOMER" ? (
-                // Jika rolenya bukan ROLE_CUSTOMER, tampilkan halaman Update Customer
-                <PageUpdateCustomer />
-              ) : (
-                // Jika rolenya adalah ROLE_CUSTOMER, redirect ke halaman Home
-                <Navigate to="/" replace />
-              )
+        <Route path="/edit-profile/:id" element={isLoggedIn ? ( <PageEditProfile />
             ) : (
-              // Jika pengguna belum login, redirect ke halaman Login
               <Navigate to="/login" replace />
             )
-        }
-        /> */}
+          }
+        />
+
+        <Route path="/addDataBooking" element={isLoggedIn ? ( <PageAddDataBooking />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route path="/myBooking" element={isLoggedIn ? ( <PageTransactionCust/>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route path="/kost/id" element={isLoggedIn ? ( <PageDetailKosan/>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } 
+        />
+       
+        <Route path="/booking/:id" element={isLoggedIn ? ( <PageBooking/>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } 
+        />
+
+        {/* Page Admin/Seller After Login */}
+        <Route path="/dashboard" element={isLoggedIn ? (<PageDashboard />) : (<Navigate to="/login" replace />)} />
+
+        <Route path="/customer" element={isLoggedIn ? (<PageCustomer />) : (<Navigate to="/login" replace />)} />
+        <Route path="/addCustomer" element={isLoggedIn ? (<PageAddCustomer />) : (<Navigate to="/login" replace />)} />
+        <Route path="/updateCustomer/:id" element={isLoggedIn ? (<PageUpdateCustomer />) : (<Navigate to="/login" replace />)} />
+
+        <Route path="/datakosan" element={isLoggedIn ? (<PageDataKosan />) : (<Navigate to="/login" replace />)} />
+        <Route path="/addDataKosan" element={isLoggedIn ? (<PageAddDataKosan />) : (<Navigate to="/login" replace />)} />
+        <Route path="/updateDataKosan/:id" element={isLoggedIn ? (<PageUpdateDataKosan />) : (<Navigate to="/login" replace />)} />
+
+        <Route path="/dataSeller" element={isLoggedIn ? (<PageDataSeller />) : (<Navigate to="/login" replace />)} />
+        <Route path="/addDataSeller" element={isLoggedIn ? (<PageAddSeller />) : (<Navigate to="/login" replace />)} />
+        <Route path="/updateSeller/:id" element={isLoggedIn ? (<PageUpdateSeller />) : (<Navigate to="/login" replace />)} />
+
+        <Route path="/dataTestimoni" element={isLoggedIn ? (<PageDataTestimonial />) : (<Navigate to="/login" replace />)} />
+        <Route path="/addDataTestimoni" element={isLoggedIn ? (<PageAddTestimonial />) : (<Navigate to="/login" replace />)} />
+        <Route path="/updateDataTestimoni/:id" element={isLoggedIn ? (<PageUpdateTestimonial />) : (<Navigate to="/login" replace />)} />
+
+        <Route path="/myProfile" element={isLoggedIn ? (<PageMyProfile />) : (<Navigate to="/login" replace />)} />
+        <Route path="/edit-myProfile/:id" element={isLoggedIn ? (<PageEditMyProfile />) : (<Navigate to="/login" replace />)} />
+
+        <Route path="/dataBooking" element={isLoggedIn ? (<PageDataBooking />) : (<Navigate to="/login" replace />)} />
+
+        <Route path="/approveBooking/:id" element={isLoggedIn ? (<PageApproveBooking />) : (<Navigate to="/login" replace />)} />
+
+        <Route path="/booking/:id" element={isLoggedIn ? (<PageBooking />) : (<Navigate to="/login" replace />)} />
+
+        <Route path="/notFound" element={<PageNotFound />} />
 
       </Routes>
     </>

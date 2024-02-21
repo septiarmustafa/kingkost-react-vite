@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '../../store/axiosInterceptor';
 import DefaultImage from '../../assets/img/DefaultImage.jpg';
 import { Link, useNavigate } from 'react-router-dom';
+import { Carousel } from 'react-bootstrap';
 
 function Kosan() {
   const [provinceOptions, setProvinceOptions] = useState([]);
@@ -133,12 +134,13 @@ function Kosan() {
   };
 
   const handleButtonClick = (kosan) => {
-    if (kosan.currentBookingStatus === "0") {
+    if (kosan.currentBookingStatus === 0) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Kosan ini sudah pernah Anda booking dan dalam tahap pending/proses.',
-      });
+        text: 'You have already booked this boarding house and it is in the pending/process stage.',
+    });
+    
     } else {
       // Redirect ke halaman /kost/id dengan navigate
       // Pastikan untuk mengimpor fungsi navigate dari react-router-dom
@@ -172,7 +174,7 @@ function Kosan() {
                   value={provinceId}
                   onChange={handleProvinceChange}
                 >
-                  <option value="">Pilih Provinsi</option>
+                  <option value="">Select Province</option>
                   {provinceOptions.map(province => (
                     <option key={province.id} value={province.id}>{province.name}</option>
                   ))}
@@ -185,7 +187,7 @@ function Kosan() {
                   onChange={handleCityChange}
                   disabled={!provinceId}
                 >
-                  <option value="">Pilih Kota</option>
+                  <option value="">Select City</option>
                   {cityOptions.map(city => (
                     <option key={city.id} value={city.id}>{city.name}</option>
                   ))}
@@ -198,7 +200,7 @@ function Kosan() {
                   onChange={handleSubdistrictChange}
                   disabled={!cityId}
                 >
-                  <option value="">Pilih Kecamatan</option>
+                  <option value="">Select Subdistrict</option>
                   {subdistrictOptions.map(subdistrict => (
                     <option key={subdistrict.id} value={subdistrict.id}>{subdistrict.name}</option>
                   ))}
@@ -211,7 +213,7 @@ function Kosan() {
                   onChange={handleGenderChange}
                   style={{ borderRadius: '15px 0 0 15px', minWidth: '80px' }}
                 >
-                  <option value="">Search By Gender</option>
+                  <option value="">Select By Gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
@@ -224,14 +226,32 @@ function Kosan() {
               <div key={kosan.id} className="col-lg-4 col-md-6">
                 <div className="card">
                   {/* <Link to={`/kost/id?kostId=${kosan.id}&customerId=${customerId}`} style={{ textDecoration: 'none', color: 'inherit' }}> */}
-                    <div className="overflow-hidden" style={{ height: '200px' }}>
-                      <img
-                        className="img-fluid"
-                        src={kosan.images.length > 0 ? kosan.images[0].url : DefaultImage}
-                        alt={kosan.images.length > 0 ? kosan.images[0].fileName : 'Placeholder'}
-                        style={{ height: '100%', width: '100%', objectFit: 'cover' }}
-                      />
-                    </div>
+                  <div className="overflow-hidden" style={{ height: '200px' }}>
+                    <Carousel>
+                      {kosan.images.map((image, index) => (
+                        <Carousel.Item key={index}>
+                          <img
+                            className="d-block w-100"
+                            src={image.url}
+                            alt={image.fileName}
+                            style={{ height: '100%', objectFit: 'cover' }}
+                          />
+                        </Carousel.Item>
+                      ))}
+                      {/* If there are less than 5 images, fill the remaining slides with default image */}
+                      {/* {kosan.images.length < 5 &&
+                        Array.from({ length: 5 - kosan.images.length }).map((_, index) => (
+                          <Carousel.Item key={kosan.images.length + index + 1}>
+                            <img
+                              className="d-block w-100"
+                              src={DefaultImage}
+                              alt="Placeholder"
+                              style={{ height: '100%', objectFit: 'cover' }}
+                            />
+                          </Carousel.Item>
+                        ))} */}
+                    </Carousel>
+                  </div>
                     <div className="card-body">
                       <div className="d-flex border-bottom">
                         <small className="flex-fill text-center border-end py-2">
@@ -246,7 +266,6 @@ function Kosan() {
                           <i className="fa fa-solid fa-venus-mars text-primary me-2"></i>
                           Gender Kosan: {kosan.genderType.name}
                         </small>
-                        <p>status : {kosan.currentBookingStatus}</p>
                       </div>
                       <div className="text-center p-4">
                         <h4 className="mb-2">{formatRupiah(kosan.kostPrice.price)}/month</h4>
