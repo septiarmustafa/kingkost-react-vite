@@ -13,7 +13,9 @@ const TransactionHistory = () => {
     const [loading, setLoading] = useState(false); // State to manage loading status
     const userId = useSelector((state) => state.authentication.userId);
     const [transactionDate, setTransactionDate] = useState(new Date());
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         const fetchTransactions = async () => {

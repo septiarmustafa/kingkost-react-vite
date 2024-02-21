@@ -8,7 +8,8 @@ import { useSelector } from 'react-redux';
 function AddDataKosan() {
     const navigate = useNavigate();
     const role = useSelector((state) => state.authentication.role);
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
     const [newKosan, setNewKosan] = useState({
         name: "",
         description: "",

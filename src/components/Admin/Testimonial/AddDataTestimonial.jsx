@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom';
 
 function AddDataTestimonial() {
     const navigate = useNavigate();
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const [newReview, setNewReview] = useState({
         message: "",

@@ -7,8 +7,11 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function AddTestimonial() {
     const userId = useSelector((state) => state.authentication.userId);
-    const navigate = useNavigate(); // Gunakan useNavigate untuk navigasi antar halaman
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const navigate = useNavigate(); 
+
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
+
 
     const [formData, setFormData] = useState({
         message: '',

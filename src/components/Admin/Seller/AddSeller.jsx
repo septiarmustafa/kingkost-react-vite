@@ -7,7 +7,9 @@ import { Link } from 'react-router-dom';
 
 function AddSeller() {
     const navigate = useNavigate();
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const [newSeller, setNewSeller] = useState({
         fullName: "",

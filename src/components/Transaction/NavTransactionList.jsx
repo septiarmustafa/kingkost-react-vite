@@ -18,8 +18,10 @@ function NavTransactionList() {
     const userId = useSelector((state) => state.authentication.userId);
 
     const dispatch = useDispatch();
-    const navigate = useNavigate(); // Hapus deklarasi navigate yang kedua
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const navigate = useNavigate(); 
+    
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const handleLogout = () => {
         Swal.fire({

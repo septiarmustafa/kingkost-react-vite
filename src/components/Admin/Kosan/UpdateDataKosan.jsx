@@ -9,7 +9,8 @@ function UpdateDataKosan() {
     const { id } = useParams();
 
     const role = useSelector((state) => state.authentication.role);
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const [kosanData, setKosanData] = useState({
         id: "",

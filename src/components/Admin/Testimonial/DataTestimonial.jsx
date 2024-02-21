@@ -12,7 +12,9 @@ function DataTestimonial() {
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         // Fetch reviews

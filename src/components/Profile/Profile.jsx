@@ -23,7 +23,9 @@ function Profile() {
     const user = useSelector(state => state.user);
     const userId = useSelector((state) => state.authentication.userId);
     const navigate = useNavigate();
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         const fetchData = async () => {

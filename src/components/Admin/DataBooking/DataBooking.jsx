@@ -13,7 +13,8 @@ function DataBooking() {
     const userRole = useSelector((state) => state.authentication.role);
     const navigate = useNavigate();
     const [isUploading, setIsUploading] = useState(false);
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const role = useSelector((state) => state.authentication.role);
 

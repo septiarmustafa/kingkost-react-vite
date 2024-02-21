@@ -16,7 +16,8 @@ function MyProfile() {
     const [isUploading, setIsUploading] = useState(false); // State untuk menandai apakah sedang dalam proses upload
 
     const userId = useSelector((state) => state.authentication.userId);
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
     const navigate = useNavigate();
 
     useEffect(() => {

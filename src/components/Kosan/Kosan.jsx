@@ -19,9 +19,11 @@ function Kosan() {
   const [currentPage, setCurrentPage] = useState(0);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [customerId, setCustomerId] = useState(null); // Add customerId state
+  const [customerId, setCustomerId] = useState(null); 
 
-  const token = JSON.parse(localStorage.getItem('userLogin')).token;
+  const tokenString = localStorage.getItem('userLogin');
+  const token = tokenString ? JSON.parse(tokenString).token : null;
+
   const navigate = useNavigate();
 
 

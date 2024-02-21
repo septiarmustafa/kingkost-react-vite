@@ -35,7 +35,8 @@ function UpdateCustomer() {
     const [showPassword, setShowPassword] = useState(false);
     const [genderTypes, setGenderTypes] = useState([]);
 
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         axios.get(`/customer/v1/${id}`, {

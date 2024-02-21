@@ -16,7 +16,9 @@ function NavKosan() {
     const username = useSelector((state) => state.authentication.username);
     const role = useSelector((state) => state.authentication.role);
     const userId = useSelector((state) => state.authentication.userId);
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
   
     console.log('isAuthenticated:', isAuthenticated);
     console.log('username:', username);

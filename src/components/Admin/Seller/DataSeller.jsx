@@ -14,7 +14,9 @@ function DataSeller() {
     const [searchGender, setSearchGender] = useState('');
     const [searchAddress, setSearchAddress] = useState('');
     const navigate = useNavigate();
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         axios.get('/seller/v1', {

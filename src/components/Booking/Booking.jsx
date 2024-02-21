@@ -18,7 +18,8 @@ const BookingKost = () => {
     const [loading, setLoading] = useState(false); // State for loading screen
     const { id } = useParams();
 
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         const fetchData = async () => {

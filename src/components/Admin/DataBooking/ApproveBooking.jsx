@@ -12,7 +12,8 @@ function ApproveBooking() {
     const [isLoading, setIsLoading] = useState(false);
     const [approveValue, setApproveValue] = useState('');
     const [sellerId, setSellerId] = useState('');
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         // Mengambil sellerId dari API

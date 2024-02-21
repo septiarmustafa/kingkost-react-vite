@@ -17,7 +17,8 @@ function EditMyProfile() {
     });
 
     const [genders, setGenders] = useState([]);
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const [errors, setErrors] = useState({
         fullName: "",

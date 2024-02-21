@@ -23,7 +23,8 @@ function SideBar() {
     const [UserData, setUserData] = useState(null);
     const userId = useSelector((state) => state.authentication.userId);
 
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     const handleLogout = () => {
         Swal.fire({

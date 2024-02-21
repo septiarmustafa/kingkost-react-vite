@@ -49,9 +49,9 @@ function Team() {
                   <img className="img-fluid" src="https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/2aac8385-5822-4ff6-86f0-843a926437e0leo.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-linkedin"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-instagram"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://github.com/leobgs" target='_blank'><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.linkedin.com/in/leonardo-bagus-utomo/" target='_blank'><i className="fab fa-linkedin"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.instagram.com/leo.nardobagusutomo/" target='_blank'><i className="fab fa-instagram"></i></Link>
                 </div>
                 <div className="text-center p-4">
                   <h5 className="mb-0">Leonardo</h5>
@@ -66,9 +66,9 @@ function Team() {
                   <img className="img-fluid" src="https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/53195e25-44bd-474b-b857-5ce34e6c0ee7andre.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-linkedin"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-instagram"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://github.com/AnRiyan1912" target='_blank'><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.linkedin.com/in/andre-riyanto-809274294/" target='_blank'><i className="fab fa-linkedin"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.instagram.com/andreriyannt19/" target='_blank'><i className="fab fa-instagram"></i></Link>
                 </div>
                 <div className="text-center p-4">
                   <h5 className="mb-0">Andre Riyanto</h5>
@@ -83,9 +83,9 @@ function Team() {
                   <img className="img-fluid" src="https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/106731e8-9ac9-449a-9c2d-f6e4e26b38d0ihsan.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-linkedin"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-instagram"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://github.com/Daexaf" target='_blank'><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.linkedin.com/in/muhammad-ihsan-64-mi/" target='_blank'><i className="fab fa-linkedin"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.instagram.com/ihsan64.mi/" target='_blank'><i className="fab fa-instagram"></i></Link>
                 </div>
                 <div className="text-center p-4">
                   <h5 className="mb-0">Muhammad Ihsan</h5>
@@ -117,9 +117,9 @@ function Team() {
                   <img className="img-fluid" src=" https://firebasestorage.googleapis.com/v0/b/kingkost-images.appspot.com/o/d915f117-70d4-4fb5-aa29-179c207e7d8cbaim.jpg?alt=media" alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-linkedin"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-instagram"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://github.com/baim" target='_blank'><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.linkedin.com/in/muhammad-ibrahim-b9a62b24a/" target='_blank'><i className="fab fa-linkedin"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.instagram.com/ibrahim.muh88/" target='_blank'><i className="fab fa-instagram" target='_blank'></i></Link>
                 </div>
                 <div className="text-center p-4">
                   <h5 className="mb-0">Muhammad Ibrahim</h5>

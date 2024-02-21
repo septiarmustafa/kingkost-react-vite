@@ -28,7 +28,8 @@ function DataKosan() {
     const [subdistrictId, setSubdistrictId] = useState('');
 
     const role = useSelector((state) => state.authentication.role);
-    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    const tokenString = localStorage.getItem('userLogin');
+    const token = tokenString ? JSON.parse(tokenString).token : null;
 
     useEffect(() => {
         axios.get('/province', {
