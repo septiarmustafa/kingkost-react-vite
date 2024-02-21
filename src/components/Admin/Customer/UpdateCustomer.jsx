@@ -34,6 +34,7 @@ function UpdateCustomer() {
     const [passwordIndicator, setPasswordIndicator] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [genderTypes, setGenderTypes] = useState([]);
+
     const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     useEffect(() => {
@@ -117,7 +118,11 @@ function UpdateCustomer() {
             return;
         }
 
-        axios.put(`/customer/v1`, customerData)
+        axios.put(`/customer/v1`, customerData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 console.log('Customer berhasil diubah:', response.data);
                 Swal.fire({

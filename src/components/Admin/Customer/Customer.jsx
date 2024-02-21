@@ -56,7 +56,7 @@ function Customer() {
             if (result.isConfirmed) {
                 axios.delete(`/customer/v1/${customerId}`, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}` // Mengirim token ke server
+                        Authorization: `Bearer ${token}` // Mengirim token ke server
                     }
                 })
                     .then(response => {
