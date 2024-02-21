@@ -198,17 +198,6 @@ function UpdateDataKosan() {
                             <h3 className="card-title text-center mb-5">Form Update Kosan</h3>
                             <form className="row g-3" onSubmit={handleUpdateKosan}>
 
-                                <div className="col-6">
-                                    <label htmlFor="name" className="form-label">Id</label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        className="form-control"
-                                        value={kosanData.name}
-                                        onChange={(e) => setKosanData({ ...kosanData, name: e.target.value })}
-                                    />
-                                </div>
-
                                 {/* Form fields */}
                                 <div className="col-6">
                                     <label htmlFor="name" className="form-label">Name</label>
