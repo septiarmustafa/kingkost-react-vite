@@ -19,6 +19,9 @@ function Dashboard() {
     const [totalKosans, setTotalKosans] = useState(0);
     const [totalReviews, setTotalReviews] = useState(0);
     const [totalBooking, setTotalBooking] = useState(0);
+    const [totalPending, setTotalPending] = useState(0)
+    const [totalReject, setTotalReject] = useState(0)
+    const [totalApprove, setTotalApprove] = useState(0)
 
     useEffect(() => {
         axios.get('/customer/v1')
@@ -87,6 +90,111 @@ function Dashboard() {
                 console.error('Error fetching kosan data:', error);
             });
     }, []);
+
+    // total Pending
+    useEffect(() => {
+        if (role === 'ROLE_ADMIN') {
+            axios.get('/transactions')
+                .then(response => {
+                    const transactions = response.data.data;
+                    const total = transactions.length;
+                    setTotalPending(total);
+                    console.log("HEHE", transactions);
+                })
+                .catch(error => {
+                    console.error('Error fetching Booking data:', error);
+                });
+        } else if (role === 'ROLE_SELLER') {
+            const fetchTransactionSellerId = async () => {
+                try {
+                    const response = await axios.get(`seller/user/${userId}`);
+                    const responseSellerId = response.data.data.id;
+                    setSellerId(responseSellerId);
+
+                    const bookingResponse = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=0`);
+                    const bookingPending = bookingResponse.data.data;
+                    const total = bookingPending.length;
+                    setTotalPending(total);
+                    console.log(total);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
+            fetchTransactionSellerId();
+        }
+    }, [sellerId]);
+
+    // total Reject
+    useEffect(() => {
+        if (role === 'ROLE_ADMIN') {
+            const fetchAllTransaction = async () => {
+                try {
+                    const bookingResponseCancel = await axios.get(`/transactions?approveStatus=1`);
+                    const bookingCancel = bookingResponseCancel.data.data;
+                    const bookingResponseReject = await axios.get(`/transactions?approveStatus=1`);
+                    const bookingReject = bookingResponseReject.data.data;
+                    const total = bookingCancel.length + bookingReject.length;
+                    setTotalReject(total);
+                    console.log(total);
+                } catch (error) {
+                    console.error("Error Fetching data", error)
+                }
+            }
+            fetchAllTransaction()
+        } else if (role === 'ROLE_SELLER') {
+            const fetchTransaction = async () => {
+                try {
+                    const response = await axios.get(`seller/user/${userId}`);
+                    const responseSellerId = response.data.data.id;
+                    setSellerId(responseSellerId);
+
+                    const bookingResponseCancel = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=1`);
+                    const bookingCancel = bookingResponseCancel.data.data;
+                    const bookingResponseReject = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=1`);
+                    const bookingReject = bookingResponseReject.data.data;
+                    const total = bookingCancel.length + bookingReject.length;
+                    setTotalReject(total);
+                    console.log(total);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
+            fetchTransaction();
+        }
+    }, [sellerId]);
+
+    // total Approve
+    useEffect(() => {
+        if (role === 'ROLE_ADMIN') {
+            axios.get('/transactions?approveStatus=3')
+                .then(response => {
+                    const transactions = response.data.data;
+                    const total = transactions.length;
+                    setTotalApprove(total);
+                    console.log("HEHE", transactions);
+                })
+                .catch(error => {
+                    console.error('Error fetching Booking data:', error);
+                });
+        } else if (role === 'ROLE_SELLER') {
+            const fetchTransactionSellerId = async () => {
+                try {
+                    const response = await axios.get(`seller/user/${userId}`);
+                    const responseSellerId = response.data.data.id;
+                    setSellerId(responseSellerId);
+
+                    const bookingResponse = await axios.get(`/transactions?sellerId=${sellerId}&approveStatus=3`);
+                    const bookingPending = bookingResponse.data.data;
+                    const total = bookingPending.length;
+                    setTotalApprove(total);
+                    console.log(total);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
+            fetchTransactionSellerId();
+        }
+    }, [sellerId]);
 
     useEffect(() => {
         if (role === 'ROLE_ADMIN') {
@@ -193,7 +301,7 @@ function Dashboard() {
                             boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'
                         }}>
                             <div className="card-body">
-                                <i className="bi bi-star" style={{fontSize: '2.5rem'}}></i>
+                                <i className="bi bi-journal-bookmark-fill" style={{fontSize: '2.5rem'}}></i>
                                 <p className="card-text text-secondary fw-bold" style={{fontSize: '15px'}}>Total
                                     : {totalBooking}</p>
                                 <p className="card-text text-white fw-bold">Booking</p>
@@ -223,9 +331,9 @@ function Dashboard() {
                             boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'
                         }}>
                             <div className="card-body">
-                                <i className="bi bi-star" style={{fontSize: '2.5rem'}}></i>
+                                <i className="bi bi-hourglass-split" style={{fontSize: '2.5rem'}}></i>
                                 <p className="card-text text-secondary fw-bold" style={{fontSize: '15px'}}>Total
-                                    : {totalReviews}</p>
+                                    : {totalPending}</p>
                                 <p className="card-text text-white fw-bold">Pending Transaction</p>
                             </div>
                         </div>
@@ -237,9 +345,9 @@ function Dashboard() {
                             boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'
                         }}>
                             <div className="card-body">
-                                <i className="bi bi-star" style={{fontSize: '2.5rem'}}></i>
+                                <i className="bi bi-x-octagon" style={{fontSize: '2.5rem'}}></i>
                                 <p className="card-text text-secondary fw-bold" style={{fontSize: '15px'}}>Total
-                                    : {totalReviews}</p>
+                                    : {totalReject}</p>
                                 <p className="card-text text-white fw-bold">Reject Transaction</p>
                             </div>
                         </div>
@@ -251,10 +359,10 @@ function Dashboard() {
                             boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)'
                         }}>
                             <div className="card-body">
-                                <i className="bi bi-star" style={{fontSize: '2.5rem'}}></i>
+                                <i className="bi bi-cash-stack" style={{fontSize: '2.5rem'}}></i>
                                 <p className="card-text text-secondary fw-bold" style={{fontSize: '15px'}}>Total
-                                    : {totalReviews}</p>
-                                <p className="card-text text-white fw-bold">Succes Transaction</p>
+                                    : {totalApprove}</p>
+                                <p className="card-text text-white fw-bold">Successfull Transaction</p>
                             </div>
                         </div>
                     </div>
