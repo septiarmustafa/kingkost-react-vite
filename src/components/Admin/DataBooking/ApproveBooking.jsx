@@ -12,10 +12,15 @@ function ApproveBooking() {
     const [isLoading, setIsLoading] = useState(false);
     const [approveValue, setApproveValue] = useState('');
     const [sellerId, setSellerId] = useState('');
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     useEffect(() => {
         // Mengambil sellerId dari API
-        axios.get(`/seller/user/${userId}`)
+        axios.get(`/seller/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 const matchedUser = response.data.data;
                 const sellerId = matchedUser.id;
@@ -32,7 +37,11 @@ function ApproveBooking() {
         setIsLoading(true);
 
         // Mengirim permintaan POST ke endpoint localhost:8080/approv
-        axios.post(`/approv?transactionId=${id}&approv=${approveValue}&sellerId=${sellerId}`)
+        axios.post(`/approv?transactionId=${id}&approv=${approveValue}&sellerId=${sellerId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(() => {
                 setIsLoading(false);
                 Swal.fire({

@@ -19,6 +19,7 @@ function NavTransactionList() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate(); // Hapus deklarasi navigate yang kedua
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     const handleLogout = () => {
         Swal.fire({
@@ -57,7 +58,11 @@ function NavTransactionList() {
         const fetchData = async () => {
             try {
                 console.log(userId)
-                const userDataResponse = await axios.get(`/customer/user/${userId}`);
+                const userDataResponse = await axios.get(`/customer/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                  });
                 const matchedUser = userDataResponse.data.data;
                 setUserData(matchedUser);
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import axios from '../../store/axiosInterceptor';
 import Swal from "sweetalert2";
 import { useParams, Link } from 'react-router-dom';
 import { Carousel } from 'react-bootstrap';
@@ -15,12 +15,17 @@ function DetailKosan() {
     const [totalCost, setTotalCost] = useState(0);
     const userId = useSelector((state) => state.authentication.userId);
     const navigate = useNavigate();
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Mendapatkan customerId dari Redux
-                const userDataResponse = await axios.get(`http://localhost:8080/customer/user/${userId}`);
+                const userDataResponse = await axios.get(`http://43.218.87.110:8080/customer/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const matchedUser = userDataResponse.data.data;
                 const customerId = matchedUser.id;
 
@@ -29,10 +34,13 @@ function DetailKosan() {
                 const kostId = searchParams.get('kostId');
 
                 // Mengambil data kosan menggunakan kostId dan customerId
-                const responseKosan = await axios.get(`http://localhost:8080/kost/id`, {
+                const responseKosan = await axios.get(`http://43.218.87.110:8080/kost/id`, {
                     params: {
                         kostId: kostId,
                         customerId: customerId
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 const kosan = responseKosan.data.data;

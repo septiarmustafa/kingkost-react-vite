@@ -37,7 +37,7 @@ function ForgotPasswordSeller() {
             }
 
             setLoading(true); // Atur loading menjadi true saat memulai proses
-            const response = await axios.post('http://localhost:8080/reset/request-seller', {
+            const response = await axios.post('http://43.218.87.110:8080/reset/request-seller', {
                 email: email
             });
 

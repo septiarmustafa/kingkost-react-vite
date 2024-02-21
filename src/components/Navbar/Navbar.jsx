@@ -16,6 +16,7 @@ function Navbar() {
     const username = useSelector((state) => state.authentication.username);
     const role = useSelector((state) => state.authentication.role);
     const userId = useSelector((state) => state.authentication.userId);
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
   
     console.log('isAuthenticated:', isAuthenticated);
     console.log('username:', username);
@@ -61,7 +62,11 @@ function Navbar() {
         const fetchData = async () => {
             try {
                 console.log(userId)
-                const userDataResponse = await axios.get(`/customer/user/${userId}`);
+                const userDataResponse = await axios.get(`/customer/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const matchedUser = userDataResponse.data.data;
                 setUserData(matchedUser);
                

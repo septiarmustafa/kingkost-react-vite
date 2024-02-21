@@ -34,9 +34,14 @@ function UpdateCustomer() {
     const [passwordIndicator, setPasswordIndicator] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [genderTypes, setGenderTypes] = useState([]);
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     useEffect(() => {
-        axios.get(`/customer/v1/${id}`)
+        axios.get(`/customer/v1/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setCustomerData(response.data);
             })

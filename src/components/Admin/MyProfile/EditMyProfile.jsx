@@ -17,6 +17,8 @@ function EditMyProfile() {
     });
 
     const [genders, setGenders] = useState([]);
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+
     const [errors, setErrors] = useState({
         fullName: "",
         genderTypeId: "",
@@ -32,7 +34,11 @@ function EditMyProfile() {
 
     useEffect(() => {
         // Fetch user data and set form data
-        axios.get(`/seller/user/${userId}`)
+        axios.get(`/seller/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 const userData = response.data.data;
                 setFormData(userData);
@@ -85,7 +91,11 @@ function EditMyProfile() {
             return;
         }
 
-        axios.put(`/seller/v1`, formData)
+        axios.put(`/seller/v1`, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 console.log('Profil berhasil diubah:', response.data);
                 Swal.fire({

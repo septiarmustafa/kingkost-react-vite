@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 function AddDataBooking() {
     const navigate = useNavigate();
     const role = useSelector((state) => state.authentication.role);
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+    
     const [newBooking, setNewBooking] = useState({
         kostId: "",
         customerId: "",
@@ -23,7 +25,11 @@ function AddDataBooking() {
 
     useEffect(() => {
         // Fetch data for kost options
-        axios.get('/kost')
+        axios.get('/kost', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setKostOptions(response.data.data);
             })
@@ -32,7 +38,11 @@ function AddDataBooking() {
             });
 
         // Fetch data for customer options
-        axios.get('/customer/v1')
+        axios.get('/customer/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setCustomerOptions(response.data);
             })
@@ -41,7 +51,11 @@ function AddDataBooking() {
             });
 
         // Fetch data for month type options
-        axios.get('/month/v1')
+        axios.get('/month/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setMonthTypeOptions(response.data);
             })
@@ -50,7 +64,11 @@ function AddDataBooking() {
             });
 
         // Fetch data for payment type options
-        axios.get('/payment/v1')
+        axios.get('/payment/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setPaymentTypeOptions(response.data);
             })
@@ -64,7 +82,11 @@ function AddDataBooking() {
 
         setIsLoading(true);
 
-        axios.post(`/transactions`, newBooking)
+        axios.post(`/transactions`, newBooking, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(() => {
                 setIsLoading(false);
                 Swal.fire({

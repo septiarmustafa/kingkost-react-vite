@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 function AddCustomer() {
     const navigate = useNavigate();
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     const [newCustomer, setNewCustomer] = useState({
         fullName: "",
@@ -38,13 +39,14 @@ function AddCustomer() {
 
     useEffect(() => {
         axios.get('/gender/v1')
-            .then(response => {
-                setGenderTypes(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching gender types:', error);
-            });
+        .then(response => {
+            setGenderTypes(response.data);
+        })
+        .catch(error => {
+            console.error('Error fetching gender types:', error);
+        });
     }, []);
+    
 
     const handleChangeEmail = (e) => {
         const newEmail = e.target.value;
@@ -120,27 +122,30 @@ function AddCustomer() {
             return;
         }
 
-        axios.post(`/api/auth/register/customer`, newCustomer)
-            .then(() => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Add Customer Successful',
-                    text: 'Your customer adding was successful!',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    navigate("/customer");
-                });
-            })
-            .catch(err => {
-                console.error(err);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Add Customer Failed',
-                    text: 'An error occurred during add Customer. Please try again later.',
-                    confirmButtonText: 'OK'
-                });
+        axios.post(`/api/auth/register/customer`, newCustomer, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Add Customer Successful',
+                text: 'Your customer adding was successful!',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                navigate("/customer");
             });
-            
+        })
+        .catch(err => {
+            console.error(err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Add Customer Failed',
+                text: 'An error occurred during add Customer. Please try again later.',
+                confirmButtonText: 'OK'
+            });
+        });
     };
 
     const handleResetForm = () => {

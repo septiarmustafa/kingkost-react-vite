@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 function UpdateDataTestimonial() {
     const navigate = useNavigate();
     const { id } = useParams();
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     const [reviewData, setReviewData] = useState({
         id: "",
@@ -23,7 +24,11 @@ function UpdateDataTestimonial() {
     const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        axios.get(`/review/v1/${id}`)
+        axios.get(`/review/v1/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setReviewData(response.data);
             })
@@ -31,7 +36,11 @@ function UpdateDataTestimonial() {
                 console.error('Error fetching review data:', error);
             });
 
-        axios.get('/customer/v1')
+        axios.get('/customer/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setCustomers(response.data);
             })
@@ -60,7 +69,11 @@ function UpdateDataTestimonial() {
             return;
         }
 
-        axios.put(`/review/v1`, reviewData)
+        axios.put(`/review/v1`, reviewData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 console.log('Review berhasil diubah:', response.data);
                 Swal.fire({

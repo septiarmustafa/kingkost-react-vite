@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../store/axiosInterceptor';
 import Carousel from 'react-bootstrap/Carousel';
 import { Row, Col } from 'react-bootstrap';
 import defaultUserImg from '../../assets/img/default-user.png';
@@ -9,13 +9,22 @@ import { FaMapMarkerAlt } from 'react-icons/fa';
 
 function Testimonial() {
   const [testimonials, setTestimonials] = useState([]);
+  const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [reviewResponse, customerResponse] = await Promise.all([
-          axios.get('http://localhost:8080/review/v1'),
-          axios.get('http://localhost:8080/customer/v1')
+          axios.get('/review/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+          }),
+          axios.get('/customer/v1', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+          })
         ]);
 
         const reviewData = reviewResponse.data;

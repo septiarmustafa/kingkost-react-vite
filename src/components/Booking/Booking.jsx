@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../store/axiosInterceptor.js';
-import { useParams, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useParams } from 'react-router-dom';
 import defaultUserImg from '../../assets/img/default-user.png';
-
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGenderless, FaUpload, FaUser, FaWhatsapp, FaMoneyBill, FaVoicemail, FaFileMedicalAlt, FaAddressBook, FaMoneyBillAlt, FaCashRegister } from 'react-icons/fa';
-
 import { useNavigate } from 'react-router-dom';
-
 
 const BookingKost = () => {
     const [customers, setCustomers] = useState([]);
@@ -21,11 +18,19 @@ const BookingKost = () => {
     const [loading, setLoading] = useState(false); // State for loading screen
     const { id } = useParams();
 
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const responseLogin = JSON.parse(localStorage.getItem('userLogin'));
-                const responseCustomer = await axios.get(`/customer/user/${responseLogin.userId}`);
+                
+                const responseCustomer = await axios.get(`/customer/user/${responseLogin.userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
                 setCustomerId(responseCustomer.data.data.id);
                 setCustomerName(responseCustomer.data.data.fullName);
                 setCustomers([responseCustomer.data.data]); // Set customers as an array with a single object
@@ -38,10 +43,13 @@ const BookingKost = () => {
 
             try {
                 // Mengambil data kosan menggunakan kostId dan customerId
-                const responseKosan = await axios.get(`http://localhost:8080/kost/id`, {
+                const responseKosan = await axios.get(`http://43.218.87.110:8080/kost/id`, {
                     params: {
                         kostId: id,
                         customerId: customerId
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 console.log("data kosan nih:")
@@ -53,14 +61,22 @@ const BookingKost = () => {
             }
 
             try {
-                const responseMonth = await axios.get('/month/v1');
+                const responseMonth = await axios.get('/month/v1', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 setMonthType(responseMonth.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
 
             try {
-                const responsePayment = await axios.get('/payment/v1');
+                const responsePayment = await axios.get('/payment/v1', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 setPaymentType(responsePayment.data);
             } catch (error) {
                 console.error('Error while fetching data', error);
@@ -68,7 +84,7 @@ const BookingKost = () => {
         };
 
         fetchData();
-    }, [id]);
+    }, [id, token, customerId]);
 
 
     const handleBooking = async () => {
@@ -97,6 +113,10 @@ const BookingKost = () => {
                 customerId: customerId,
                 paymentTypeId: selectedPayment, // Use paymentTypeId instead of paymentId
                 monthTypeId: selectedMonth,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
     
             console.log('Booking successful:', response.data);
@@ -144,9 +164,6 @@ const BookingKost = () => {
         ELEVEN_MONTH: '11 Month',
         TWELVE_MONTH: '12 Month'
     };
-    
-
-    
     
 
     return (

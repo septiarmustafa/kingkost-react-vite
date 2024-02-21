@@ -14,8 +14,18 @@ function Customer() {
     const [searchGender, setSearchGender] = useState('');
     const navigate = useNavigate();
 
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+
+    console.log(token);
+
     useEffect(() => {
-        axios.get('/customer/v1')
+        console.log("token nih uy");
+        console.log(token);
+        axios.get('/customer/v1', {
+            headers: {
+                Authorization: `Bearer ${token}` // Mengirim token ke server
+            }
+        })
             .then(response => {
                 setCustomers(response.data);
             })
@@ -44,7 +54,11 @@ function Customer() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`/customer/v1/${customerId}`)
+                axios.delete(`/customer/v1/${customerId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}` // Mengirim token ke server
+                    }
+                })
                     .then(response => {
                         // Update state to reflect the removal of the customer
                         setCustomers(customers.filter(customer => customer.id !== customerId));

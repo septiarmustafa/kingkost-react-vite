@@ -23,6 +23,8 @@ function SideBar() {
     const [UserData, setUserData] = useState(null);
     const userId = useSelector((state) => state.authentication.userId);
 
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
+
     const handleLogout = () => {
         Swal.fire({
           title: 'Are you sure?',
@@ -59,7 +61,11 @@ function SideBar() {
         const fetchData = async () => {
             try {
                 console.log(userId)
-                const userDataResponse = await axios.get(`/seller/user/${userId}`);
+                const userDataResponse = await axios.get(`/seller/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const matchedUser = userDataResponse.data.data;
                 setUserData(matchedUser);
                

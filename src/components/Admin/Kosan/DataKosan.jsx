@@ -28,9 +28,14 @@ function DataKosan() {
     const [subdistrictId, setSubdistrictId] = useState('');
 
     const role = useSelector((state) => state.authentication.role);
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     useEffect(() => {
-        axios.get('/province')
+        axios.get('/province', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
                 setProvinceOptions(response.data.data);
             })
@@ -42,7 +47,11 @@ function DataKosan() {
 
     useEffect(() => {
         if (provinceId) {
-            axios.get(`/city?province_id=${provinceId}`)
+            axios.get(`/city?province_id=${provinceId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+                })
                 .then(response => {
                     setCityOptions(response.data.data);
                     setCityId("");
@@ -55,7 +64,11 @@ function DataKosan() {
 
     useEffect(() => {
         if (cityId) {
-            axios.get(`/subdistrict?city_id=${cityId}`)
+            axios.get(`/subdistrict?city_id=${cityId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+                })
                 .then(response => {
                     setSubdistrictOptions(response.data.data);
                     setSubdistrictId("");
@@ -74,12 +87,24 @@ function DataKosan() {
         try {
             let response;
             if (userRole === "ROLE_SELLER") {
-                const userDataResponse = await axios.get(`/seller/user/${userId}`);
+                const userDataResponse = await axios.get(`/seller/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const matchedUser = userDataResponse.data.data;
                 const sellerId = matchedUser.id;
-                response = await axios.get(`/kost?sellerId=${sellerId}`);
+                response = await axios.get(`/kost?sellerId=${sellerId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
             } else if (userRole === "ROLE_ADMIN") {
-                response = await axios.get(`/kost?page=${currentPage}`);
+                response = await axios.get(`/kost?page=${currentPage}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
             }
             const { data } = response.data;
             setKosanData(data);
@@ -103,7 +128,11 @@ function DataKosan() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`/kost/${kosanId}`)
+                axios.delete(`/kost/${kosanId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                    })
                     .then(response => {
                         setKosanData(kosanData.filter(kosan => kosan.id !== kosanId));
                         console.log('Kosan deleted successfully');
@@ -162,9 +191,11 @@ function DataKosan() {
                 formData.append("kostId", kosanId);
                 await axios.post(`/kost/image`, formData, {
                     headers: {
-                        "Content-Type": "multipart/form-data"
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${token}`
                     }
                 });
+               
         
                 Swal.fire({
                     icon: 'success',

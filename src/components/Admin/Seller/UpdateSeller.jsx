@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 function UpdateSeller() {
     const navigate = useNavigate();
     const { id } = useParams();
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     const [sellerData, setSellerData] = useState({
         id: "",
@@ -37,7 +38,11 @@ function UpdateSeller() {
     const [genderTypes, setGenderTypes] = useState([]);
 
     useEffect(() => {
-        axios.get(`/seller/v1/${id}`)
+        axios.get(`/seller/v1/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 setSellerData(response.data);
             })
@@ -112,7 +117,11 @@ function UpdateSeller() {
             return;
         }
 
-        axios.put(`/seller/v1`, sellerData)
+        axios.put(`/seller/v1`, sellerData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            })
             .then(response => {
                 console.log('Seller berhasil diubah:', response.data);
                 Swal.fire({

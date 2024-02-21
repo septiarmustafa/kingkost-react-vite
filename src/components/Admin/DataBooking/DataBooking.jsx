@@ -13,6 +13,7 @@ function DataBooking() {
     const userRole = useSelector((state) => state.authentication.role);
     const navigate = useNavigate();
     const [isUploading, setIsUploading] = useState(false);
+    const token = JSON.parse(localStorage.getItem('userLogin')).token;
 
     const role = useSelector((state) => state.authentication.role);
 
@@ -27,63 +28,94 @@ function DataBooking() {
     const [searchStatus, setSearchStatus] = useState('');
 
     useEffect(() => {
-        axios.get('/province')
-            .then(response => {
-                setProvinceOptions(response.data.data);
-            })
-            .catch(error => {
-                console.error('Error fetching province options:', error);
-            });
-    }, []);
+        axios.get('/province', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            setProvinceOptions(response.data.data);
+        })
+        .catch(error => {
+            console.error('Error fetching province options:', error);
+        });
+    }, [token]); // Perubahan token akan memicu pengambilan data provinsi baru
 
     useEffect(() => {
         if (provinceId) {
-            axios.get(`/city?province_id=${provinceId}`)
-                .then(response => {
-                    setCityOptions(response.data.data);
-                    setCityId("");
-                })
-                .catch(error => {
-                    console.error('Error fetching city options:', error);
-                });
+            axios.get(`/city?province_id=${provinceId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                setCityOptions(response.data.data);
+                setCityId("");
+            })
+            .catch(error => {
+                console.error('Error fetching city options:', error);
+            });
         }
-    }, [provinceId]);
+    }, [provinceId, token]); // Perubahan token atau provinceId akan memicu pengambilan data kota baru
 
     useEffect(() => {
         if (cityId) {
-            axios.get(`/subdistrict?city_id=${cityId}`)
-                .then(response => {
-                    setSubdistrictOptions(response.data.data);
-                    setSubdistrictId("");
-                })
-                .catch(error => {
-                    console.error('Error fetching subdistrict options:', error);
-                });
+            axios.get(`/subdistrict?city_id=${cityId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                setSubdistrictOptions(response.data.data);
+                setSubdistrictId("");
+            })
+            .catch(error => {
+                console.error('Error fetching subdistrict options:', error);
+            });
         }
-    }, [cityId]);
+    }, [cityId, token]); // Perubahan token atau cityId akan memicu pengambilan data kecamatan baru
 
     useEffect(() => {
         fetchData();
-    }, [currentPage, searchTerm, provinceId, cityId, subdistrictId, searchStatus]);
-    
+    }, [currentPage, searchTerm, provinceId, cityId, subdistrictId, searchStatus, token]); // Perubahan token akan memicu pengambilan data baru
 
     const fetchData = async () => {
         try {
             let response;
             if (userRole === "ROLE_SELLER") {
-                const userDataResponse = await axios.get(`/seller/user/${userId}`);
+                const userDataResponse = await axios.get(`/seller/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 const matchedUser = userDataResponse.data.data;
                 const sellerId = matchedUser.id;
                 if (searchTerm.trim() !== '') {
-                    response = await axios.get(`/transactions?sellerId=${sellerId}`);
+                    response = await axios.get(`/transactions?sellerId=${sellerId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                 } else {
-                    response = await axios.get(`/transactions?sellerId=${sellerId}&page=${currentPage}`);
+                    response = await axios.get(`/transactions?sellerId=${sellerId}&page=${currentPage}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                 }
             } else if (userRole === "ROLE_ADMIN") {
                 if (searchTerm.trim() !== '') {
-                    response = await axios.get(`/transactions?page=${currentPage}`);
+                    response = await axios.get(`/transactions?page=${currentPage}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                 } else {
-                    response = await axios.get(`/transactions?page=${currentPage}`);
+                    response = await axios.get(`/transactions?page=${currentPage}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
                 }
             }
             const { data } = response.data;
@@ -150,7 +182,11 @@ function DataBooking() {
     const rejectTransaction = async (transactionId, customerId) => {
         try {
             setIsUploading(true);
-            const response = await axios.post(`/transactions/cancel?transactionId=${transactionId}&customerId=${customerId}`);
+            const response = await axios.post(`/transactions/cancel?transactionId=${transactionId}&customerId=${customerId}`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             console.log('Transaction canceled successfully');
             fetchData(); // Fetch updated data
             setIsUploading(false);
