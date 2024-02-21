@@ -183,6 +183,7 @@
 }
 
 
+
 /*** Section Title ***/
 .section-title {
   position: relative;
@@ -505,3 +506,49 @@
   height: 100%;
   object-fit: cover;
 }
+
+
+
+
+.google-login-button {
+  width: 100px;
+  height: 40px;
+  border-radius: 5px;
+  padding: 20em;
+  /* Tambahkan gaya lain sesuai kebutuhan Anda */
+}
+
+
+.booking-container {
+    display: flex;
+    gap: 20px;
+}
+
+.booking-card {
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.booking-card-img {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.booking-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #ff4400;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.booking-button:hover {
+    background-color: #000000;
+}
+

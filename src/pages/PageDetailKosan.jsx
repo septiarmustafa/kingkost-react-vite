@@ -5,12 +5,11 @@ import DetailKosan from '../components/Kosan/DetailKosan';
 import NavDetailKosan from '../components/Kosan/NavDetailKosan';
 
 function PageDetailKosan() {
-  const { id } = useParams(); // Mendapatkan ID dari URL
 
   return (
       <div>
         <NavDetailKosan />
-        <DetailKosan id={id} />
+        <DetailKosan />
         <Footer />
       </div>
   );

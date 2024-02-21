@@ -6,19 +6,20 @@ const authSlice = createSlice({
   name: "authentication",
   initialState: {
     isAuthenticated: false,
-    id: "",
+    userId: "",
     username: "",
     password: "",
     email: "",
     role: "",
     token: "",
+    active: "",
   },
   reducers: {
     setAuthenticated: (state, action) => {
       state.isAuthenticated = action.payload;
     },
-    setAuthId: (state, action) => {
-      state.id = action.payload;
+    setAuthUserId: (state, action) => {
+      state.userId = action.payload;
     },
     setAuthUsername: (state, action) => {
       state.username = action.payload;
@@ -34,6 +35,9 @@ const authSlice = createSlice({
     },
     setAuthToken: (state, action) => {
       state.token = action.payload;
+    },
+    setAuthActive: (state, action) => {
+      state.active = action.payload;
     }
   },
 });
@@ -41,12 +45,13 @@ const authSlice = createSlice({
 
 export const {
   setAuthenticated,
-  setAuthId,
+  setAuthUserId,
   setAuthUsername,
   setAuthEmail,
   setAuthRole,
   setAuthPassword,
-  setAuthToken
+  setAuthToken,
+  setAuthActive,
 } = authSlice.actions;
 
 

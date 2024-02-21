@@ -1,98 +1,104 @@
-import React from 'react';
-import img1 from '../../assets/img/testimonial-1.jpg';
-import img2 from '../../assets/img/testimonial-2.jpg';
-import img3 from '../../assets/img/testimonial-3.jpg';
-import img4 from '../../assets/img/testimonial-4.jpg';
-import 'owl.carousel/dist/assets/owl.carousel.css';
-import 'owl.carousel/dist/assets/owl.theme.default.css';
-import 'owl.carousel';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Carousel from 'react-bootstrap/Carousel';
+import { Row, Col } from 'react-bootstrap';
+import defaultUserImg from '../../assets/img/default-user.png';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+
 
 
 function Testimonial() {
-  React.useEffect(() => {
-    $('.testimonial-carousel').owlCarousel({
-      items: 3,
-      loop: true,
-      margin: 30,
-      autoplay: true,
-      responsive: {
-        0: {
-          items: 1 // Pada layar sangat kecil (mobile), tampilkan hanya 1 item
-        },
-        576: {
-          items: 2 // Pada layar berukuran lebih besar dari mobile (tablet), tampilkan 2 item
-        },
-        992: {
-          items: 3 // Pada layar berukuran lebih besar dari tablet (laptop), tampilkan 3 item
-        },
-        1200: {
-          items: 4 // Pada layar berukuran lebih besar dari laptop (desktop), tampilkan 4 item
-        }
+  const [testimonials, setTestimonials] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [reviewResponse, customerResponse] = await Promise.all([
+          axios.get('http://localhost:8080/review/v1'),
+          axios.get('http://localhost:8080/customer/v1')
+        ]);
+
+        const reviewData = reviewResponse.data;
+        const customerData = customerResponse.data;
+
+        // Map customer data to each testimonial
+        const updatedTestimonials = reviewData.map(testimonial => {
+          const customer = customerData.find(customer => customer.id === testimonial.customerId.id);
+          return {
+            ...testimonial,
+            customerData: customer || {} // Set customerData or an empty object if not found
+          };
+        });
+
+        setTestimonials(updatedTestimonials);
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-      
-    });
+    };
+
+    fetchData();
   }, []);
 
-  const testimonials = [
-    {
-      name: 'Ryan R',
-      location: 'Cikini, Jakarta',
-      image: img1,
-      message: 'Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.'
-    },
-    {
-      name: 'Ihsan',
-      location: 'Tangsel',
-      image: img2,
-      message: 'Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.'
-    },
-    {
-      name: 'Andree',
-      location: 'Batam',
-      image: img3,
-      message: 'Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.'
-    },
-    {
-      name: 'Tiar',
-      location: 'New York, USA',
-      image: img4,
-      message: 'Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.'
-    },
-    {
-      name: 'Baim',
-      location: 'New York, USA',
-      image: img3,
-      message: 'Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.'
-    },
-    {
-      name: 'Joo1',
-      location: 'New York, USA',
-      image: img4,
-      message: 'Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.'
-    }
-  ];
+  // Memisahkan testimonial menjadi bagian-bagian yang berisi tiga testimonial
+  const separatedTestimonials = [];
+  for (let i = 0; i < testimonials.length; i += 3) {
+    separatedTestimonials.push(testimonials.slice(i, i + 3));
+  }
 
   return (
-    <div className="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s" style={{paddingTop: '5em', paddingBottom: '10em'}}>
+    <div className="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s" style={{ paddingTop: '5em', paddingBottom: '10em' }}>
       <div className="container-fluid">
         <div className="text-center">
-          <h5 className="section-title bg-white text-center text-secondary px-3">Testimonial</h5>
-          <h1 className="mb-5 mt-3">Our Clients Say!!!</h1>
+          <h5 className="section-title bg-white text-center text-dark px-3">Testimonial</h5>
+          <h1 className="my-5">WHAT <span className='text-secondary'> THEY SAY </span>ABOUT US</h1>
         </div>
-        <div className="owl-carousel testimonial-carousel position-relative">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="testimonial-item bg-light border p-4">
-              <div className="card" style={{ minHeight: '300px' }}>
-                <img className="card-img-top rounded-circle mx-auto mt-3" src={testimonial.image} alt={testimonial.name} style={{ width: '80px', height: '80px' }} />
-                <div className="card-body text-center">
-                  <h5 className="card-title mb-0">{testimonial.name}</h5>
-                  <p className="card-text mb-0">{testimonial.location}</p>
-                  <p className="card-text mt-2 mb-0">{testimonial.message}</p>
-                </div>
-              </div>
-            </div>
+        <Carousel nextLabel={<span aria-hidden="true" className="carousel-control-next-icon" />} prevLabel={<span aria-hidden="true" className="carousel-control-prev-icon" />}>
+          {separatedTestimonials.map((testimonialGroup, index) => (
+            <Carousel.Item key={index}>
+              <Row className="justify-content-center testimonial-carousel">
+                {testimonialGroup.map((testimonial, i) => (
+                  <Col key={i} md={4}>
+                    {testimonial.customerData && (
+                      <div className="testimonial-item border p-4" style={{backgroundColor: '#d1d0cd'}}>
+                        <div className="card" style={{ minHeight: '350px', padding: '15px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.5)' }}>
+                        <div className="card-body text-center">
+                            <p className="card-text mt-2 mb-0">"{testimonial.message}"</p>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center',  alignItems: 'center' }}>
+                           <div style={{ marginBottom: '15px' }}>
+                              <img
+                                className="rounded-circle mx-auto"
+                                src={testimonial.customerData.url || defaultUserImg}
+                                alt={testimonial.customerData.fullName}
+                                style={{
+                                  width: '70px',
+                                  height: '70px',
+                                  borderColor: '#b55a05',
+                                  border: '2px solid #b55a05', // Tambahkan border color dan ketebalan
+                                }}
+                              />
+                            </div>
+
+                            <div style={{ textAlign: 'left' }}>
+                                <h5 className="card-title mb-2 ms-3">
+                                    {testimonial.customerData.fullName}
+                                </h5>
+                                <p className="card-text mb-2 ms-3">
+                                    <FaMapMarkerAlt className="me-1 mb-1" /> {/* Menambahkan ikon lokasi */}
+                                    {testimonial.customerData.address}
+                                </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                  </Col>
+                ))}
+              </Row>
+            </Carousel.Item>
           ))}
-        </div>
+        </Carousel>
       </div>
     </div>
   );

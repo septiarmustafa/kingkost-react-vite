@@ -37,7 +37,7 @@ function About() {
                                 <p className="mb-0"><i className="fa fa-arrow-right text-warning me-2"></i>Convenient Location</p>
                             </div>
                         </div>
-                        <Link to="/read-more" className="btn btn-warning py-3 px-5 mt-2" style={{borderRadius: '15px'}}>Read More</Link>
+                        <Link to="/TermsAndConditions" className="btn btn-warning py-3 px-5 mt-2" style={{borderRadius: '15px'}}>Read More</Link>
                     </div>
                 </div>
             </div>

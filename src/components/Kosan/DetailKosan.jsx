@@ -1,253 +1,238 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import kosan1 from '../../assets/img/kosan1.jpg';
-import kosan2 from '../../assets/img/kosan2.jpg';
-import kosan3 from '../../assets/img/kosan3.jpg';
-
-import img from '../../assets/img/team-1.jpg';
-import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import Swal from "sweetalert2";
+import { useParams, Link } from 'react-router-dom';
+import { Carousel } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 function DetailKosan() {
-    const { id } = useParams();
-    const [kosanData, setKosanData] = useState(null);
+    const { kostId } = useParams(); // Mendapatkan nilai kostId dari URL
 
+    const [kosanData, setKosanData] = useState({});
+    const [startDate, setStartDate] = useState('');
+    const [months, setMonths] = useState(0);
     const [totalCost, setTotalCost] = useState(0);
-
-    const handleCalculateCost = () => {
-        const startDate = document.getElementById('startDate').value;
-        const months = parseInt(document.getElementById('months').value);
-
-        // Lakukan perhitungan biaya di sini
-        // Misalnya, jika harga per bulan adalah 1.300.000, maka total biaya adalah harga per bulan dikalikan dengan jumlah bulan
-        const pricePerMonth = parseFloat(kosanData.price.replace('Rp. ', '').replace('.', '').replace(',', ''));
-        const total = pricePerMonth * months;
-
-        setTotalCost(total.toLocaleString('id-ID')); // Format total biaya menjadi format mata uang Indonesia
-    };
+    const userId = useSelector((state) => state.authentication.userId);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // Simulasi pengambilan data berdasarkan ID dari URL
         const fetchData = async () => {
             try {
-                // Simulasi delay
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                // Mendapatkan customerId dari Redux
+                const userDataResponse = await axios.get(`http://localhost:8080/customer/user/${userId}`);
+                const matchedUser = userDataResponse.data.data;
+                const customerId = matchedUser.id;
 
-                // Data kosan
-                const data = {
-                    1: {
-                        img: kosan1,
-                        name: 'Kosan Mawar',
-                        description: 'Kosan nyaman dengan fasilitas lengkap',
-                        province: 'DKI Jakarta',
-                        city: 'Jakarta',
-                        district: 'South Jakarta',
-                        address: 'Jalan Lokasi 1, Kota A',
-                        location: 'Jakarta - Kebayoran Baru',
-                        availability: 'Available Now',
-                        roomType: 'Single Room',
-                        price: '1000000',
-                        rating: 5,
-                        available_room: 5,
-                        seller: 'John Doe',
-                        is_wifi: true,
-                        is_ac: true,
-                        is_parking: false,
-                        gender: 'Mixed',
-                    },
-                    2: {
-                        img: kosan2,
-                        name: 'Kosan Indah',
-                        description: 'Kosan strategis dengan tempat parkir',
-                        province: 'DKI Jakarta',
-                        city: 'Jakarta',
-                        district: 'Central Jakarta',
-                        address: 'Jalan Lokasi 2, Kota B',
-                        location: 'Jakarta - Tanah Abang',
-                        availability: 'Available Now',
-                        roomType: 'Single Room',
-                        price: '1300000',
-                        rating: 4,
-                        available_room: 3,
-                        seller: 'Jane Doe',
-                        is_wifi: true,
-                        is_ac: true,
-                        is_parking: true,
-                        gender: 'Female',
-                    },
-                    3: {
-                        img: kosan3,
-                        name: 'Kosan Bahagia',
-                        description: 'Kosan nyaman dekat pusat kota',
-                        province: 'Jawa Barat',
-                        city: 'Bandung',
-                        district: 'Bandung Selatan',
-                        address: 'Jalan Lokasi 3, Kota C',
-                        location: 'Bandung - Cicendo',
-                        availability: 'Available Now',
-                        roomType: 'Single Room',
-                        price: '1500000',
-                        rating: 4,
-                        available_room: 2,
-                        seller: 'Bob Johnson',
-                        is_wifi: true,
-                        is_ac: true,
-                        is_parking: true,
-                        gender: 'Male',
-                    },
-                    4: {
-                        id: 4,
-                        img: kosan1,
-                        name: 'Kosan Ceria',
-                        description: 'Kosan dengan fasilitas lengkap',
-                        province: 'DKI Jakarta',
-                        city: 'Jakarta',
-                        district: 'Central Jakarta',
-                        address: 'Jalan Lokasi 4, Kota D',
-                        location: 'Jakarta - Cikini',
-                        availability: 'Available Now',
-                        roomType: 'Single Room',
-                        price: '600000',
-                        rating: 4,
-                        available_room: 4,
-                        seller: 'Alice Smith',
-                        is_wifi: true,
-                        is_ac: true,
-                        is_parking: true,
-                        gender: 'Mixed',
+                // Mendapatkan kostId dari URL
+                const searchParams = new URLSearchParams(window.location.search);
+                const kostId = searchParams.get('kostId');
+
+                // Mengambil data kosan menggunakan kostId dan customerId
+                const responseKosan = await axios.get(`http://localhost:8080/kost/id`, {
+                    params: {
+                        kostId: kostId,
+                        customerId: customerId
                     }
-                };
+                });
+                const kosan = responseKosan.data.data;
 
-                // Set data kosan sesuai ID dari URL
-                setKosanData(data[id]);
+                setKosanData(kosan);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching data:', error.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'You have already booked this boarding house and it is in the pending/process stage.',
+                });
+                
+                // Redirect ke halaman /kosan
+                navigate(`/kosan`);
             }
         };
 
-        // Panggil fungsi fetchData
         fetchData();
-    }, [id]);
+    }, [userId, navigate]);
+
+    const handleStartDateChange = (e) => {
+        setStartDate(e.target.value);
+    };
+
+    const handleCalculateCost = () => {
+        // Periksa apakah kosanData memiliki properti kostPrice
+        if (kosanData && kosanData.kostPrice) {
+            const pricePerMonth = kosanData.kostPrice.price;
+            const total = pricePerMonth * months;
+            setTotalCost(total.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
+        } else {
+            console.error('Error: Unable to calculate cost. kosanData.kostPrice is undefined.');
+            // Tampilkan pesan kesalahan kepada pengguna
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'An error occurred while calculating the cost. Please try again later.',
+            });
+            
+        }
+    };
 
     if (!kosanData) {
-        return (
-            <div className="text-center">
-                <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        );
+        return <div>Data Kosong</div>;
     }
-    
 
     return (
-        <div className="container ">
-        <div className="row my-5">
-            <div className="col-md-6 px-3">
-                <img src={kosanData.img} alt={kosanData.name} className="detail-image img-fluid" />
-            </div>
-            <div className="col-md-6 px-3">
-                <img src={kosanData.img} alt={kosanData.name} className="detail-image img-fluid" />
-            </div>
-        </div>
-
-
-        <div className="row">
-            <div className="col-md-6">
-                <div className="detail-header">
-                    <div className="detail-header-info">
-                        <h3 className="detail-title">{kosanData.name} - {kosanData.roomType} </h3>
-                        <p className='mb-1'> {kosanData.description} </p>
-                        <p className="detail-address">{kosanData.address} || {kosanData.location}</p>
-                        <div className="detail-features row">
-                            <div className="col-md-4">
-                                <div className="detail-feature">
-                                    <i className="fas fa-bed text-primary"></i>
-                                    <span className='ms-2'>{kosanData.roomType}</span>
-                                </div>
-                            </div>
-                            <div className="col-md-4">
-                                <div className="detail-feature">
-                                    <i className="fas fa-user-friends text-primary"></i>
-                                    <span className='ms-2'>{kosanData.available_room} Roam</span>
-                                </div>
-                            </div>
-                            <div className="col-md-4">
-                                <div className="detail-feature">
-                                    <i className="fas fa-star text-primary"></i>
-                                    <span className='ms-2'>{kosanData.rating} Stars</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="detail-price my-3"> 
-                           <i class="fas fa-solid fa-tag text-danger"></i> 
-                           <span className='ms-2'> Rp. {kosanData.price} / Bulan</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="detail-amenities">
-                    <h5>Fasilitas</h5>
-                    <ul className="list-unstyled">
-                        <li>
-                            <i className={`fas fa-wifi me-2 ${kosanData.is_wifi ? 'text-primary' : 'text-danger'}`}></i>
-                            {kosanData.is_wifi ? 'WiFi' : 'No WiFi'}
-                        </li>
-                        <li className='ms-1'>
-                            <i className={`fas fa-snowflake me-2 ${kosanData.is_ac ? 'text-primary' : 'text-danger'}`}></i>
-                            {kosanData.is_ac ? 'AC' : 'No AC'}
-                        </li>
-                        <li className='ms-1'>
-                            <i className={`fas fa-parking me-2 ${kosanData.is_parking ? 'text-primary' : 'text-danger'}`}></i>
-                            {kosanData.is_parking ? 'Parking' : 'No Parking'}
-                        </li>
-                    </ul>
-                </div>
-
-                <div className="detail-contact pb-5">
-                    <div className="card mb-5 shadow">
+        <div className="container">
+            <div className="row my-3">
+                <div className="col-md-6">
+                    <div key={kosanData.id} className="card shadow px-3" style={{ borderRadius: '15px' }}>
                         <div className="card-body">
-                            <h5 className="card-title">Hubungi Penyewa/Seller Kosan</h5>
-                            <div className="contact-info d-flex align-items-center">
-                                <div className="contact-detail flex-grow-1">
-                                    <span>{kosanData.seller}</span>
-                                    <p>penyewa@gmail.com</p>
+                            {kosanData.images && kosanData.images.length > 1 ? (
+                                <Carousel>
+                                    {kosanData.images.map((image, index) => (
+                                        <Carousel.Item key={index}>
+                                            <img
+                                                className="d-block w-100 h-50"
+                                                src={image.url}
+                                                alt={image.alt}
+                                                style={{ borderRadius: '15px' }}
+                                            />
+                                            <Carousel.Caption>
+                                                <h3>{image.caption}</h3>
+                                                <p>{image.description}</p>
+                                            </Carousel.Caption>
+                                        </Carousel.Item>
+                                    ))}
+                                </Carousel>
+                            ) : (
+                                <img
+                                    className="d-block w-100 h-50"
+                                    src={kosanData.images && kosanData.images[0].url}
+                                    alt={kosanData.images && kosanData.images[0].alt}
+                                    style={{ borderRadius: '15px' }}
+                                />
+                            )}
+                            <div className="col-md-12">
+                                <div className="detail-header">
+                                    <div className="detail-header-info mt-3">
+                                        <h4 className="detail-title" style={{ fontFamily: 'sans-serif' }}>{kosanData.name}</h4>
+                                        <p className='mb-2'> {kosanData.description} </p>
+
+                                        <label className="detail-address text-dark">{kosanData.province && kosanData.province.name} || {kosanData.city && kosanData.city.name}</label>
+                                        <p className="detail-title">{kosanData.subdistrict && kosanData.subdistrict.name}</p>
+
+                                        <div className="detail-features row">
+                                            <div className="col-md-4">
+                                                <div className="detail-feature ms-2">
+                                                    <i className="fas fa-bed text-primary"></i>
+                                                    <span className='ms-2'>Available : {kosanData.availableRoom} Room</span>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-4">
+                                                <div className="detail-feature">
+                                                    <i className="fas fa-user-friends text-primary"></i>
+                                                    <span className='ms-2'>{kosanData.genderType && kosanData.genderType.name}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="detail-price my-3">
+                                            <i className="fas fa-solid fa-tag text-danger"></i>
+                                            <span className='ms-2'> {kosanData.kostPrice && kosanData.kostPrice.price.toLocaleString('id-ID', {
+                                                style: 'currency',
+                                                currency: 'IDR'
+                                            })}/month</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="right">
-                                    <img src={img} className="seller-image" style={{ height: '80px', borderRadius: '100%' }} />
+                                <div className="detail-amenities">
+                                    <h5>Fasilitas</h5>
+                                    <ul className="list-unstyled">
+                                        <li>
+                                            <i className={`fas fa-wifi me-2 ${kosanData.isWifi ? 'text-primary' : 'text-danger'}`}></i>
+                                            {kosanData.isWifi ? 'WiFi' : 'No WiFi'}
+                                        </li>
+                                        <li className='ms-1'>
+                                            <i className={`fas fa-snowflake me-2 ${kosanData.isAc ? 'text-primary' : 'text-danger'}`}></i>
+                                            {kosanData.isAc ? 'AC' : 'No AC'}
+                                        </li>
+                                        <li className='ms-1'>
+                                            <i className={`fas fa-parking me-2 ${kosanData.isParking ? 'text-primary' : 'text-danger'}`}></i>
+                                            {kosanData.isParking ? 'Parking' : 'No Parking'}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-6">
+                    <div className="card mb-3" style={{ borderRadius: '15px' }}>
+                        <div className="card-body shadow">
+                            <h5 className="card-title">Simulasi Penghitungan Biaya</h5>
+                            <div className="mb-3">
+                                <label htmlFor="startDate" className="form-label">Tanggal Mulai Kos</label>
+                                <input type="date" className="form-control" id="startDate"
+                                    min={new Date().toISOString().split('T')[0]}
+                                    value={startDate}
+                                    onChange={handleStartDateChange} />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="months" className="form-label">Bulan Kos</label>
+                                <input type="number" className="form-control" id="months" min="0" value={months} onChange={(e) => setMonths(parseInt(e.target.value))} />
+                            </div>
+                            <button className="btn btn-primary" onClick={handleCalculateCost}
+                                style={{
+                                    borderRadius: '10px',
+                                    textDecoration: 'none',
+                                    color: 'white'
+                                }}>Hitung Biaya
+                            </button>
+                            <div className="mt-3">
+                                <h5>Total Biaya: <span id="totalCost">{totalCost}/Month</span></h5>
+                            </div>
+                            <Link to={`https://wa.me/${kosanData.seller && kosanData.seller.phoneNumber}`} target='_blank'
+                                className="btn btn-success mt-3 me-3"
+                                style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}>
+                                <i className="fas fa-comment"></i> Chat Pemilik Kos
+                            </Link>
+                            {kosanData.currentBookingStatus === 0 ? (
+                                <button className="btn btn-danger mt-3"
+                                    style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}
+                                    onClick={() => {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'Kosan ini sudah pernah Anda booking dan dalam tahap pending/proses.',
+                                        });
+                                    }}>
+                                    Book Now
+                                </button>
+                            ) : (
+                                <Link to={`/booking/${kosanData.id}`} className="btn btn-danger mt-3"
+                                    style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}>
+                                    Book Now
+                                </Link>
+                            )}
+                        </div>
+                    </div>
+                    <div className="detail-contact pb-5">
+                        <div className="card shadow" style={{ borderRadius: '15px' }}>
+                            <div className="card-body">
+                                <h5 className="card-title">Hubungi Penyewa/Seller Kosan</h5>
+                                <div className="contact-info d-flex align-items-center">
+                                    <div className="contact-detail flex-grow-1">
+                                        <span>{kosanData.seller && kosanData.seller.fullName}</span>
+                                        <p className='pt-2'>
+                                            <i className="bi bi-geo-alt-fill"></i> {kosanData.seller && kosanData.seller.address}<br />
+                                            <i className="bi bi-envelope-fill"></i> {kosanData.seller && kosanData.seller.email}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div className="col-md-6">
-                <div className="card ms-5">
-                    <div className="card-body">
-                        <h5 className="card-title">Booking</h5>
-                        <div className="mb-3">
-                            <label htmlFor="startDate" className="form-label">Tanggal Mulai Kos</label>
-                            <input type="date" className="form-control" id="startDate" />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="months" className="form-label">Bulan Kos</label>
-                            <input type="number" className="form-control" id="months" />
-                        </div>
-                        <button className="btn btn-primary" onClick={handleCalculateCost} style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}>Hitung Biaya</button>
-                        <div className="mt-3">
-                            <h5>Total Biaya: <span id="totalCost">{totalCost}</span></h5>
-                        </div>
-                        <Link to="https://wa.me/628123456789" target='_blank' className="btn btn-success mt-3 me-3" style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}>
-                            <i className="fas fa-comment"></i> Chat Pemilik Kos
-                        </Link>
-                        <Link to="/booking" className="btn btn-danger mt-3" style={{ borderRadius: '10px', textDecoration: 'none', color: 'white' }}>
-                            Book Now
-                        </Link>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
     );
 }
 
