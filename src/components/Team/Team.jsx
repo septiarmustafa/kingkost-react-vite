@@ -38,9 +38,9 @@ function Team() {
                   <img className="img-fluid border" src={Ryan} alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{ backgroundColor: 'gold', color: 'black' }} to="#"><i className="fab fa-facebook-f"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{ backgroundColor: 'gold', color: 'black' }} to="#"><i className="fab fa-twitter"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{ backgroundColor: 'gold', color: 'black' }} to="#"><i className="fab fa-instagram"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{ backgroundColor: 'gold', color: 'black' }} to="https://github.com/RyanRamadhan11" target='_blank'><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{ backgroundColor: 'gold', color: 'black' }} to="https://www.linkedin.com/in/ryan-ramadhan-17118b222/" target='_blank'><i className="fab fa-linkedin"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{ backgroundColor: 'gold', color: 'black' }} to="https://www.instagram.com/ryanrmdhans/" target='_blank'><i className="fab fa-instagram"></i></Link>
                 </div>
                 <div className="text-center p-4">
                   <h5 className="mb-0">Ryan Ramadhan</h5>
@@ -55,8 +55,8 @@ function Team() {
                   <img className="img-fluid" src={Leo} alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-facebook-f"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-twitter"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-linkedin"></i></Link>
                   <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-instagram"></i></Link>
                 </div>
                 <div className="text-center p-4">
@@ -72,8 +72,8 @@ function Team() {
                   <img className="img-fluid" src={Andre} alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-facebook-f"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-twitter"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-linkedin"></i></Link>
                   <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-instagram"></i></Link>
                 </div>
                 <div className="text-center p-4">
@@ -89,8 +89,8 @@ function Team() {
                   <img className="img-fluid" src={Ihsan} alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-facebook-f"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-twitter"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-linkedin"></i></Link>
                   <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-instagram"></i></Link>
                 </div>
                 <div className="text-center p-4">
@@ -106,9 +106,9 @@ function Team() {
                   <img className="img-fluid" src={Tiar} alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-facebook-f"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-twitter"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-instagram"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://github.com/septiarmustafa" target='_blank'><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.linkedin.com/in/septiar-mustafa-26a121176/" target='_blank'><i className="fab fa-linkedin"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="https://www.instagram.com/septiarmustafa" target='_blank'><i className="fab fa-instagram"></i></Link>
                 </div>
                 <div className="text-center p-4">
                   <h5 className="mb-0">Septiar Mustafa</h5>
@@ -123,8 +123,8 @@ function Team() {
                   <img className="img-fluid" src={Baim} alt="" />
                 </div>
                 <div className="position-relative d-flex justify-content-center mt-3">
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-facebook-f"></i></Link>
-                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-twitter"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-github"></i></Link>
+                  <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-linkedin"></i></Link>
                   <Link className="btn btn-square mx-1" style={{backgroundColor: 'gold', color: 'black'}} to="#"><i className="fab fa-instagram"></i></Link>
                 </div>
                 <div className="text-center p-4">
