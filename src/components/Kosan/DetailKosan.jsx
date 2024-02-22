@@ -23,7 +23,7 @@ function DetailKosan() {
         const fetchData = async () => {
             try {
                 // Mendapatkan customerId dari Redux
-                const userDataResponse = await axios.get(`http://43.218.87.110:8080/customer/user/${userId}`, {
+                const userDataResponse = await axios.get(`/customer/user/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -36,7 +36,7 @@ function DetailKosan() {
                 const kostId = searchParams.get('kostId');
 
                 // Mengambil data kosan menggunakan kostId dan customerId
-                const responseKosan = await axios.get(`http://43.218.87.110:8080/kost/id`, {
+                const responseKosan = await axios.get(`/kost/id`, {
                     params: {
                         kostId: kostId,
                         customerId: customerId

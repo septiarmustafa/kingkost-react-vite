@@ -27,6 +27,8 @@ function Profile() {
     const tokenString = localStorage.getItem('userLogin');
     const token = tokenString ? JSON.parse(tokenString).token : null;
 
+    const [imageUploaded, setImageUploaded] = useState(false); // State untuk menandai bahwa gambar telah diunggah
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -64,7 +66,7 @@ function Profile() {
         };
 
         fetchData();
-    }, [userId]);
+    }, [userId, imageUploaded]);
 
     useEffect(() => {
         const fetchDataKost = async () => {
@@ -89,7 +91,68 @@ function Profile() {
     };
 
     const handleImageClick = () => {
-        // Handling image upload
+        Swal.fire({
+            title: "Upload Image",
+            text: "Please upload an image",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonText: "Upload",
+            cancelButtonText: "Cancel",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = "image/*";
+                input.onchange = (event) => handleFileInputChange(event, apiUserData.id);
+                input.click();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                console.log("Upload canceled");
+            }
+        });
+    };
+    
+    const handleFileInputChange = async (event, userId) => {
+        const file = event.target.files[0];
+        if (file) {
+            try {
+                setIsUploading(true); // Set isUploading to true when upload starts
+                const formData = new FormData();
+                formData.append("file", file);
+    
+                // Post data ke endpoint yang ditentukan
+                await axios.post(`/customer/v1/upload/${userId}`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+    
+                // Menampilkan pesan berhasil
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Upload Image Successful!',
+                    showConfirmButton: true,
+                    timer: 2000
+                });
+    
+                // Menandai bahwa gambar telah diunggah
+                setImageUploaded(prevState => !prevState);
+            } catch (error) {
+                console.error("Error uploading image:", error);
+                // Menampilkan pesan kesalahan
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to upload image. Please try again later.',
+                    showConfirmButton: true
+                });
+            } finally {
+                setIsUploading(false); // Set isUploading to false when upload finishes (either success or failure)
+            }
+        }
     };
 
     const formatRupiah = (value) => {
