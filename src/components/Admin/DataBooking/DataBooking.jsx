@@ -388,7 +388,6 @@ function DataBooking() {
                                             >
                                                 <FaHamburger style={{ marginRight: '0.5rem' }} /> Change Status
                                             </button>
-                                            
                                         </>
                                     )}
                                 </td>
